@@ -67,6 +67,7 @@ public:
     void showTrainingCar (const bool showIt);
     
     void reset();
+    void arrangeRestingCars();
     
     virtual void mouseUp (const MouseEvent& event) override;
     virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
@@ -78,7 +79,7 @@ private:
 
     void resetPath ();
     void getCurrentCheckPoints();
-    void arrangeRestingCars();
+    
     const bool isCrashed();
     
     //=========================================================================

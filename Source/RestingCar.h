@@ -14,8 +14,7 @@
 #include "JuceHeader.h"
 
 //==============================================================================
-/**
-*/
+
 class RestingCar    : public Component
 {
 public:
@@ -24,6 +23,8 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
+    
+    virtual void mouseUp (const MouseEvent& event) override;
 
 private:
     const Colour cl;

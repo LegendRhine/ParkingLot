@@ -1,4 +1,4 @@
-﻿/*
+/*
   ==============================================================================
 
     This file was auto-generated!
@@ -74,7 +74,7 @@ void ParkingLot::resized ()
     pathHudu = 0.0f;
 
     trainingCar->setTransform (AffineTransform ());
-	trainingCar->setCentreRelative (0.5f, 0.5f);
+	trainingCar->setCentrePosition(CarLength + 120, getHeight() - 200);
     trainingCar->reset();
 
     leftPlacer->setTransform (AffineTransform());
@@ -206,7 +206,10 @@ void ParkingLot::moveTheCar (const bool backward)
 
     if (isCrashed())
     {
-        if (AlertWindow::showNativeDialogBox ("Warning", "Crashed!!", true))
+        if (AlertWindow::showNativeDialogBox (L"撞了!!",
+                                              L"点击[确定]按钮或直接回车继续玩。\n"
+                                              L"点击[取消]按钮复位车辆重新开始。",
+                                              true))
             moveTheCar (!backward);
         else
             reset();
@@ -294,7 +297,7 @@ void ParkingLot::getCurrentCheckPoints ()
 {
     checkPoints.clearQuick();
 
-    // add 24 points of the car for crash-check
+    // add 48 points of the car for crash-check
     const int x = trainingCar->getX();
     const int y = trainingCar->getY();
     const int w = trainingCar->getWidth();
@@ -315,36 +318,75 @@ void ParkingLot::getCurrentCheckPoints ()
     checkPoints.add (Point<int> (x + 4, b - 4));
     checkPoints.add (Point<int> (r - 4, b - 4));
 
-    // 4 sides
-    checkPoints.add (Point<int> (x + w / 4, y - 1));
-    checkPoints.add (Point<int> (x + w / 2, y - 1));
-    checkPoints.add (Point<int> (r - w / 4, y - 1));
-
-    checkPoints.add (Point<int> (x + w / 4, b + 1));
-    checkPoints.add (Point<int> (x + w / 2, b + 1));
-    checkPoints.add (Point<int> (r - w / 4, b + 1));
-
-    checkPoints.add (Point<int> (x - 1, y + h / 8));
-    checkPoints.add (Point<int> (x - 1, y + h / 4));
-    checkPoints.add (Point<int> (x - 1, y + h * 3 / 8));
-    checkPoints.add (Point<int> (x - 1, y + h / 2));
-    checkPoints.add (Point<int> (x - 1, b - h * 3 / 8));
-    checkPoints.add (Point<int> (x - 1, b - h / 8));
-
-    checkPoints.add (Point<int> (r + 1, y + h / 8));
-    checkPoints.add (Point<int> (r + 1, y + h / 4));
-    checkPoints.add (Point<int> (r + 1, y + h * 3 / 8));
-    checkPoints.add (Point<int> (r + 1, y + h / 2));
-    checkPoints.add (Point<int> (r + 1, b - h * 3 / 8));
-    checkPoints.add (Point<int> (r + 1, b - h / 8));
+    // top and bottom sides
+    for (int i = 1; i < 8; ++i)
+    {
+        checkPoints.add (Point<int> (x + i * (w / 8), y - 1));
+        checkPoints.add (Point<int> (x + i * (w / 8), b + 1));
+    }
+    
+    // left and right sides
+    for (int i = 1; i < 16; ++i)
+    {
+        if (i != 11)  // alreay added (rear path point)
+        {
+            checkPoints.add (Point<int> (x - 1, y + i * (h / 16)));
+            checkPoints.add (Point<int> (r + 1, y + i * (h / 16)));
+        }
+    }
 }
 
 //=================================================================================================
 void ParkingLot::arrangeRestingCars()
 {
     restingCars.clear (true);
-
-
+    
+    const int hGap = 20;
+    const int vGap = 45;
+    
+    const int hNumbers = getHeight() / (CarWidth + hGap) +
+                         ((getHeight() % (CarWidth + hGap) == 0) ? 0 : 1);
+    
+    const int vNumbers = getHeight() / (CarLength + vGap) +
+                         ((getHeight() % (CarLength + vGap) == 0) ? 0 : 1);
+    
+    // one side for h-car arrange
+    for (int i = hNumbers; --i >= 0; )
+    {
+        if (i != 3)
+        {
+            RestingCar* car = new RestingCar();
+            restingCars.add (car);
+            addAndMakeVisible (car);
+            car->setSize (CarLength, CarWidth);
+            car->setTopLeftPosition (8, (CarWidth + hGap) * i + 8);
+        }
+    }
+    
+    for (int i = hNumbers; --i >= 0; )
+    {
+        if (!(i == 1 || i == 5))
+        {
+            RestingCar* car = new RestingCar();
+            restingCars.add (car);
+            addAndMakeVisible (car);
+            car->setSize (CarLength, CarWidth);
+            car->setTopLeftPosition (getWidth() - 8 - CarLength, (CarWidth + hGap) * i + 8);
+        }
+    }
+    
+    // v-car arrange
+    for (int i = 0; i < vNumbers; ++i)
+    {
+        if (i != 1)
+        {
+            RestingCar* car = new RestingCar();
+            restingCars.add (car);
+            addAndMakeVisible (car);
+            car->setSize (CarWidth, CarLength);
+            car->setTopLeftPosition (getWidth() / 2 - CarWidth / 2, (CarLength + vGap) * i + 8);
+        }
+    }
 }
 
 //=================================================================================================

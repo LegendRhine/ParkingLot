@@ -8,6 +8,7 @@
   ==============================================================================
 */
 
+#include "CommonData.h"
 #include "MainComponent.h"
 #include "ParkingLot.h"
 #include "SetupPanel.h"
@@ -18,7 +19,7 @@ MainComponent::MainComponent()
     addAndMakeVisible (parkinglot = new ParkingLot());
     addAndMakeVisible (setupPanel = new SetupPanel (parkinglot));
 
-    setSize (1280, 800);
+    setSize (1350, 800);
 }
 
 MainComponent::~MainComponent()
@@ -31,6 +32,13 @@ void MainComponent::paint (Graphics& g)
 
     g.setColour (Colours::yellow.withAlpha (0.4f));
     g.drawRect (setupPanel->getX(), 0, 3, getHeight());
+    
+    // draw stop-line
+    g.setColour (Colours::yellow.withAlpha(0.5f));
+    g.fillRect (CarLength + 25, 0, 5, getHeight());
+    g.fillRect (parkinglot->getWidth() / 2 - CarWidth / 2 - 18, 0, 5, getHeight());
+    g.fillRect (parkinglot->getWidth() / 2 + CarWidth / 2 + 13, 0, 5, getHeight());
+    g.fillRect (parkinglot->getWidth() - CarLength - 28, 0, 5, getHeight());
 }
 
 void MainComponent::resized()
