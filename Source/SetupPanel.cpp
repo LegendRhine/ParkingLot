@@ -15,6 +15,17 @@
 SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     : parkinglot (parkinglot_)
 {
+    // labels..
+    addAndMakeVisible (nameLb = new Label ("nameLabel", ProjectInfo::projectName));
+    nameLb->setFont (Font (25.0f));
+    nameLb->setJustificationType (Justification::centredBottom);
+    nameLb->setColour (Label::textColourId, Colours::lightgrey);
+
+    addAndMakeVisible (versionLb = new Label ("versionLabel", ProjectInfo::versionString));
+    versionLb->setFont (Font (15.0f));
+    versionLb->setJustificationType (Justification::centredBottom);
+    versionLb->setColour (Label::textColourId, Colours::lightgrey);
+
     // reset button
     addAndMakeVisible (resetBt = new TextButton (L"复位重来"));
     resetBt->addListener (this);
@@ -61,19 +72,23 @@ void SetupPanel::paint (Graphics& g)
 //=========================================================================
 void SetupPanel::resized()
 {
+    // labels
+    nameLb->setBounds (0, 10, getWidth(), 30);
+    versionLb->setBounds (0, 35, getWidth(), 25);
+
     // reset button
     resetBt->setBounds (getWidth() - 90, getHeight() - 30, 80, 25);
 
     // pathes buttons..
     const int leftGap = 15;
 
-    leftFrontPathBt->setBounds (leftGap, 70, 100, 25);
+    leftFrontPathBt->setBounds (leftGap, 80, 100, 25);
     rightFrontPathBt->setBounds (leftFrontPathBt->getRight() + 5, leftFrontPathBt->getY(), 100, 25);
     leftRearPathBt->setBounds (leftGap, leftFrontPathBt->getBottom() + 5, 100, 25);
     rightRearPathBt->setBounds (leftRearPathBt->getRight() + 5, leftRearPathBt->getY(), 100, 25);
 
     // others..
-    showPoleBt->setBounds (leftGap, leftRearPathBt->getBottom() + 20, 100, 25);
+    showPoleBt->setBounds (leftGap, leftRearPathBt->getBottom() + 5, 100, 25);
     hideCarBt->setBounds (showPoleBt->getRight() + 5, showPoleBt->getY(), 100, 25);
 }
 

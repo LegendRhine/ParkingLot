@@ -22,6 +22,7 @@ class SetupPanel    : public Component,
     public Button::Listener
 {
 public:
+    //=========================================================================
     SetupPanel (ParkingLot* const parkinglot);
     ~SetupPanel();
 
@@ -31,8 +32,11 @@ public:
     virtual void buttonClicked (Button* bt) override;
 
 private:
+    //=========================================================================
     ParkingLot* const parkinglot;
 
+    ScopedPointer<Label> nameLb;
+    ScopedPointer<Label> versionLb;
     ScopedPointer<TextButton> resetBt;
 
     ScopedPointer<ToggleButton> leftFrontPathBt;
