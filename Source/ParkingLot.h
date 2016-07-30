@@ -11,7 +11,7 @@
 
 #include "JuceHeader.h"
 
-class Car;
+class TrainingCar;
 
 //=========================================================================
 class PolePlacer : public Component
@@ -35,14 +35,13 @@ private:
 };
 
 //==============================================================================
-/** The parking lot. holds the car and control it.    
-*/
-class MainContentComponent   : public Component
+/** The parking lot. holds the car and control it.  */
+class ParkingLot   : public Component
 {
 public:
     //==============================================================================
-    MainContentComponent();
-    ~MainContentComponent();
+    ParkingLot();
+    ~ParkingLot();
 
     void paint (Graphics&) override;
     void resized() override;
@@ -51,7 +50,7 @@ public:
     void setDirection (const int newDirection);
     void moveTheCar (const bool backward);
 
-    void reset()                                    { resized(); }
+    void reset();
     
     virtual void mouseUp (const MouseEvent& event) override;
     virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
@@ -62,12 +61,12 @@ private:
     void placeTheCar (const int oldFangxiang, const int newFangxiang);
     PolePlacer* getPlacer (const bool isLeft) { return isLeft ? leftPlacer : rightPlacer; }
 
-    ScopedPointer<Car> car;
+    ScopedPointer<TrainingCar> car;
     ScopedPointer<PolePlacer> leftPlacer, rightPlacer;
 
 	float pathHudu;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParkingLot)
 };
 
 

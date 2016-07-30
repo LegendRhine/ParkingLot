@@ -9,24 +9,24 @@
 */
 
 #include "CommonData.h"
-#include "Car.h"
+#include "TrainingCar.h"
 
 //==============================================================================
-Car::Car ()
+TrainingCar::TrainingCar ()
 	: direction (0)
 {
 	setSize (100, 240);
 }
 
 //=================================================================================================
-void Car::reset ()
+void TrainingCar::reset ()
 {
     direction = 0;
     repaint ();
 }
 
 //=========================================================================
-void Car::paint (Graphics& g)
+void TrainingCar::paint (Graphics& g)
 {    
     // whole car
     g.setColour (Colours::lightseagreen);
@@ -68,7 +68,7 @@ void Car::paint (Graphics& g)
 }
 
 //=================================================================================================
-void Car::setDirection (const int newDirection)
+void TrainingCar::setDirection (const int newDirection)
 {
     const int oldFangxiang = direction;
     direction = newDirection;

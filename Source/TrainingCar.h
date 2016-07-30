@@ -15,11 +15,11 @@
 
 //==============================================================================
 /** The car for training. */
-class Car    : public Component
+class TrainingCar    : public Component
 {
 public:
-    Car ();
-    ~Car() { }
+    TrainingCar ();
+    ~TrainingCar() { }
 
     void paint (Graphics&) override;
     bool hitTest (int, int) override                { return false; }
@@ -34,7 +34,7 @@ private:
     // both the angle of left and right are the same: 36.87.
 	int direction; 
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Car)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrainingCar)
 };
 
 

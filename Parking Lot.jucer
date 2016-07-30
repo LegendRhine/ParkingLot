@@ -6,11 +6,10 @@
   <MAINGROUP id="HITcTa" name="Parking Lot">
     <GROUP id="{662A7673-0387-25A7-C779-2B1AF86634D2}" name="Source">
       <FILE id="PO10uK" name="CommonData.h" compile="0" resource="0" file="Source/CommonData.h"/>
-      <FILE id="jcVIvw" name="Car.cpp" compile="1" resource="0" file="Source/Car.cpp"/>
-      <FILE id="oJgGhO" name="Car.h" compile="0" resource="0" file="Source/Car.h"/>
-      <FILE id="wNt6U5" name="MainComponent.cpp" compile="1" resource="0"
-            file="Source/MainComponent.cpp"/>
-      <FILE id="lnpPJj" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="jcVIvw" name="TrainingCar.cpp" compile="1" resource="0" file="Source/TrainingCar.cpp"/>
+      <FILE id="oJgGhO" name="TrainingCar.h" compile="0" resource="0" file="Source/TrainingCar.h"/>
+      <FILE id="wNt6U5" name="ParkingLot.cpp" compile="1" resource="0" file="Source/ParkingLot.cpp"/>
+      <FILE id="lnpPJj" name="ParkingLot.h" compile="0" resource="0" file="Source/ParkingLot.h"/>
       <FILE id="znSm56" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
     </GROUP>
   </MAINGROUP>

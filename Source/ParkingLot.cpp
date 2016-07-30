@@ -6,26 +6,26 @@
   ==============================================================================
 */
 
-#include "MainComponent.h"
-#include "Car.h"
+#include "ParkingLot.h"
+#include "TrainingCar.h"
 #include "CommonData.h"
 
 //==============================================================================
-MainContentComponent::MainContentComponent()
+ParkingLot::ParkingLot()
 	: pathHudu (0.0f)
 {
-	addAndMakeVisible (car = new Car());
+	addAndMakeVisible (car = new TrainingCar());
     addChildComponent (leftPlacer = new PolePlacer());
     addChildComponent (rightPlacer = new PolePlacer());
 
     setSize (1200, 800);
 }
 
-MainContentComponent::~MainContentComponent()
+ParkingLot::~ParkingLot()
 {
 }
 //=========================================================================
-void MainContentComponent::paint (Graphics& g)
+void ParkingLot::paint (Graphics& g)
 {
     g.fillAll (Colours::darkgrey);
 
@@ -36,7 +36,7 @@ void MainContentComponent::paint (Graphics& g)
 	g.fillRect (car->getBoundsInParent ().expanded (5));*/	
 }
 //=========================================================================
-void MainContentComponent::resized ()
+void ParkingLot::resized ()
 {
     pathHudu = 0.0f;
 
@@ -52,7 +52,7 @@ void MainContentComponent::resized ()
 }
 
 //=================================================================================================
-void MainContentComponent::setDirection (const int newDirection)
+void ParkingLot::setDirection (const int newDirection)
 {
     const int oldFangxiang = car->getDirection();
 
@@ -81,7 +81,7 @@ void MainContentComponent::setDirection (const int newDirection)
 }
 
 //=================================================================================================
-void MainContentComponent::placeTheCar (const int oldFangxiang, const int newFangxiang)
+void ParkingLot::placeTheCar (const int oldFangxiang, const int newFangxiang)
 {
     if (newFangxiang == 0 || oldFangxiang == newFangxiang)  
         return;
@@ -93,7 +93,6 @@ void MainContentComponent::placeTheCar (const int oldFangxiang, const int newFan
     // First, place the car base on the matches placer, then transform the car. 
     // the pole base on the placer.
     // second, place two placer base on the car, then transform them.
-
     if (newFangxiang == -1)
     {
         centerX = leftPlacer->getBoundsInParent().getCentreX() + FromInnerWheel + 50;
@@ -119,7 +118,7 @@ void MainContentComponent::placeTheCar (const int oldFangxiang, const int newFan
 }
 
 //=================================================================================================
-void MainContentComponent::mouseUp (const MouseEvent& e)
+void ParkingLot::mouseUp (const MouseEvent& e)
 {
     if (e.mods.isLeftButtonDown())
         setDirection (-1);
@@ -130,13 +129,13 @@ void MainContentComponent::mouseUp (const MouseEvent& e)
 }
 
 //=================================================================================================
-void MainContentComponent::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& wheel)
+void ParkingLot::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& wheel)
 {
     moveTheCar (wheel.deltaY > 0);
 }
 
 //=================================================================================================
-void MainContentComponent::moveTheCar (const bool backward)
+void ParkingLot::moveTheCar (const bool backward)
 {
     if (0 == car->getDirection())  // straight forward
     {
@@ -160,7 +159,16 @@ void MainContentComponent::moveTheCar (const bool backward)
 }
 
 //=================================================================================================
-void MainContentComponent::turnDirection (const bool shunshizhen, const bool turnLeft)
+void ParkingLot::reset ()
+{
+    leftPlacer->setVisible (false);
+    rightPlacer->setVisible (false);
+
+    resized();
+}
+
+//=================================================================================================
+void ParkingLot::turnDirection (const bool shunshizhen, const bool turnLeft)
 {
     pathHudu += shunshizhen ? EachHudu : -EachHudu;
 

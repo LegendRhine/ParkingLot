@@ -8,8 +8,8 @@
   ==============================================================================
 */
 
-#include "../JuceLibraryCode/JuceHeader.h"
-#include "MainComponent.h"
+#include "JuceHeader.h"
+#include "ParkingLot.h"
 
 
 //==============================================================================
@@ -66,7 +66,7 @@ public:
                                                     DocumentWindow::allButtons)
         {
             setUsingNativeTitleBar (true);
-            setContentOwned (new MainContentComponent(), true);
+            setContentOwned (new ParkingLot(), true);
 
 			setResizable (true, false);
 			setResizeLimits (900, 780, 3800, 3800);
