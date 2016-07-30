@@ -14,7 +14,7 @@
 MainContentComponent::MainContentComponent()
 	: pathHudu (0.0f)
 {
-	addAndMakeVisible (car = new Car (this));
+	addAndMakeVisible (car = new Car());
     addAndMakeVisible (leftPlacer = new PolePlacer());
     addAndMakeVisible (rightPlacer = new PolePlacer());
 
@@ -52,20 +52,12 @@ void MainContentComponent::resized ()
 }
 
 //=================================================================================================
-void MainContentComponent::moveTheCar (const bool shunshizhen, const bool turnLeft)
+void MainContentComponent::setDirection (const int newDirection)
 {
-    //todo...
+    const int oldFangxiang = car->getDirection();
 
-	pathHudu += shunshizhen ? EachHudu : -EachHudu;
-
-    const int x = turnLeft ? (car->getX() - FromInnerWheel)
-                           : (car->getRight() + FromInnerWheel);
-    const int y = car->getY() + 190;
-
-    AffineTransform aft (AffineTransform::rotation (pathHudu, float(x), float(y)));
-	car->setTransform (aft);
-    rightPlacer->setTransform (aft);
-    leftPlacer->setTransform (aft);
+    car->setDirection (newDirection);
+    placeTheCar (oldFangxiang, newDirection);
 }
 
 //=================================================================================================
@@ -104,5 +96,60 @@ void MainContentComponent::placeTheCar (const int oldFangxiang, const int newFan
     car->setTransform (aft);
     leftPlacer->setTransform (aft);
     rightPlacer->setTransform (aft);
+}
+
+//=================================================================================================
+void MainContentComponent::mouseUp (const MouseEvent& e)
+{
+    if (e.mods.isLeftButtonDown())
+        setDirection (-1);
+    else if (e.mods.isRightButtonDown())
+        setDirection (1);
+    else if (e.mods.isMiddleButtonDown())
+        setDirection (0);
+}
+
+//=================================================================================================
+void MainContentComponent::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& wheel)
+{
+    moveTheCar (wheel.deltaY > 0);
+}
+
+//=================================================================================================
+void MainContentComponent::moveTheCar (const bool backward)
+{
+    if (0 == car->getDirection())  // straight forward
+    {
+        const int dist (backward ? StraightStep : -StraightStep);
+        car->setTopLeftPosition (car->getX(), car->getY() + dist);
+
+        Component* leftPole (getPlacer (true));
+        Component* rightPole (getPlacer (false));
+
+        leftPole->setTopLeftPosition (leftPole->getX(), leftPole->getY() + dist);
+        rightPole->setTopLeftPosition (rightPole->getX(), rightPole->getY() + dist);
+    }
+    else if (-1 == car->getDirection()) // -1 is turn left
+    {
+        turnDirection (backward, true);
+    }
+    else  if (1 == car->getDirection()) // 1 is turn right
+    {
+        turnDirection (!backward, false);
+    }
+}
+
+//=================================================================================================
+void MainContentComponent::turnDirection (const bool shunshizhen, const bool turnLeft)
+{
+    pathHudu += shunshizhen ? EachHudu : -EachHudu;
+
+    const int x = turnLeft ? (car->getX() - FromInnerWheel) : (car->getRight() + FromInnerWheel);
+    const int y = car->getY() + 190;
+
+    AffineTransform aft (AffineTransform::rotation (pathHudu, float(x), float(y)));
+    car->setTransform (aft);
+    rightPlacer->setTransform (aft);
+    leftPlacer->setTransform (aft);
 }
 

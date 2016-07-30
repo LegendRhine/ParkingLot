@@ -13,30 +13,26 @@
 
 #include "JuceHeader.h"
 
-class MainContentComponent;
-
 //==============================================================================
-/*
-*/
+/** The car for training. */
 class Car    : public Component
 {
 public:
-    Car (MainContentComponent* mainComp);
+    Car ();
     ~Car() { }
 
     void paint (Graphics&) override;
-
-	void move (const bool backward);
+    bool hitTest (int, int) override                { return false; }
     void reset();
 
-	virtual void mouseUp (const MouseEvent& event) override;
-	virtual void mouseWheelMove (const MouseEvent& , const MouseWheelDetails& ) override;
+    /** -1: turn left, 0: straight, 1: turn right */
+    void setDirection (const int newDirection);
+    const int getDirection() const                  { return direction; }
 
 private:
-	MainContentComponent* mainComp;
-
-	// -1: left; 0:center; 1: right. both the angle of left and right are the same: 36.87.
-	int fangxiang; 
+	// -1: left; 0:center; 1: right. 
+    // both the angle of left and right are the same: 36.87.
+	int direction; 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Car)
 };

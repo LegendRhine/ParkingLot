@@ -11,6 +11,8 @@
 #ifndef COMMONDATA_H_INCLUDED
 #define COMMONDATA_H_INCLUDED
 
+#include "JuceHeader.h"
+
 static const int FromInnerWheel = 110;
 static const float EachHudu     = std::asin (2.0f * float_Pi / 220.0f);
 static const int StraightStep   = 6;
