@@ -43,7 +43,7 @@ void TrainingCar::paint (Graphics& g)
         
     // driver
     g.setColour (Colours::black.withAlpha (0.65f));
-    g.fillEllipse (15.0f, 100.0f, 20.0f, 30.0f);
+    g.fillEllipse (15.0f, 100.0f, 16.0f, 22.0f);
 
     // links
     g.drawHorizontalLine (45, 15.0f, getWidth () - 15.0f);

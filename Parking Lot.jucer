@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="sFpOqq" name="Parking Lot" projectType="guiapp" version="1.0.0"
-              bundleIdentifier="com.yourcompany.ParkingLot" includeBinaryInAppConfig="1"
+              bundleIdentifier="com.underwaySoft.ParkingLot" includeBinaryInAppConfig="1"
               jucerVersion="4.2.3">
   <MAINGROUP id="HITcTa" name="Parking Lot">
     <GROUP id="{662A7673-0387-25A7-C779-2B1AF86634D2}" name="Source">
+      <GROUP id="{D4BF5535-797D-031C-A9DE-A85EA0265543}" name="BinaryData">
+        <FILE id="cTG37C" name="icon.png" compile="0" resource="1" file="Source/BinaryData/icon.png"/>
+      </GROUP>
       <FILE id="PO10uK" name="CommonData.h" compile="0" resource="0" file="Source/CommonData.h"/>
       <FILE id="jcVIvw" name="TrainingCar.cpp" compile="1" resource="0" file="Source/TrainingCar.cpp"/>
       <FILE id="oJgGhO" name="TrainingCar.h" compile="0" resource="0" file="Source/TrainingCar.h"/>
@@ -14,12 +17,12 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2015 targetFolder="Builds/VisualStudio2015">
+    <VS2015 targetFolder="Builds/VisualStudio2015" smallIcon="cTG37C" bigIcon="cTG37C">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
                        isDebug="1" optimisation="1" targetName="Parking Lot"/>
-        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="Parking Lot"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       isDebug="0" optimisation="2" targetName="Parking Lot"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../JUCE/modules"/>
