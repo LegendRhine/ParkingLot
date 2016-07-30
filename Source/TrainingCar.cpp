@@ -15,7 +15,7 @@
 TrainingCar::TrainingCar ()
 	: direction (0)
 {
-	setSize (100, 240);
+	setSize (CarWidth, CarLength);
 }
 
 //=================================================================================================
@@ -30,41 +30,45 @@ void TrainingCar::paint (Graphics& g)
 {    
     // whole car
     g.setColour (Colours::lightseagreen);
-	g.fillRoundedRectangle (getLocalBounds ().toFloat (), 15.0f);
+    g.fillRoundedRectangle (getLocalBounds ().toFloat (), 15.0f);
 
     // border
-	g.setColour (Colours::lightgrey);
-	g.drawRoundedRectangle (getLocalBounds ().toFloat (), 15.0f, 0.5f);
+    g.setColour (Colours::lightgrey);
+    g.drawRoundedRectangle (getLocalBounds ().toFloat (), 15.0f, 0.5f);
 
-	// driver
-	g.setColour (Colours::grey);
-	g.fillEllipse (15.0f, 100.0f, 20.0f, 30.0f);
+    // an identity arrow for forward direction
+    Line<float> arrowLine (getWidth() / 2.f, 35.f, getWidth() / 2.f, 15.f);
+    g.setColour (Colours::lightgrey.withAlpha (0.35f));
+    g.drawArrow (arrowLine, 6.f, 20.f, 15.f);
+        
+    // driver
+    g.setColour (Colours::black.withAlpha (0.65f));
+    g.fillEllipse (15.0f, 100.0f, 20.0f, 30.0f);
 
-	// links
-	g.setColour (Colours::black);
-	g.drawHorizontalLine (50, 10.0f, getWidth () - 10.0f);
-	g.drawHorizontalLine (190, 10.0f, getWidth () - 10.0f);
-	
-	// rear wheels
-	g.fillRect (5, 170, 10, 40);
-	g.fillRect (85, 170, 10, 40);
+    // links
+    g.drawHorizontalLine (45, 15.0f, getWidth () - 15.0f);
+    g.drawHorizontalLine (190, 15.0f, getWidth () - 15.0f);
 
-	// front wheels
-	if (0 == direction)
-	{
-		g.fillRect (2, 30, 10, 40);
-		g.fillRect (88, 30, 10, 40);
-	}
-	else if (-1 == direction)
-	{
-		g.drawLine (5.0f, 32.0f, 23.0f, 69.0f, 10.0f);
-		g.drawLine (78.0f, 32.0f, 96.0f, 69.0f, 10.0f);
-	}
-	else if (1 == direction)
-	{
-		g.drawLine (23.0f, 32.0f, 5.0f, 69.0f, 10.0f);
-		g.drawLine (96.0f, 32.0f, 78.0f, 69.0f, 10.0f);
-	}
+    // rear wheels
+    g.fillRect (6, 170, 10, 40);
+    g.fillRect (84, 170, 10, 40);
+
+    // front wheels
+    if (0 == direction)
+    {
+        g.fillRect (7, 25, 10, 40);
+        g.fillRect (83, 25, 10, 40);
+    }
+    else if (-1 == direction)
+    {
+        g.drawLine (5.0f, 27.0f, 23.0f, 64.0f, 10.0f);
+        g.drawLine (78.0f, 27.0f, 96.0f, 64.0f, 10.0f);
+    }
+    else if (1 == direction)
+    {
+        g.drawLine (23.0f, 27.0f, 5.0f, 64.0f, 10.0f);
+        g.drawLine (96.0f, 27.0f, 78.0f, 64.0f, 10.0f);
+    }
 }
 
 //=================================================================================================

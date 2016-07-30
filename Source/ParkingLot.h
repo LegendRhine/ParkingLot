@@ -24,14 +24,14 @@ public:
 
     virtual void paint (Graphics& g) override
     {
-        g.setColour (Colours::red.withAlpha (0.65f));
+        g.setColour (Colours::lightgreen.withAlpha (0.65f));
         g.fillEllipse (0.f, 0.f, float(wh), float(wh));
     }
 
     bool hitTest (int, int) override            { return false; }
 
 private:
-    const int wh = 20;
+    const int wh = 10;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PolePlacer)
 };
