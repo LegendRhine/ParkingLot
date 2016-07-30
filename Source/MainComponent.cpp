@@ -15,8 +15,8 @@ MainContentComponent::MainContentComponent()
 	: pathHudu (0.0f)
 {
 	addAndMakeVisible (car = new Car());
-    addAndMakeVisible (leftPlacer = new PolePlacer());
-    addAndMakeVisible (rightPlacer = new PolePlacer());
+    addChildComponent (leftPlacer = new PolePlacer());
+    addChildComponent (rightPlacer = new PolePlacer());
 
     setSize (1200, 800);
 }
@@ -58,6 +58,26 @@ void MainContentComponent::setDirection (const int newDirection)
 
     car->setDirection (newDirection);
     placeTheCar (oldFangxiang, newDirection);
+
+    if (newDirection == 0)
+    {
+        leftPlacer->setVisible (false);
+        rightPlacer->setVisible (false);
+    }
+    else if (newDirection == -1)
+    {
+        leftPlacer->setVisible (true);
+        rightPlacer->setVisible (false);
+
+        leftPlacer->toFront(false);
+    }
+    else if (newDirection == 1)
+    {
+        leftPlacer->setVisible (false);
+        rightPlacer->setVisible (true);
+
+        rightPlacer->toFront(false);
+    }
 }
 
 //=================================================================================================
