@@ -14,6 +14,8 @@
 class TrainingCar;
 
 //=========================================================================
+/** This class will show the Axis-point when turning. 
+*/
 class PolePlacer : public Component
 {
 public:
@@ -35,7 +37,11 @@ private:
 };
 
 //==============================================================================
-/** The parking lot. holds the car and control it.  */
+/** The parking lot which holds few resting cars, the training-car and controls it. 
+
+    Mouse click (left/right/middle) for turning the direction.
+    Mouse wheel for back/forward the training-car.
+*/
 class ParkingLot   : public Component
 {
 public:

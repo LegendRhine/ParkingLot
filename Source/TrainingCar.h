@@ -14,7 +14,8 @@
 #include "JuceHeader.h"
 
 //==============================================================================
-/** The car for training. */
+/** Training-car which be held and controled by the parking-lot.
+*/
 class TrainingCar    : public Component
 {
 public:
@@ -25,13 +26,15 @@ public:
     bool hitTest (int, int) override                { return false; }
     void reset();
 
-    /** -1: turn left, 0: straight, 1: turn right */
+    /** The argument: -1: left-turning, 0: straight, 1: right-turning */
     void setDirection (const int newDirection);
-    const int getDirection() const                  { return direction; }
+
+    /** Return: -1: left-turning, 0: straight, 1: right-turning */
+    const int getDirection() const { return direction; }
 
 private:
 	// -1: left; 0:center; 1: right. 
-    // both the angle of left and right are the same: 36.87.
+    // both left-turning and right-turning are the same angle.
 	int direction; 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrainingCar)
