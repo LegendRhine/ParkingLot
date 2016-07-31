@@ -33,7 +33,7 @@ void ParkingLot::paint (Graphics& g)
 	g.fillRect (car->getBounds ().expanded (8));
 
 	g.setColour (Colours::darkgoldenrod);
-	g.fillRect (car->getBoundsInParent ().expanded (5));*/	
+	g.fillRect (car->getBoundsInParent ().expanded (5));	*/
 }
 //=========================================================================
 void ParkingLot::resized ()
@@ -46,9 +46,13 @@ void ParkingLot::resized ()
 
     leftPlacer->setTransform (AffineTransform());
     leftPlacer->setCentrePosition (car->getX() - FromInnerWheel, car->getY() + 190);
+    leftPlacer->setVisible (false);
 
     rightPlacer->setTransform (AffineTransform());
     rightPlacer->setCentrePosition (car->getRight() + FromInnerWheel, car->getY() + 190);
+    rightPlacer->setVisible (false);
+
+    getCurrentCheckPoints();
 }
 
 //=================================================================================================
@@ -83,38 +87,38 @@ void ParkingLot::setDirection (const int newDirection)
 //=================================================================================================
 void ParkingLot::placeTheCar (const int oldFangxiang, const int newFangxiang)
 {
-    if (newFangxiang == 0 || oldFangxiang == newFangxiang)  
-        return;
-
-    int centerX = 0;
-    int centerY = 0;
-    AffineTransform aft;
-
-    // First, place the car base on the matches placer, then transform the car. 
-    // the pole base on the placer.
-    // second, place two placer base on the car, then transform them.
-    if (newFangxiang == -1)
+    if (newFangxiang != 0 && oldFangxiang != newFangxiang)  
     {
-        centerX = leftPlacer->getBoundsInParent().getCentreX() + FromInnerWheel + 50;
-        centerY = leftPlacer->getBoundsInParent().getCentreY() - 70;        
-        aft = AffineTransform::rotation (pathHudu, 
-            centerX - FromInnerWheel - 50.0000001f, centerY + 70.0000001f);
+        int centerX = 0;
+        int centerY = 0;
+        AffineTransform aft;
+
+        // First, place the car base on the matches placer, then transform the car. 
+        // the pole base on the placer.
+        // second, place two placer base on the car, then transform them.
+        if (newFangxiang == -1)
+        {
+            centerX = leftPlacer->getBoundsInParent().getCentreX() + FromInnerWheel + 50;
+            centerY = leftPlacer->getBoundsInParent().getCentreY() - 70;
+            aft = AffineTransform::rotation (pathHudu,
+                centerX - FromInnerWheel - 50.0000001f, centerY + 70.0000001f);
+        }
+        else
+        {
+            centerX = rightPlacer->getBoundsInParent().getCentreX() - FromInnerWheel - 50;
+            centerY = rightPlacer->getBoundsInParent().getCentreY() - 70;
+            aft = AffineTransform::rotation (pathHudu,
+                centerX + FromInnerWheel + 50.0000001f, centerY + 70.0000001f);
+        }
+
+        car->setCentrePosition (centerX, centerY);
+        leftPlacer->setCentrePosition (car->getX() - FromInnerWheel, car->getY() + 190);
+        rightPlacer->setCentrePosition (car->getRight() + FromInnerWheel, car->getY() + 190);
+
+        car->setTransform (aft);
+        leftPlacer->setTransform (aft);
+        rightPlacer->setTransform (aft);
     }
-    else
-    {
-        centerX = rightPlacer->getBoundsInParent().getCentreX() - FromInnerWheel - 50;
-        centerY = rightPlacer->getBoundsInParent().getCentreY() - 70;        
-        aft = AffineTransform::rotation (pathHudu, 
-            centerX + FromInnerWheel + 50.0000001f, centerY + 70.0000001f);
-    }    
-
-    car->setCentrePosition (centerX, centerY);
-    leftPlacer->setCentrePosition (car->getX() - FromInnerWheel, car->getY() + 190);
-    rightPlacer->setCentrePosition (car->getRight() + FromInnerWheel, car->getY() + 190);
-
-    car->setTransform (aft);
-    leftPlacer->setTransform (aft);
-    rightPlacer->setTransform (aft);
 }
 
 //=================================================================================================
@@ -142,11 +146,8 @@ void ParkingLot::moveTheCar (const bool backward)
         const int dist (backward ? StraightStep : -StraightStep);
         car->setTopLeftPosition (car->getX(), car->getY() + dist);
 
-        Component* leftPole (getPlacer (true));
-        Component* rightPole (getPlacer (false));
-
-        leftPole->setTopLeftPosition (leftPole->getX(), leftPole->getY() + dist);
-        rightPole->setTopLeftPosition (rightPole->getX(), rightPole->getY() + dist);
+        leftPlacer->setTopLeftPosition (leftPlacer->getX(), leftPlacer->getY() + dist);
+        rightPlacer->setTopLeftPosition (rightPlacer->getX(), rightPlacer->getY() + dist);
     }
     else if (-1 == car->getDirection()) // -1 is turn left
     {
@@ -156,6 +157,81 @@ void ParkingLot::moveTheCar (const bool backward)
     {
         turnDirection (!backward, false);
     }
+
+    getCurrentCheckPoints();
+
+    // check crash...
+    if (isCrashed())
+    {
+        AlertWindow::showMessageBox (AlertWindow::WarningIcon, "Warning", "Crashed!!");
+
+        moveTheCar (!backward);
+    }
+}
+
+//=================================================================================================
+const bool ParkingLot::isCrashed ()
+{
+    // 用24个点做检测，位于车身外1像素处，考虑到四个圆角
+    // 24个点逐一进行AffineTransform，得到屏幕所显的位置，而后进行检测
+    // 检测时需排除自身 Component* getComponentAt (Point<int> position) ！= car
+
+    AffineTransform atf (car->getTransform());
+
+    for (int i = checkPoints.size(); --i >= 0; )
+    {
+        Point<int> p (checkPoints[i].transformedBy (atf));
+
+        if (!contains (p)/* || getComponentAt (p) != nullptr*/)
+            return true;
+    }
+
+    return false;
+}
+
+//=================================================================================================
+void ParkingLot::getCurrentCheckPoints ()
+{
+    checkPoints.clearQuick();
+
+    // add 24 points of the car for crash-check
+    const int x = car->getX();
+    const int y = car->getY();
+    const int w = car->getWidth();
+    const int h = car->getHeight();
+    const int r = car->getRight();
+    const int b = car->getBottom();
+
+    // 4 conners
+    checkPoints.add (Point<int> (x, y - 1));
+    checkPoints.add (Point<int> (r, y - 1));
+    checkPoints.add (Point<int> (r, b + 1));
+    checkPoints.add (Point<int> (x, b + 1));
+
+    // 4 sides
+    checkPoints.add (Point<int> (x + w / 4, y - 1));
+    checkPoints.add (Point<int> (x + w / 2, y - 1));
+    checkPoints.add (Point<int> (r - w / 4, y - 1));
+
+    checkPoints.add (Point<int> (x + w / 4, b + 1));
+    checkPoints.add (Point<int> (x + w / 2, b + 1));
+    checkPoints.add (Point<int> (r - w / 4, b + 1));
+
+    checkPoints.add (Point<int> (x - 1, y + h / 8));
+    checkPoints.add (Point<int> (x - 1, y + h / 4));
+    checkPoints.add (Point<int> (x - 1, y + h * 3 / 8));
+    checkPoints.add (Point<int> (x - 1, y + h / 2));
+    checkPoints.add (Point<int> (x - 1, b - h * 3 / 8));
+    checkPoints.add (Point<int> (x - 1, b - h / 4));
+    checkPoints.add (Point<int> (x - 1, b - h / 8));
+
+    checkPoints.add (Point<int> (r + 1, y + h / 8));
+    checkPoints.add (Point<int> (r + 1, y + h / 4));
+    checkPoints.add (Point<int> (r + 1, y + h * 3 / 8));
+    checkPoints.add (Point<int> (r + 1, y + h / 2));
+    checkPoints.add (Point<int> (r + 1, b - h * 3 / 8));
+    checkPoints.add (Point<int> (r + 1, b - h / 4));
+    checkPoints.add (Point<int> (r + 1, b - h / 8));
 }
 
 //=================================================================================================

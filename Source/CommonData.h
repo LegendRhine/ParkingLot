@@ -17,7 +17,7 @@
 static const int CarWidth       = 100;
 static const int CarLength      = 240;
 static const int FromInnerWheel = 110;
-static const float EachHudu     = std::asin (2.0f * float_Pi / 220.0f);
+static const float EachHudu     = 0.02f;
 static const int StraightStep   = 6;
 
 

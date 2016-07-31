@@ -55,7 +55,7 @@ public:
     /** -1: turn left, 0: straight, 1: turn right */
     void setDirection (const int newDirection);
     void moveTheCar (const bool backward);
-
+    
     void reset();
     
     virtual void mouseUp (const MouseEvent& event) override;
@@ -65,12 +65,19 @@ private:
     //==============================================================================
     void turnDirection (const bool shunshizhen, const bool turnLeft);
     void placeTheCar (const int oldFangxiang, const int newFangxiang);
-    PolePlacer* getPlacer (const bool isLeft) { return isLeft ? leftPlacer : rightPlacer; }
 
+    void getCurrentCheckPoints();
+
+    /** Return true if the training-car crashed with something (border or resting-cars, etc.) */
+    const bool isCrashed();
+    
+    //=========================================================================
     ScopedPointer<TrainingCar> car;
     ScopedPointer<PolePlacer> leftPlacer, rightPlacer;
 
 	float pathHudu;
+
+    Array<Point<int>> checkPoints;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParkingLot)
 };
