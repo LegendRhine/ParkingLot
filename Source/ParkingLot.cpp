@@ -163,26 +163,24 @@ void ParkingLot::moveTheCar (const bool backward)
     // check crash...
     if (isCrashed())
     {
-        AlertWindow::showMessageBox (AlertWindow::WarningIcon, "Warning", "Crashed!!");
-
-        moveTheCar (!backward);
+        if (AlertWindow::showNativeDialogBox ("Warning", "Crashed!!", true))
+            moveTheCar (!backward);
+        else
+            reset();
     }
 }
 
 //=================================================================================================
 const bool ParkingLot::isCrashed ()
 {
-    // 用24个点做检测，位于车身外1像素处，考虑到四个圆角
-    // 24个点逐一进行AffineTransform，得到屏幕所显的位置，而后进行检测
-    // 检测时需排除自身 Component* getComponentAt (Point<int> position) ！= car
-
     AffineTransform atf (car->getTransform());
 
     for (int i = checkPoints.size(); --i >= 0; )
     {
         Point<int> p (checkPoints[i].transformedBy (atf));
+        Component* comp = getComponentAt (p);
 
-        if (!contains (p)/* || getComponentAt (p) != nullptr*/)
+        if (!contains (p) || (comp != nullptr && comp != this))
             return true;
     }
 

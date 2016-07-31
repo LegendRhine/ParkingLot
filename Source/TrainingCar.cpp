@@ -36,10 +36,10 @@ void TrainingCar::paint (Graphics& g)
     g.setColour (Colours::lightgrey);
     g.drawRoundedRectangle (getLocalBounds ().toFloat (), 15.0f, 0.5f);
 
-    // an identity arrow for forward direction
-    Line<float> arrowLine (getWidth() / 2.f, 35.f, getWidth() / 2.f, 15.f);
-    g.setColour (Colours::lightgrey.withAlpha (0.35f));
-    g.drawArrow (arrowLine, 6.f, 20.f, 15.f);
+    // an identity for forward direction
+    g.setColour (Colours::lightgrey.withAlpha (0.45f));
+    g.setFont (20.0f);
+    g.drawSingleLineText ("S", getWidth() / 2 - 6, 30);
         
     // driver
     g.setColour (Colours::black.withAlpha (0.65f));
