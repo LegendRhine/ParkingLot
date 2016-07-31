@@ -9,11 +9,13 @@
         <FILE id="cTG37C" name="icon.png" compile="0" resource="1" file="Source/BinaryData/icon.png"/>
       </GROUP>
       <FILE id="PO10uK" name="CommonData.h" compile="0" resource="0" file="Source/CommonData.h"/>
-      <FILE id="jcVIvw" name="TrainingCar.cpp" compile="1" resource="0" file="Source/TrainingCar.cpp"/>
-      <FILE id="oJgGhO" name="TrainingCar.h" compile="0" resource="0" file="Source/TrainingCar.h"/>
+      <FILE id="znSm56" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="wNt6U5" name="ParkingLot.cpp" compile="1" resource="0" file="Source/ParkingLot.cpp"/>
       <FILE id="lnpPJj" name="ParkingLot.h" compile="0" resource="0" file="Source/ParkingLot.h"/>
-      <FILE id="znSm56" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="GhK5rM" name="RestingCar.cpp" compile="1" resource="0" file="Source/RestingCar.cpp"/>
+      <FILE id="LJ0RQE" name="RestingCar.h" compile="0" resource="0" file="Source/RestingCar.h"/>
+      <FILE id="jcVIvw" name="TrainingCar.cpp" compile="1" resource="0" file="Source/TrainingCar.cpp"/>
+      <FILE id="oJgGhO" name="TrainingCar.h" compile="0" resource="0" file="Source/TrainingCar.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

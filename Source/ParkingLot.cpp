@@ -6,15 +6,16 @@
   ==============================================================================
 */
 
+#include "CommonData.h"
 #include "ParkingLot.h"
 #include "TrainingCar.h"
-#include "CommonData.h"
+#include "RestingCar.h"
 
 //==============================================================================
 ParkingLot::ParkingLot()
 	: pathHudu (0.0f)
 {
-	addAndMakeVisible (car = new TrainingCar());
+	addAndMakeVisible (trainingCar = new TrainingCar());
     addChildComponent (leftPlacer = new PolePlacer());
     addChildComponent (rightPlacer = new PolePlacer());
 
@@ -40,27 +41,28 @@ void ParkingLot::resized ()
 {
     pathHudu = 0.0f;
 
-    car->setTransform (AffineTransform());
-	car->setCentreRelative (0.5f, 0.5f);
-    car->reset();
+    trainingCar->setTransform (AffineTransform());
+	trainingCar->setCentreRelative (0.5f, 0.5f);
+    trainingCar->reset();
 
     leftPlacer->setTransform (AffineTransform());
-    leftPlacer->setCentrePosition (car->getX() - FromInnerWheel, car->getY() + 190);
+    leftPlacer->setCentrePosition (trainingCar->getX() - FromInnerWheel, trainingCar->getY() + 190);
     leftPlacer->setVisible (false);
 
     rightPlacer->setTransform (AffineTransform());
-    rightPlacer->setCentrePosition (car->getRight() + FromInnerWheel, car->getY() + 190);
+    rightPlacer->setCentrePosition (trainingCar->getRight() + FromInnerWheel, trainingCar->getY() + 190);
     rightPlacer->setVisible (false);
 
     getCurrentCheckPoints();
+    arrangeRestingCars();
 }
 
 //=================================================================================================
 void ParkingLot::setDirection (const int newDirection)
 {
-    const int oldFangxiang = car->getDirection();
+    const int oldFangxiang = trainingCar->getDirection();
 
-    car->setDirection (newDirection);
+    trainingCar->setDirection (newDirection);
     placeTheCar (oldFangxiang, newDirection);
 
     if (newDirection == 0)
@@ -111,11 +113,11 @@ void ParkingLot::placeTheCar (const int oldFangxiang, const int newFangxiang)
                 centerX + FromInnerWheel + 50.0000001f, centerY + 70.0000001f);
         }
 
-        car->setCentrePosition (centerX, centerY);
-        leftPlacer->setCentrePosition (car->getX() - FromInnerWheel, car->getY() + 190);
-        rightPlacer->setCentrePosition (car->getRight() + FromInnerWheel, car->getY() + 190);
+        trainingCar->setCentrePosition (centerX, centerY);
+        leftPlacer->setCentrePosition (trainingCar->getX() - FromInnerWheel, trainingCar->getY() + 190);
+        rightPlacer->setCentrePosition (trainingCar->getRight() + FromInnerWheel, trainingCar->getY() + 190);
 
-        car->setTransform (aft);
+        trainingCar->setTransform (aft);
         leftPlacer->setTransform (aft);
         rightPlacer->setTransform (aft);
     }
@@ -141,19 +143,19 @@ void ParkingLot::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& whe
 //=================================================================================================
 void ParkingLot::moveTheCar (const bool backward)
 {
-    if (0 == car->getDirection())  // straight forward
+    if (0 == trainingCar->getDirection())  // straight forward
     {
         const int dist (backward ? StraightStep : -StraightStep);
-        car->setTopLeftPosition (car->getX(), car->getY() + dist);
+        trainingCar->setTopLeftPosition (trainingCar->getX(), trainingCar->getY() + dist);
 
         leftPlacer->setTopLeftPosition (leftPlacer->getX(), leftPlacer->getY() + dist);
         rightPlacer->setTopLeftPosition (rightPlacer->getX(), rightPlacer->getY() + dist);
     }
-    else if (-1 == car->getDirection()) // -1 is turn left
+    else if (-1 == trainingCar->getDirection()) // -1 is turn left
     {
         turnDirection (backward, true);
     }
-    else  if (1 == car->getDirection()) // 1 is turn right
+    else  if (1 == trainingCar->getDirection()) // 1 is turn right
     {
         turnDirection (!backward, false);
     }
@@ -173,7 +175,7 @@ void ParkingLot::moveTheCar (const bool backward)
 //=================================================================================================
 const bool ParkingLot::isCrashed ()
 {
-    AffineTransform atf (car->getTransform());
+    AffineTransform atf (trainingCar->getTransform());
 
     for (int i = checkPoints.size(); --i >= 0; )
     {
@@ -193,12 +195,12 @@ void ParkingLot::getCurrentCheckPoints ()
     checkPoints.clearQuick();
 
     // add 24 points of the car for crash-check
-    const int x = car->getX();
-    const int y = car->getY();
-    const int w = car->getWidth();
-    const int h = car->getHeight();
-    const int r = car->getRight();
-    const int b = car->getBottom();
+    const int x = trainingCar->getX();
+    const int y = trainingCar->getY();
+    const int w = trainingCar->getWidth();
+    const int h = trainingCar->getHeight();
+    const int r = trainingCar->getRight();
+    const int b = trainingCar->getBottom();
 
     // 4 conners
     checkPoints.add (Point<int> (x, y - 1));
@@ -233,7 +235,15 @@ void ParkingLot::getCurrentCheckPoints ()
 }
 
 //=================================================================================================
-void ParkingLot::reset ()
+void ParkingLot::arrangeRestingCars()
+{
+    restingCars.clear (true);
+
+
+}
+
+//=================================================================================================
+void ParkingLot::reset()
 {
     leftPlacer->setVisible (false);
     rightPlacer->setVisible (false);
@@ -246,11 +256,11 @@ void ParkingLot::turnDirection (const bool shunshizhen, const bool turnLeft)
 {
     pathHudu += shunshizhen ? EachHudu : -EachHudu;
 
-    const int x = turnLeft ? (car->getX() - FromInnerWheel) : (car->getRight() + FromInnerWheel);
-    const int y = car->getY() + 190;
+    const int x = turnLeft ? (trainingCar->getX() - FromInnerWheel) : (trainingCar->getRight() + FromInnerWheel);
+    const int y = trainingCar->getY() + 190;
 
     AffineTransform aft (AffineTransform::rotation (pathHudu, float(x), float(y)));
-    car->setTransform (aft);
+    trainingCar->setTransform (aft);
     rightPlacer->setTransform (aft);
     leftPlacer->setTransform (aft);
 }

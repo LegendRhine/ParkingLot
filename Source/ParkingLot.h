@@ -6,12 +6,13 @@
   ==============================================================================
 */
 
-#ifndef MAINCOMPONENT_H_INCLUDED
-#define MAINCOMPONENT_H_INCLUDED
+#ifndef PARKINGLOT_H_INCLUDED
+#define PARKINGLOT_H_INCLUDED
 
 #include "JuceHeader.h"
 
 class TrainingCar;
+class RestingCar;
 
 //=========================================================================
 /** This class will show the Axis-point when turning. 
@@ -65,22 +66,23 @@ private:
     //==============================================================================
     void turnDirection (const bool shunshizhen, const bool turnLeft);
     void placeTheCar (const int oldFangxiang, const int newFangxiang);
-
     void getCurrentCheckPoints();
+    void arrangeRestingCars();
 
     /** Return true if the training-car crashed with something (border or resting-cars, etc.) */
     const bool isCrashed();
     
     //=========================================================================
-    ScopedPointer<TrainingCar> car;
     ScopedPointer<PolePlacer> leftPlacer, rightPlacer;
+    ScopedPointer<TrainingCar> trainingCar;
 
 	float pathHudu;
 
     Array<Point<int>> checkPoints;
+    OwnedArray<RestingCar> restingCars;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParkingLot)
 };
 
 
-#endif  // MAINCOMPONENT_H_INCLUDED
+#endif  // PARKINGLOT_H_INCLUDED

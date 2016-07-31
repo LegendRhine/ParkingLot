@@ -8,8 +8,8 @@
   ==============================================================================
 */
 
-#ifndef CAR_H_INCLUDED
-#define CAR_H_INCLUDED
+#ifndef TRAININGCAR_H_INCLUDED
+#define TRAININGCAR_H_INCLUDED
 
 #include "JuceHeader.h"
 
@@ -41,4 +41,4 @@ private:
 };
 
 
-#endif  // CAR_H_INCLUDED
+#endif  // TRAININGCAR_H_INCLUDED
