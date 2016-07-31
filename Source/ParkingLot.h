@@ -68,8 +68,6 @@ private:
     void placeTheCar (const int oldFangxiang, const int newFangxiang);
     void getCurrentCheckPoints();
     void arrangeRestingCars();
-
-    /** Return true if the training-car crashed with something (border or resting-cars, etc.) */
     const bool isCrashed();
     
     //=========================================================================
@@ -80,6 +78,7 @@ private:
 
     Array<Point<int>> checkPoints;
     OwnedArray<RestingCar> restingCars;
+    Path leftFrontPath, rightFrontPath, leftRearPath, rightRearPath;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParkingLot)
 };

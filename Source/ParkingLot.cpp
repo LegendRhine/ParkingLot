@@ -30,6 +30,15 @@ void ParkingLot::paint (Graphics& g)
 {
     g.fillAll (Colours::darkgrey);
 
+    // draw path...
+    g.setColour (Colours::lightgreen);
+    g.strokePath (leftFrontPath, PathStrokeType (1.0f));
+    g.strokePath (rightFrontPath, PathStrokeType (1.0f));
+
+    g.setColour (Colours::lightpink);
+    g.strokePath (leftRearPath, PathStrokeType (1.0f));
+    g.strokePath (rightRearPath, PathStrokeType (1.0f));
+
 	/*g.setColour (Colours::darkred);
 	g.fillRect (car->getBounds ().expanded (8));
 
@@ -55,6 +64,19 @@ void ParkingLot::resized ()
 
     getCurrentCheckPoints();
     arrangeRestingCars();
+
+    // path...
+    leftFrontPath.clear();
+    rightFrontPath.clear();
+    leftRearPath.clear();
+    rightRearPath.clear();
+
+    //repaint();
+
+    leftFrontPath.startNewSubPath (checkPoints[0].toFloat());
+    rightFrontPath.startNewSubPath (checkPoints[1].toFloat());
+    leftRearPath.startNewSubPath (checkPoints[2].toFloat());
+    rightRearPath.startNewSubPath (checkPoints[3].toFloat());
 }
 
 //=================================================================================================
@@ -162,7 +184,6 @@ void ParkingLot::moveTheCar (const bool backward)
 
     getCurrentCheckPoints();
 
-    // check crash...
     if (isCrashed())
     {
         if (AlertWindow::showNativeDialogBox ("Warning", "Crashed!!", true))
@@ -170,10 +191,21 @@ void ParkingLot::moveTheCar (const bool backward)
         else
             reset();
     }
+    else  // link path point and draw them...
+    {
+        AffineTransform atf (trainingCar->getTransform());
+
+        leftFrontPath.lineTo (checkPoints[0].toFloat().transformedBy (atf));
+        rightFrontPath.lineTo (checkPoints[1].toFloat().transformedBy (atf));
+        leftRearPath.lineTo (checkPoints[2].toFloat().transformedBy (atf));
+        rightRearPath.lineTo (checkPoints[3].toFloat().transformedBy (atf));
+
+        repaint();
+    }
 }
 
 //=================================================================================================
-const bool ParkingLot::isCrashed ()
+const bool ParkingLot::isCrashed()
 {
     AffineTransform atf (trainingCar->getTransform());
 
@@ -182,7 +214,7 @@ const bool ParkingLot::isCrashed ()
         Point<int> p (checkPoints[i].transformedBy (atf));
         Component* comp = getComponentAt (p);
 
-        if (!contains (p) || (comp != nullptr && comp != this))
+        if (!contains (p) || (comp != nullptr && comp != this && comp != trainingCar))
             return true;
     }
 
@@ -203,10 +235,10 @@ void ParkingLot::getCurrentCheckPoints ()
     const int b = trainingCar->getBottom();
 
     // 4 conners
-    checkPoints.add (Point<int> (x, y - 1));
-    checkPoints.add (Point<int> (r, y - 1));
-    checkPoints.add (Point<int> (r, b + 1));
-    checkPoints.add (Point<int> (x, b + 1));
+    checkPoints.add (Point<int> (x + 5, y + 5));
+    checkPoints.add (Point<int> (r - 5, y + 5));
+    checkPoints.add (Point<int> (x + 5, b - 5));
+    checkPoints.add (Point<int> (r - 5, b - 5));
 
     // 4 sides
     checkPoints.add (Point<int> (x + w / 4, y - 1));
