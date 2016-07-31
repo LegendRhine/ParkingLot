@@ -32,12 +32,12 @@ void ParkingLot::paint (Graphics& g)
 
     // draw path...
     g.setColour (Colours::lightgreen);
-    g.strokePath (leftFrontPath, PathStrokeType (1.0f));
-    g.strokePath (rightFrontPath, PathStrokeType (1.0f));
+    g.strokePath (leftFrontPath, PathStrokeType (0.5f));
+    g.strokePath (rightFrontPath, PathStrokeType (0.5f));
 
     g.setColour (Colours::lightpink);
-    g.strokePath (leftRearPath, PathStrokeType (1.0f));
-    g.strokePath (rightRearPath, PathStrokeType (1.0f));
+    g.strokePath (leftRearPath, PathStrokeType (0.5f));
+    g.strokePath (rightRearPath, PathStrokeType (0.5f));
 
 	/*g.setColour (Colours::darkred);
 	g.fillRect (car->getBounds ().expanded (8));
@@ -70,8 +70,6 @@ void ParkingLot::resized ()
     rightFrontPath.clear();
     leftRearPath.clear();
     rightRearPath.clear();
-
-    //repaint();
 
     leftFrontPath.startNewSubPath (checkPoints[0].toFloat());
     rightFrontPath.startNewSubPath (checkPoints[1].toFloat());
@@ -234,11 +232,17 @@ void ParkingLot::getCurrentCheckPoints ()
     const int r = trainingCar->getRight();
     const int b = trainingCar->getBottom();
 
-    // 4 conners
-    checkPoints.add (Point<int> (x + 5, y + 5));
-    checkPoints.add (Point<int> (r - 5, y + 5));
-    checkPoints.add (Point<int> (x + 5, b - 5));
-    checkPoints.add (Point<int> (r - 5, b - 5));
+    // front conners
+    checkPoints.add (Point<int> (x + 3, y + 3));
+    checkPoints.add (Point<int> (r - 3, y + 3));
+
+    // rear path point
+    checkPoints.add (Point<int> (x, b - h / 4)); 
+    checkPoints.add (Point<int> (r, b - h / 4)); 
+
+    // rear conners
+    checkPoints.add (Point<int> (x + 4, b - 4));
+    checkPoints.add (Point<int> (r - 4, b - 4));
 
     // 4 sides
     checkPoints.add (Point<int> (x + w / 4, y - 1));
@@ -254,7 +258,6 @@ void ParkingLot::getCurrentCheckPoints ()
     checkPoints.add (Point<int> (x - 1, y + h * 3 / 8));
     checkPoints.add (Point<int> (x - 1, y + h / 2));
     checkPoints.add (Point<int> (x - 1, b - h * 3 / 8));
-    checkPoints.add (Point<int> (x - 1, b - h / 4));
     checkPoints.add (Point<int> (x - 1, b - h / 8));
 
     checkPoints.add (Point<int> (r + 1, y + h / 8));
@@ -262,7 +265,6 @@ void ParkingLot::getCurrentCheckPoints ()
     checkPoints.add (Point<int> (r + 1, y + h * 3 / 8));
     checkPoints.add (Point<int> (r + 1, y + h / 2));
     checkPoints.add (Point<int> (r + 1, b - h * 3 / 8));
-    checkPoints.add (Point<int> (r + 1, b - h / 4));
     checkPoints.add (Point<int> (r + 1, b - h / 8));
 }
 
