@@ -353,6 +353,8 @@ void ParkingLot::reset()
     leftPlacer->setVisible (false);
     rightPlacer->setVisible (false);
 
+    trainingCar->setAlpha (alphaOfThings);
+
     resized();
     repaint();
 }

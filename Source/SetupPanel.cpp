@@ -62,16 +62,18 @@ void SetupPanel::paint (Graphics& g)
 void SetupPanel::resized()
 {
     // reset button
-    resetBt->setBounds (getWidth() - 100, getHeight() - 30, 80, 25);
+    resetBt->setBounds (getWidth() - 90, getHeight() - 30, 80, 25);
 
     // pathes buttons..
-    leftFrontPathBt->setBounds (20, 40, 100, 25);
+    const int leftGap = 15;
+
+    leftFrontPathBt->setBounds (leftGap, 70, 100, 25);
     rightFrontPathBt->setBounds (leftFrontPathBt->getRight() + 5, leftFrontPathBt->getY(), 100, 25);
-    leftRearPathBt->setBounds (20, leftFrontPathBt->getBottom() + 5, 100, 25);
+    leftRearPathBt->setBounds (leftGap, leftFrontPathBt->getBottom() + 5, 100, 25);
     rightRearPathBt->setBounds (leftRearPathBt->getRight() + 5, leftRearPathBt->getY(), 100, 25);
 
     // others..
-    showPoleBt->setBounds (20, leftRearPathBt->getBottom() + 20, 100, 25);
+    showPoleBt->setBounds (leftGap, leftRearPathBt->getBottom() + 20, 100, 25);
     hideCarBt->setBounds (showPoleBt->getRight() + 5, showPoleBt->getY(), 100, 25);
 }
 
