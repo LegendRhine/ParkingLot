@@ -206,9 +206,9 @@ void ParkingLot::moveTheCar (const bool backward)
 
     if (isCrashed())
     {
-        if (AlertWindow::showNativeDialogBox (L"撞了!! 撞了!!",
+        if (AlertWindow::showNativeDialogBox (L"撞了!!",
                                               L"点击[确定]按钮或直接回车继续玩。\n"
-                                              L"点击[取消]按钮车辆复位重新开始。",
+                                              L"点击[取消]按钮复位车辆重新开始。",
                                               true))
             moveTheCar (!backward);
         else
