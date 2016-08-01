@@ -53,9 +53,18 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
+
     /** -1: turn left, 0: straight, 1: turn right */
     void setDirection (const int newDirection);
     void moveTheCar (const bool backward);
+
+    void showLeftFrontPath (const bool showIt);
+    void showRightFrontPath (const bool showIt);
+    void showLeftRearPath (const bool showIt);
+    void showRightRearPath (const bool showIt);
+
+    void showPole (const bool showIt);
+    void showTrainingCar (const bool showIt);
     
     void reset();
     
@@ -66,6 +75,8 @@ private:
     //==============================================================================
     void turnDirection (const bool shunshizhen, const bool turnLeft);
     void placeTheCar (const int oldFangxiang, const int newFangxiang);
+
+    void resetPath ();
     void getCurrentCheckPoints();
     void arrangeRestingCars();
     const bool isCrashed();
@@ -79,6 +90,9 @@ private:
     Array<Point<int>> checkPoints;
     OwnedArray<RestingCar> restingCars;
     Path leftFrontPath, rightFrontPath, leftRearPath, rightRearPath;
+
+    bool leftFrontPathShow, rightFrontPathShow, leftRearPathShow, rightRearPathShow;
+    bool shouldShowPole;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParkingLot)
 };

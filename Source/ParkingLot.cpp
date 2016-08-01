@@ -13,7 +13,12 @@
 
 //==============================================================================
 ParkingLot::ParkingLot()
-	: pathHudu (0.0f)
+	: pathHudu (0.0f),
+    leftFrontPathShow (false),
+    rightFrontPathShow (false),
+    leftRearPathShow (false),
+    rightRearPathShow (false),
+    shouldShowPole (false)
 {
 	addAndMakeVisible (trainingCar = new TrainingCar());
     addChildComponent (leftPlacer = new PolePlacer());
@@ -26,14 +31,30 @@ ParkingLot::~ParkingLot()
 //=========================================================================
 void ParkingLot::paint (Graphics& g)
 {
-    // draw path...
-    g.setColour (Colours::lightgreen);
-    g.strokePath (leftFrontPath, PathStrokeType (0.5f));
-    g.strokePath (rightFrontPath, PathStrokeType (0.5f));
+    // draw pathes...
+    if (leftFrontPathShow)
+    {
+        g.setColour (Colours::lightgreen);
+        g.strokePath (leftFrontPath, PathStrokeType (0.5f));
+    }
 
-    g.setColour (Colours::lightpink);
-    g.strokePath (leftRearPath, PathStrokeType (0.5f));
-    g.strokePath (rightRearPath, PathStrokeType (0.5f));
+    if (rightFrontPathShow)
+    {
+        g.setColour (Colours::lightgreen);
+        g.strokePath (rightFrontPath, PathStrokeType (0.5f));
+    }
+
+    if (leftRearPathShow)
+    {
+        g.setColour (Colours::lightpink);
+        g.strokePath (leftRearPath, PathStrokeType (0.5f));
+    }
+
+    if (rightRearPathShow)
+    {
+        g.setColour (Colours::lightpink);
+        g.strokePath (rightRearPath, PathStrokeType (0.5f));
+    }
 
 	/*g.setColour (Colours::darkred);
 	g.fillRect (car->getBounds ().expanded (8));
@@ -46,7 +67,7 @@ void ParkingLot::resized ()
 {
     pathHudu = 0.0f;
 
-    trainingCar->setTransform (AffineTransform());
+    trainingCar->setTransform (AffineTransform ());
 	trainingCar->setCentreRelative (0.5f, 0.5f);
     trainingCar->reset();
 
@@ -60,8 +81,12 @@ void ParkingLot::resized ()
 
     getCurrentCheckPoints();
     arrangeRestingCars();
+    resetPath();
+}
 
-    // path...
+//=================================================================================================
+void ParkingLot::resetPath ()
+{
     leftFrontPath.clear();
     rightFrontPath.clear();
     leftRearPath.clear();
@@ -81,23 +106,17 @@ void ParkingLot::setDirection (const int newDirection)
     trainingCar->setDirection (newDirection);
     placeTheCar (oldFangxiang, newDirection);
 
-    if (newDirection == 0)
-    {
-        leftPlacer->setVisible (false);
-        rightPlacer->setVisible (false);
-    }
-    else if (newDirection == -1)
+    leftPlacer->setVisible (false);
+    rightPlacer->setVisible (false);
+
+    if (shouldShowPole && newDirection == -1)
     {
         leftPlacer->setVisible (true);
-        rightPlacer->setVisible (false);
-
         leftPlacer->toFront(false);
     }
-    else if (newDirection == 1)
+    else if (shouldShowPole && newDirection == 1)
     {
-        leftPlacer->setVisible (false);
         rightPlacer->setVisible (true);
-
         rightPlacer->toFront(false);
     }
 }
@@ -199,6 +218,54 @@ void ParkingLot::moveTheCar (const bool backward)
 }
 
 //=================================================================================================
+void ParkingLot::showLeftFrontPath (const bool showThem)
+{
+    leftFrontPathShow = showThem;
+    repaint();
+}
+
+//=================================================================================================
+void ParkingLot::showRightFrontPath (const bool showIt)
+{
+    rightFrontPathShow = showIt;
+    repaint();
+}
+
+//=================================================================================================
+void ParkingLot::showLeftRearPath (const bool showIt)
+{
+    leftRearPathShow = showIt;
+    repaint();
+}
+
+//=================================================================================================
+void ParkingLot::showRightRearPath (const bool showIt)
+{
+    rightRearPathShow = showIt;
+    repaint();
+}
+
+//=================================================================================================
+void ParkingLot::showPole (const bool showIt)
+{
+    shouldShowPole = showIt;
+
+    leftPlacer->setVisible (false);
+    rightPlacer->setVisible (false);
+
+    if (shouldShowPole && trainingCar->getDirection() == -1)
+        leftPlacer->setVisible (true);
+    else if (shouldShowPole && trainingCar->getDirection() == 1)
+        rightPlacer->setVisible (true);
+}
+
+//=================================================================================================
+void ParkingLot::showTrainingCar (const bool showIt)
+{
+    trainingCar->setAlpha (showIt ? 0.2f : 1.f);
+}
+
+//=================================================================================================
 const bool ParkingLot::isCrashed()
 {
     AffineTransform atf (trainingCar->getTransform());
@@ -229,8 +296,9 @@ void ParkingLot::getCurrentCheckPoints ()
     const int b = trainingCar->getBottom();
 
     // front conners
-    checkPoints.add (Point<int> (x + 3, y + 3));
-    checkPoints.add (Point<int> (r - 3, y + 3));
+    const int frontGap = 3;
+    checkPoints.add (Point<int> (x + frontGap, y + frontGap));
+    checkPoints.add (Point<int> (r - frontGap, y + frontGap));
 
     // rear path point
     checkPoints.add (Point<int> (x, b - h / 4)); 

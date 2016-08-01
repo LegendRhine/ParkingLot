@@ -18,7 +18,8 @@ class ParkingLot;
 //==============================================================================
 /*
 */
-class SetupPanel    : public Component
+class SetupPanel    : public Component,
+    public Button::Listener
 {
 public:
     SetupPanel (ParkingLot* const parkinglot);
@@ -27,8 +28,18 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
+    virtual void buttonClicked (Button* bt) override;
+
 private:
     ParkingLot* const parkinglot;
+
+    ScopedPointer<ToggleButton> leftFrontPathBt;
+    ScopedPointer<ToggleButton> rightFrontPathBt;
+    ScopedPointer<ToggleButton> leftRearPathBt;
+    ScopedPointer<ToggleButton> rightRearPathBt;
+
+    ScopedPointer<ToggleButton> showPoleBt;
+    ScopedPointer<ToggleButton> hideCarBt;;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SetupPanel)
 };
