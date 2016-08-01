@@ -18,8 +18,6 @@ ParkingLot::ParkingLot()
 	addAndMakeVisible (trainingCar = new TrainingCar());
     addChildComponent (leftPlacer = new PolePlacer());
     addChildComponent (rightPlacer = new PolePlacer());
-
-    setSize (1200, 800);
 }
 
 ParkingLot::~ParkingLot()
@@ -28,8 +26,6 @@ ParkingLot::~ParkingLot()
 //=========================================================================
 void ParkingLot::paint (Graphics& g)
 {
-    g.fillAll (Colours::darkgrey);
-
     // draw path...
     g.setColour (Colours::lightgreen);
     g.strokePath (leftFrontPath, PathStrokeType (0.5f));

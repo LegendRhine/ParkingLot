@@ -7,7 +7,7 @@
 */
 
 #include "JuceHeader.h"
-#include "ParkingLot.h"
+#include "MainComponent.h"
 
 //==============================================================================
 class ParkingLotApplication  : public JUCEApplication
@@ -36,10 +36,10 @@ public:
                                                     DocumentWindow::allButtons)
         {
             setUsingNativeTitleBar (true);
-            setContentOwned (new ParkingLot(), true);
+            setContentOwned (new MainComponent(), true);
 
 			setResizable (true, false);
-			setResizeLimits (900, 780, 3800, 3800);
+			setResizeLimits (1280, 780, 3800, 3800);
 
 			centreWithSize (getWidth (), getHeight ());
 			setVisible (true);
