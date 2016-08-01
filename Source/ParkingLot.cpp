@@ -11,6 +11,8 @@
 #include "TrainingCar.h"
 #include "RestingCar.h"
 
+const float alphaOfThings = 1.0f;
+
 //==============================================================================
 ParkingLot::ParkingLot()
 	: pathHudu (0.0f),
@@ -23,6 +25,10 @@ ParkingLot::ParkingLot()
 	addAndMakeVisible (trainingCar = new TrainingCar());
     addChildComponent (leftPlacer = new PolePlacer());
     addChildComponent (rightPlacer = new PolePlacer());
+
+    trainingCar->setAlpha (alphaOfThings);
+    leftPlacer->setAlpha (alphaOfThings);
+    rightPlacer->setAlpha (alphaOfThings);
 }
 
 ParkingLot::~ParkingLot()
@@ -81,6 +87,7 @@ void ParkingLot::resized ()
 
     getCurrentCheckPoints();
     arrangeRestingCars();
+
     resetPath();
 }
 
@@ -262,7 +269,7 @@ void ParkingLot::showPole (const bool showIt)
 //=================================================================================================
 void ParkingLot::showTrainingCar (const bool showIt)
 {
-    trainingCar->setAlpha (showIt ? 0.2f : 1.f);
+    trainingCar->setAlpha (showIt ? 0.2f : alphaOfThings);
 }
 
 //=================================================================================================
@@ -347,6 +354,7 @@ void ParkingLot::reset()
     rightPlacer->setVisible (false);
 
     resized();
+    repaint();
 }
 
 //=================================================================================================

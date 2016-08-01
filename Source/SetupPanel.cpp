@@ -15,6 +15,10 @@
 SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     : parkinglot (parkinglot_)
 {
+    // reset button
+    addAndMakeVisible (resetBt = new TextButton (L"复位重来"));
+    resetBt->addListener (this);
+
     // show path buttons
     addAndMakeVisible (leftFrontPathBt = new ToggleButton (L"左前角轨迹"));
     leftFrontPathBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
@@ -57,11 +61,16 @@ void SetupPanel::paint (Graphics& g)
 //=========================================================================
 void SetupPanel::resized()
 {
+    // reset button
+    resetBt->setBounds (getWidth() - 100, getHeight() - 30, 80, 25);
+
+    // pathes buttons..
     leftFrontPathBt->setBounds (20, 40, 100, 25);
     rightFrontPathBt->setBounds (leftFrontPathBt->getRight() + 5, leftFrontPathBt->getY(), 100, 25);
     leftRearPathBt->setBounds (20, leftFrontPathBt->getBottom() + 5, 100, 25);
     rightRearPathBt->setBounds (leftRearPathBt->getRight() + 5, leftRearPathBt->getY(), 100, 25);
 
+    // others..
     showPoleBt->setBounds (20, leftRearPathBt->getBottom() + 20, 100, 25);
     hideCarBt->setBounds (showPoleBt->getRight() + 5, showPoleBt->getY(), 100, 25);
 }
@@ -69,7 +78,12 @@ void SetupPanel::resized()
 //=================================================================================================
 void SetupPanel::buttonClicked (Button* bt)
 {
-    if (bt == leftFrontPathBt)
+    if (bt == resetBt)
+    {
+        parkinglot->reset();
+        hideCarBt->setToggleState (false, sendNotification);
+    }
+    else if (bt == leftFrontPathBt)
     {
         parkinglot->showLeftFrontPath (leftFrontPathBt->getToggleState());
     }

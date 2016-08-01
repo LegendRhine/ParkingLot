@@ -33,6 +33,8 @@ public:
 private:
     ParkingLot* const parkinglot;
 
+    ScopedPointer<TextButton> resetBt;
+
     ScopedPointer<ToggleButton> leftFrontPathBt;
     ScopedPointer<ToggleButton> rightFrontPathBt;
     ScopedPointer<ToggleButton> leftRearPathBt;
