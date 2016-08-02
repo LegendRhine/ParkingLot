@@ -18,11 +18,12 @@ ParkingLot::ParkingLot()
 	: pathHudu (0.0f),
     leftFrontPathShow (false),
     rightFrontPathShow (false),
-    leftRearPathShow (false),
-    rightRearPathShow (false),
+    leftRearPathShow (true),
+    rightRearPathShow (true),
     shouldShowPole (false),
     xiexiang (false),
-    fanxiexiang (false)
+    fanxiexiang (false),
+    clearAllRestingCars (false)
 {
 	addAndMakeVisible (trainingCar = new TrainingCar());
     addChildComponent (leftPlacer = new PolePlacer());
@@ -88,9 +89,10 @@ void ParkingLot::resized ()
     rightPlacer->setVisible (false);
 
     getCurrentCheckPoints();
-    arrangeRestingCars (xiexiang, fanxiexiang);
-
     resetPath();
+    repaint();
+
+    arrangeRestingCars (xiexiang, fanxiexiang);
 }
 
 //=================================================================================================
@@ -287,6 +289,16 @@ void ParkingLot::setSlopedRestingCars (const bool slope, const bool backslash)
 }
 
 //=================================================================================================
+void ParkingLot::clearRestingCars ()
+{
+    clearAllRestingCars = true;
+    restingCars.clear();
+
+    // tell maincomponent don't draw stop-lines
+    getParentComponent()->repaint();
+}
+
+//=================================================================================================
 const bool ParkingLot::isCrashed()
 {
     AffineTransform atf (trainingCar->getTransform());
@@ -351,8 +363,11 @@ void ParkingLot::getCurrentCheckPoints ()
 void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
 {
     restingCars.clear (true);
+
+    if (clearAllRestingCars)
+        return;
     
-    const int hGap = 30 + (slope ? 50 : 0);
+    const int hGap = 25 + (slope ? 50 : 0);
     const int vGap = 45;
     
     const int hNumbers = getHeight() / (CarWidth + hGap) +
@@ -428,9 +443,9 @@ void ParkingLot::reset()
     rightPlacer->setVisible (false);
 
     trainingCar->setAlpha (alphaOfThings);
+    clearAllRestingCars = false;
 
     resized();
-    repaint();
 }
 
 //=================================================================================================

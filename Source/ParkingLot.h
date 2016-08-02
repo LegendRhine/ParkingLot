@@ -57,6 +57,7 @@ public:
     /** -1: turn left, 0: straight, 1: turn right */
     void setDirection (const int newDirection);
     void moveTheCar (const bool backward);
+    const bool dontShowRestingCars() const              { return clearAllRestingCars; }
 
     void showLeftFrontPath (const bool showIt);
     void showRightFrontPath (const bool showIt);
@@ -66,6 +67,7 @@ public:
     void showPole (const bool showIt);
     void showTrainingCar (const bool showIt);
     void setSlopedRestingCars (const bool slope, const bool backslash);
+    void clearRestingCars();
     
     void reset();
     
@@ -97,6 +99,7 @@ private:
     bool leftFrontPathShow, rightFrontPathShow, leftRearPathShow, rightRearPathShow;
     bool shouldShowPole;
     bool xiexiang, fanxiexiang;
+    bool clearAllRestingCars;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParkingLot)
 };

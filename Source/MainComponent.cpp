@@ -34,11 +34,14 @@ void MainComponent::paint (Graphics& g)
     g.drawRect (setupPanel->getX(), 0, 3, getHeight());
     
     // draw stop-line
-    g.setColour (Colours::yellow.withAlpha(0.5f));
-    g.fillRect (CarLength + 25, 0, 5, getHeight());
-    g.fillRect (parkinglot->getWidth() / 2 - CarWidth / 2 - 18, 0, 5, getHeight());
-    g.fillRect (parkinglot->getWidth() / 2 + CarWidth / 2 + 13, 0, 5, getHeight());
-    g.fillRect (parkinglot->getWidth() - CarLength - 28, 0, 5, getHeight());
+    if (!parkinglot->dontShowRestingCars())
+    {
+        g.setColour (Colours::yellow.withAlpha(0.5f));
+        g.fillRect (CarLength + 25, 0, 5, getHeight());
+        g.fillRect (parkinglot->getWidth() / 2 - CarWidth / 2 - 18, 0, 5, getHeight());
+        g.fillRect (parkinglot->getWidth() / 2 + CarWidth / 2 + 13, 0, 5, getHeight());
+        g.fillRect (parkinglot->getWidth() - CarLength - 28, 0, 5, getHeight());
+    }
 }
 
 void MainComponent::resized()

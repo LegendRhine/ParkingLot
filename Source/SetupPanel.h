@@ -37,7 +37,9 @@ private:
 
     ScopedPointer<Label> nameLb;
     ScopedPointer<Label> versionLb;
+
     ScopedPointer<TextButton> resetBt;
+    ScopedPointer<TextButton> clearBt;
 
     ScopedPointer<ToggleButton> leftFrontPathBt;
     ScopedPointer<ToggleButton> rightFrontPathBt;
