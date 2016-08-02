@@ -81,6 +81,19 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
 
     nonSlopeBt->setToggleState (true, dontSendNotification);
 
+    // group component..
+    addAndMakeVisible (pathGroup = new GroupComponent (String(), L"轨迹显示"));
+    pathGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey);
+    pathGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
+
+    addAndMakeVisible (typeGroup = new GroupComponent (String(), L"车位类型"));
+    typeGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey);
+    typeGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
+
+    addAndMakeVisible (othersGroup = new GroupComponent (String(), L"其他选项"));
+    othersGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey);
+    othersGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
+
 }
 //=========================================================================
 SetupPanel::~SetupPanel()
@@ -91,7 +104,7 @@ void SetupPanel::paint (Graphics& g)
 {
     g.setColour (Colours::lightgrey);
 
-    g.drawHorizontalLine (70, 10.0f, getWidth() - 10.0f);
+    g.drawHorizontalLine (getHeight() - 40, 10.0f, getWidth() - 10.0f);
 }
 //=========================================================================
 void SetupPanel::resized()
@@ -104,22 +117,30 @@ void SetupPanel::resized()
     resetBt->setBounds (getWidth() - 60, getHeight() - 30, 50, 25);
     clearBt->setBounds (resetBt->getX() - 60, getHeight() - 30, 50, 25);
 
-    // pathes buttons..
-    const int leftGap = 15;
+    // pathes..
+    const int leftGap = 20;
 
-    leftFrontPathBt->setBounds (leftGap, 80, 100, 25);
+    pathGroup->setBounds (leftGap - 10, 70, getWidth() - 15, 90);
+
+    leftFrontPathBt->setBounds (leftGap, pathGroup->getY() + 20, 100, 25);
     rightFrontPathBt->setBounds (leftFrontPathBt->getRight() + 5, leftFrontPathBt->getY(), 100, 25);
     leftRearPathBt->setBounds (leftGap, leftFrontPathBt->getBottom() + 5, 100, 25);
     rightRearPathBt->setBounds (leftRearPathBt->getRight() + 5, leftRearPathBt->getY(), 100, 25);
 
-    // show..
-    showPoleBt->setBounds (leftGap, leftRearPathBt->getBottom() + 5, 100, 25);
-    hideCarBt->setBounds (showPoleBt->getRight() + 5, showPoleBt->getY(), 100, 25);
-
     // slope..
-    nonSlopeBt->setBounds (leftGap, showPoleBt->getBottom() + 5, 62, 25);
+    typeGroup->setBounds (leftGap - 10, 170, getWidth() - 15, 60);
+
+    nonSlopeBt->setBounds (leftGap, typeGroup->getY() + 20, 62, 25);
     slopeBt->setBounds (nonSlopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
     antiSlopeBt->setBounds (slopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
+
+    // others..
+    othersGroup->setBounds (leftGap - 10, 240, getWidth() - 15, 60);
+
+    showPoleBt->setBounds (leftGap, othersGroup->getY() + 20, 100, 25);
+    hideCarBt->setBounds (showPoleBt->getRight() + 5, showPoleBt->getY(), 100, 25);
+
+
 }
 
 //=================================================================================================

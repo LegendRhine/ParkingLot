@@ -50,6 +50,8 @@ private:
     ScopedPointer<ToggleButton> hideCarBt;
     ScopedPointer<ToggleButton> nonSlopeBt, slopeBt, antiSlopeBt;
 
+    ScopedPointer<GroupComponent> pathGroup, typeGroup, othersGroup;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SetupPanel)
 };
 
