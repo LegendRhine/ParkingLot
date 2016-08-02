@@ -16,6 +16,7 @@ RestingCar::RestingCar()
     : cl (Random::getSystemRandom().nextFloat(), 0.8f, 0.55f, 1.0f)
 {
     //setSize (CarWidth, CarLength);
+    setWantsKeyboardFocus(false);
 }
 
 RestingCar::~RestingCar()
@@ -36,4 +37,9 @@ void RestingCar::paint (Graphics& g)
 void RestingCar::resized()
 {
     
+}
+
+void RestingCar::mouseUp (const MouseEvent& e)
+{
+    getParentComponent()->mouseUp (e);
 }

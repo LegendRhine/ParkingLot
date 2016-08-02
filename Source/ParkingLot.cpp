@@ -359,7 +359,7 @@ void ParkingLot::arrangeRestingCars()
             restingCars.add (car);
             addAndMakeVisible (car);
             car->setSize (CarLength, CarWidth);
-            car->setTopLeftPosition (8, (CarWidth + hGap) * i + 10);
+            car->setTopLeftPosition (8, (CarWidth + hGap) * i + 8);
         }
     }
     
@@ -371,7 +371,7 @@ void ParkingLot::arrangeRestingCars()
             restingCars.add (car);
             addAndMakeVisible (car);
             car->setSize (CarLength, CarWidth);
-            car->setTopLeftPosition (getWidth() - 8 - CarLength, (CarWidth + hGap) * i + 10);
+            car->setTopLeftPosition (getWidth() - 8 - CarLength, (CarWidth + hGap) * i + 8);
         }
     }
     
@@ -384,7 +384,7 @@ void ParkingLot::arrangeRestingCars()
             restingCars.add (car);
             addAndMakeVisible (car);
             car->setSize (CarWidth, CarLength);
-            car->setTopLeftPosition (getWidth() / 2 - CarWidth / 2, (CarLength + vGap) * i + 10);
+            car->setTopLeftPosition (getWidth() / 2 - CarWidth / 2, (CarLength + vGap) * i + 8);
         }
     }
 }
