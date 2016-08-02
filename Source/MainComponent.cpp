@@ -19,7 +19,7 @@ MainComponent::MainComponent()
     addAndMakeVisible (parkinglot = new ParkingLot());
     addAndMakeVisible (setupPanel = new SetupPanel (parkinglot));
 
-    setSize (1330, 800);
+    setSize (1350, 800);
 }
 
 MainComponent::~MainComponent()
