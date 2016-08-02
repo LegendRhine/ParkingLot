@@ -1,4 +1,4 @@
-﻿/*
+/*
   ==============================================================================
 
     This file was auto-generated!
@@ -74,7 +74,7 @@ void ParkingLot::resized ()
     pathHudu = 0.0f;
 
     trainingCar->setTransform (AffineTransform ());
-	trainingCar->setCentreRelative (0.5f, 0.5f);
+	trainingCar->setCentrePosition(getWidth() - CarLength - 120, getHeight() - 200);
     trainingCar->reset();
 
     leftPlacer->setTransform (AffineTransform());
@@ -346,8 +346,53 @@ void ParkingLot::getCurrentCheckPoints ()
 void ParkingLot::arrangeRestingCars()
 {
     restingCars.clear (true);
-
-
+    
+    const int hGap = 20;
+    const int vGap = 50;
+    
+    const int hNumbers = getHeight() / (CarWidth + hGap) +
+                         ((getHeight() % (CarWidth + hGap) == 0) ? 0 : 1);
+    
+    const int vNumbers = getHeight() / (CarLength + vGap) +
+                         ((getHeight() % (CarLength + vGap) == 0) ? 0 : 1);
+    
+    // one side for h-car arrange
+    for (int i = hNumbers; --i >= 0; )
+    {
+        if (i != 2)
+        {
+            RestingCar* car = new RestingCar();
+            restingCars.add (car);
+            addAndMakeVisible (car);
+            car->setSize (CarLength, CarWidth);
+            car->setTopLeftPosition (10, (CarWidth + hGap) * i + 10);
+        }
+    }
+    
+    for (int i = hNumbers; --i >= 0; )
+    {
+        if (i != 4)
+        {
+            RestingCar* car = new RestingCar();
+            restingCars.add (car);
+            addAndMakeVisible (car);
+            car->setSize (CarLength, CarWidth);
+            car->setTopLeftPosition (getWidth() - 10 - CarLength, (CarWidth + hGap) * i + 10);
+        }
+    }
+    
+    // v-car arrange
+    for (int i = 0; i < vNumbers; ++i)
+    {
+        if (i != 1)
+        {
+            RestingCar* car = new RestingCar();
+            restingCars.add (car);
+            addAndMakeVisible (car);
+            car->setSize (CarWidth, CarLength);
+            car->setTopLeftPosition (getWidth() / 2 - CarWidth / 2, (CarLength + vGap) * i + 10);
+        }
+    }
 }
 
 //=================================================================================================
