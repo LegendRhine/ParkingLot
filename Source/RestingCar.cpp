@@ -27,11 +27,11 @@ void RestingCar::paint (Graphics& g)
 {
     // whole car
     g.setColour (cl);
-    g.fillRoundedRectangle (getLocalBounds ().toFloat (), 8.0f);
+    g.fillRoundedRectangle (getLocalBounds ().toFloat (), 10.0f);
 
     // border
     g.setColour (Colours::lightgrey);
-    g.drawRoundedRectangle (getLocalBounds ().toFloat (), 8.0f, 0.5f);
+    g.drawRoundedRectangle (getLocalBounds ().toFloat (), 10.0f, 0.5f);
 }
 
 void RestingCar::resized()

@@ -30,11 +30,11 @@ void TrainingCar::paint (Graphics& g)
 {    
     // whole car
     g.setColour (Colours::lightseagreen);
-    g.fillRoundedRectangle (getLocalBounds ().toFloat (), 10.0f);
+    g.fillRoundedRectangle (getLocalBounds ().toFloat (), 15.0f);
 
     // border
     g.setColour (Colours::lightgrey);
-    g.drawRoundedRectangle (getLocalBounds ().toFloat (), 10.0f, 0.5f);
+    g.drawRoundedRectangle (getLocalBounds ().toFloat (), 15.0f, 0.5f);
 
     // an identity for forward direction
     g.setColour (Colours::lightgrey.withAlpha (0.45f));
