@@ -45,7 +45,8 @@ private:
     ScopedPointer<ToggleButton> rightRearPathBt;
 
     ScopedPointer<ToggleButton> showPoleBt;
-    ScopedPointer<ToggleButton> hideCarBt;;
+    ScopedPointer<ToggleButton> hideCarBt;
+    ScopedPointer<ToggleButton> nonSlopeBt, slopeBt, antiSlopeBt;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SetupPanel)
 };

@@ -1,4 +1,4 @@
-/*
+﻿/*
   ==============================================================================
 
     This file was auto-generated!
@@ -20,7 +20,9 @@ ParkingLot::ParkingLot()
     rightFrontPathShow (false),
     leftRearPathShow (false),
     rightRearPathShow (false),
-    shouldShowPole (false)
+    shouldShowPole (false),
+    xiexiang (false),
+    fanxiexiang (false)
 {
 	addAndMakeVisible (trainingCar = new TrainingCar());
     addChildComponent (leftPlacer = new PolePlacer());
@@ -86,7 +88,7 @@ void ParkingLot::resized ()
     rightPlacer->setVisible (false);
 
     getCurrentCheckPoints();
-    arrangeRestingCars();
+    arrangeRestingCars (xiexiang, fanxiexiang);
 
     resetPath();
 }
@@ -276,6 +278,15 @@ void ParkingLot::showTrainingCar (const bool showIt)
 }
 
 //=================================================================================================
+void ParkingLot::setSlopedRestingCars (const bool slope, const bool backslash)
+{
+    xiexiang = slope;
+    fanxiexiang = backslash;
+
+    resized();
+}
+
+//=================================================================================================
 const bool ParkingLot::isCrashed()
 {
     AffineTransform atf (trainingCar->getTransform());
@@ -337,11 +348,11 @@ void ParkingLot::getCurrentCheckPoints ()
 }
 
 //=================================================================================================
-void ParkingLot::arrangeRestingCars()
+void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
 {
     restingCars.clear (true);
     
-    const int hGap = 20;
+    const int hGap = 30 + (slope ? 50 : 0);
     const int vGap = 45;
     
     const int hNumbers = getHeight() / (CarWidth + hGap) +
@@ -350,7 +361,7 @@ void ParkingLot::arrangeRestingCars()
     const int vNumbers = getHeight() / (CarLength + vGap) +
                          ((getHeight() % (CarLength + vGap) == 0) ? 0 : 1);
     
-    // one side for h-car arrange
+    // left side for h-car arrange
     for (int i = hNumbers; --i >= 0; )
     {
         if (i != 3)
@@ -360,9 +371,20 @@ void ParkingLot::arrangeRestingCars()
             addAndMakeVisible (car);
             car->setSize (CarLength, CarWidth);
             car->setTopLeftPosition (8, (CarWidth + hGap) * i + 8);
+
+            // slope and backslash
+            if (slope)
+            {
+                const float cx (car->getBounds().toFloat().getCentreX());
+                const float cy (car->getBounds().toFloat().getCentreY());
+                const float hudu = float_Pi / 4.0f;
+
+                car->setTransform (AffineTransform::rotation (backslash ? hudu : -hudu, cx, cy));
+            }
         }
     }
     
+    // right side for h-car arrange
     for (int i = hNumbers; --i >= 0; )
     {
         if (!(i == 1 || i == 5))
@@ -372,6 +394,16 @@ void ParkingLot::arrangeRestingCars()
             addAndMakeVisible (car);
             car->setSize (CarLength, CarWidth);
             car->setTopLeftPosition (getWidth() - 8 - CarLength, (CarWidth + hGap) * i + 8);
+
+            // slope and backslash
+            if (slope)
+            {
+                const float cx (car->getBounds().toFloat().getCentreX());
+                const float cy (car->getBounds().toFloat().getCentreY());
+                const float hudu = float_Pi / 4.0f;
+
+                car->setTransform (AffineTransform::rotation (backslash ? -hudu : hudu, cx, cy));
+            }
         }
     }
     

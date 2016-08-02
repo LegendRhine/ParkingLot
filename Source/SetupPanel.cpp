@@ -57,8 +57,25 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     hideCarBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
     hideCarBt->addListener (this);
 
-    // set toggle state of buttons...
-    showPoleBt->setToggleState (false, dontSendNotification);
+    // slope bts
+    addAndMakeVisible (nonSlopeBt = new ToggleButton (L"非字型"));
+    nonSlopeBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
+    nonSlopeBt->addListener (this);
+
+    addAndMakeVisible (slopeBt = new ToggleButton (L"斜非型"));
+    slopeBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
+    slopeBt->addListener (this);
+
+    addAndMakeVisible (antiSlopeBt = new ToggleButton (L"反斜非"));
+    antiSlopeBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
+    antiSlopeBt->addListener (this);
+
+    nonSlopeBt->setRadioGroupId (1234);
+    slopeBt->setRadioGroupId (1234);
+    antiSlopeBt->setRadioGroupId (1234);
+
+    nonSlopeBt->setToggleState (true, dontSendNotification);
+
 }
 //=========================================================================
 SetupPanel::~SetupPanel()
@@ -87,9 +104,14 @@ void SetupPanel::resized()
     leftRearPathBt->setBounds (leftGap, leftFrontPathBt->getBottom() + 5, 100, 25);
     rightRearPathBt->setBounds (leftRearPathBt->getRight() + 5, leftRearPathBt->getY(), 100, 25);
 
-    // others..
+    // show..
     showPoleBt->setBounds (leftGap, leftRearPathBt->getBottom() + 5, 100, 25);
     hideCarBt->setBounds (showPoleBt->getRight() + 5, showPoleBt->getY(), 100, 25);
+
+    // slope..
+    nonSlopeBt->setBounds (leftGap, showPoleBt->getBottom() + 5, 62, 25);
+    slopeBt->setBounds (nonSlopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
+    antiSlopeBt->setBounds (slopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
 }
 
 //=================================================================================================
@@ -123,5 +145,17 @@ void SetupPanel::buttonClicked (Button* bt)
     else if (bt == hideCarBt)
     {
         parkinglot->showTrainingCar (hideCarBt->getToggleState());
+    }
+    else if (bt == nonSlopeBt)
+    {
+        parkinglot->setSlopedRestingCars (false, false);
+    }
+    else if (bt == slopeBt)
+    {
+        parkinglot->setSlopedRestingCars (true, false);
+    }
+    else if (bt == antiSlopeBt)
+    {
+        parkinglot->setSlopedRestingCars (true, true);
     }
 }

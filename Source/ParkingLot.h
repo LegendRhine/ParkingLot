@@ -65,15 +65,17 @@ public:
 
     void showPole (const bool showIt);
     void showTrainingCar (const bool showIt);
+    void setSlopedRestingCars (const bool slope, const bool backslash);
     
     void reset();
-    void arrangeRestingCars();
+    
     
     virtual void mouseUp (const MouseEvent& event) override;
     virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
 
 private:
     //==============================================================================
+    void arrangeRestingCars (const bool slope, const bool backslash);
     void turnDirection (const bool shunshizhen, const bool turnLeft);
     void placeTheCar (const int oldFangxiang, const int newFangxiang);
 
@@ -94,6 +96,7 @@ private:
 
     bool leftFrontPathShow, rightFrontPathShow, leftRearPathShow, rightRearPathShow;
     bool shouldShowPole;
+    bool xiexiang, fanxiexiang;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParkingLot)
 };
