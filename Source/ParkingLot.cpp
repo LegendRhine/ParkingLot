@@ -77,7 +77,7 @@ void ParkingLot::resized ()
     pathHudu = 0.0f;
 
     trainingCar->setTransform (AffineTransform ());
-	trainingCar->setCentrePosition(CarLength + 120, getHeight() - 200);
+	trainingCar->setCentrePosition (getWidth() - CarLength - 95, getHeight() - 140);
     trainingCar->reset();
 
     leftPlacer->setTransform (AffineTransform());
@@ -320,7 +320,7 @@ void ParkingLot::getCurrentCheckPoints ()
 {
     checkPoints.clearQuick();
 
-    // add 48 points of the car for crash-check
+    // add 50 points of the car for crash-check
     const int x = trainingCar->getX();
     const int y = trainingCar->getY();
     const int w = trainingCar->getWidth();
@@ -334,8 +334,12 @@ void ParkingLot::getCurrentCheckPoints ()
     checkPoints.add (Point<int> (r - frontGap, y + frontGap));
 
     // rear path point
-    checkPoints.add (Point<int> (x, b - h / 4)); 
-    checkPoints.add (Point<int> (r, b - h / 4)); 
+    checkPoints.add (Point<int> (x, b - h / 4 + 10)); 
+    checkPoints.add (Point<int> (r, b - h / 4 + 10)); 
+
+    // addtional 2 points
+    checkPoints.add (Point<int> (x, b - h / 4 - 5));
+    checkPoints.add (Point<int> (r, b - h / 4 - 5));
 
     // rear conners
     checkPoints.add (Point<int> (x + 4, b - 4));

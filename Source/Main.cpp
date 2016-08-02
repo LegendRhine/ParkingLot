@@ -13,7 +13,7 @@
 class ParkingLotLaF : public LookAndFeel_V3
 {
 public:
-    virtual Font getTextButtonFont (TextButton&, int) override
+    /*virtual Font getTextButtonFont (TextButton&, int) override
     {
         return Font (16.f);
     }
@@ -21,12 +21,6 @@ public:
     virtual void drawToggleButton (Graphics& g, ToggleButton& button, 
         bool isMouseOverButton, bool isButtonDown) override
     {
-        /*if (button.hasKeyboardFocus (true))
-        {
-            g.setColour (button.findColour (TextEditor::focusedOutlineColourId));
-            g.drawRect (0, 0, button.getWidth(), button.getHeight());
-        }*/
-
         float fontSize = jmin (17.0f, button.getHeight() * 0.95f);
         const float tickWidth = fontSize * 1.1f;
 
@@ -49,7 +43,7 @@ public:
             textX, 0,
             button.getWidth() - textX - 2, button.getHeight(),
             Justification::centredLeft, 10);
-    }
+    }*/
 
 };
 

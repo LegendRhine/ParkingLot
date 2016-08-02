@@ -83,15 +83,15 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
 
     // group component..
     addAndMakeVisible (pathGroup = new GroupComponent (String(), L"轨迹显示"));
-    pathGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey);
+    pathGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
     pathGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
 
     addAndMakeVisible (typeGroup = new GroupComponent (String(), L"车位类型"));
-    typeGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey);
+    typeGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
     typeGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
 
     addAndMakeVisible (othersGroup = new GroupComponent (String(), L"其他选项"));
-    othersGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey);
+    othersGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
     othersGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
 
 }
@@ -140,7 +140,6 @@ void SetupPanel::resized()
     showPoleBt->setBounds (leftGap, othersGroup->getY() + 20, 100, 25);
     hideCarBt->setBounds (showPoleBt->getRight() + 5, showPoleBt->getY(), 100, 25);
 
-
 }
 
 //=================================================================================================
@@ -151,6 +150,7 @@ void SetupPanel::buttonClicked (Button* bt)
         parkinglot->reset();
         hideCarBt->setToggleState (false, sendNotification);
 
+        typeGroup->setEnabled (true);
         nonSlopeBt->setEnabled (true);
         slopeBt->setEnabled (true);
         antiSlopeBt->setEnabled (true);
@@ -160,6 +160,7 @@ void SetupPanel::buttonClicked (Button* bt)
     {
         parkinglot->clearRestingCars();
 
+        typeGroup->setEnabled (false);
         nonSlopeBt->setEnabled (false);
         slopeBt->setEnabled (false);
         antiSlopeBt->setEnabled (false);
