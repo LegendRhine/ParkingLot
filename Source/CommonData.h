@@ -17,8 +17,8 @@
 static const int CarWidth       = 100;
 static const int CarLength      = 240;
 static const int FromInnerWheel = 140;
-static const float EachHudu     = 0.02f;
-static const int StraightStep   = 6;
+static const float EachHudu     = 0.015f;
+static const int StraightStep   = 4;
 
 
 #endif  // COMMONDATA_H_INCLUDED
