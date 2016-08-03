@@ -137,8 +137,8 @@ void ParkingLot::placeTheCar (const int oldFangxiang, const int newFangxiang)
 {
     if (newFangxiang != 0 && oldFangxiang != newFangxiang)  
     {
-        int centerX = 0;
-        int centerY = 0;
+        float centerX = 0.f;
+        float centerY = 0.f;
         AffineTransform aft;
 
         // First, place the car base on the matches placer, then transform the car. 
@@ -146,20 +146,20 @@ void ParkingLot::placeTheCar (const int oldFangxiang, const int newFangxiang)
         // second, place two placer base on the car, then transform them.
         if (newFangxiang == -1)
         {
-            centerX = leftPlacer->getBoundsInParent().getCentreX() + FromInnerWheel + 50;
-            centerY = leftPlacer->getBoundsInParent().getCentreY() - 70;
+            centerX = leftPlacer->getBoundsInParent().getCentreX() + FromInnerWheel + 50.f;
+            centerY = leftPlacer->getBoundsInParent().getCentreY() - 70.f;
             aft = AffineTransform::rotation (pathHudu,
-                centerX - FromInnerWheel - 50.0000001f, centerY + 70.0000001f);
+                centerX - FromInnerWheel - 50.f, centerY + 70.f);
         }
         else
         {
-            centerX = rightPlacer->getBoundsInParent().getCentreX() - FromInnerWheel - 50;
-            centerY = rightPlacer->getBoundsInParent().getCentreY() - 70;
+            centerX = rightPlacer->getBoundsInParent().getCentreX() - FromInnerWheel - 50.f;
+            centerY = rightPlacer->getBoundsInParent().getCentreY() - 70.f;
             aft = AffineTransform::rotation (pathHudu,
-                centerX + FromInnerWheel + 50.0000001f, centerY + 70.0000001f);
+                centerX + FromInnerWheel + 50.f, centerY + 70.f);
         }
 
-        trainingCar->setCentrePosition (centerX, centerY);
+        trainingCar->setCentrePosition (roundToInt (centerX), roundToInt (centerY));
         leftPlacer->setCentrePosition (trainingCar->getX() - FromInnerWheel, trainingCar->getY() + 190);
         rightPlacer->setCentrePosition (trainingCar->getRight() + FromInnerWheel, trainingCar->getY() + 190);
 
@@ -214,7 +214,8 @@ void ParkingLot::moveTheCar (const bool backward)
             ImageCache::getFromMemory (BinaryData::crashed_png, BinaryData::crashed_pngSize),
             false);
 
-        splash->deleteAfterDelay (RelativeTime (1), true);        
+        splash->deleteAfterDelay (RelativeTime (1), true); 
+
         moveTheCar (!backward);
     }
     else if (isSuccessful())
@@ -236,8 +237,6 @@ void ParkingLot::moveTheCar (const bool backward)
 
         repaint();
     }
-
-    //if (speedLevel == 2)
 }
 
 //=================================================================================================

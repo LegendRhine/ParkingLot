@@ -79,7 +79,7 @@ private:
         bool hitTest (int, int) override { return false; }
 
     private:
-        const int wh = 10;
+        const int wh = 2;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PolePlacer)
     };
