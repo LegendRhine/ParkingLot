@@ -12,6 +12,7 @@
 #include "RestingCar.h"
 
 const float alphaOfThings = 1.0f;
+const int timerIntervel = 50;
 
 //==============================================================================
 ParkingLot::ParkingLot()
@@ -324,7 +325,7 @@ void ParkingLot::setSpeed (const int speedLevel_)
     stopTimer();
     speedLevel = speedLevel_;
 
-    startTimer (speedLevel * 100);
+    startTimer (speedLevel * timerIntervel);
 }
 
 //=================================================================================================
@@ -341,7 +342,7 @@ const bool ParkingLot::isCrashed()
 
         Component* comp = getComponentAt (p);
 
-        for (int j = restingCars.size(); --j >= 0; )
+        for (int j = 0; j < restingCars.size(); ++j)
         {
             if (comp == restingCars[j])
                 return true;
@@ -354,6 +355,9 @@ const bool ParkingLot::isCrashed()
 //=================================================================================================
 const bool ParkingLot::isSuccessful ()
 {
+    if (stopAreaOne == nullptr || stopAreaTwo == nullptr || stopAreaThree == nullptr)
+        return false;
+
     AffineTransform atf (trainingCar->getTransform());
 
     for (int i = checkPoints.size(); --i >= 0; )
@@ -424,7 +428,7 @@ void ParkingLot::getCurrentCheckPoints ()
 //=================================================================================================
 void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
 {
-    restingCars.clear (true);
+    restingCars.clear();
     stopAreaOne = stopAreaTwo = stopAreaThree = nullptr;
 
     if (clearAllRestingCars)
@@ -479,7 +483,7 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
         {
             car = stopAreaTwo = new StopArea();
             car->setSize (CarLength + 8, CarWidth + 8);
-            car->setTopLeftPosition (getWidth() - 14 - CarLength, (CarWidth + hGap) * i + 6);
+            car->setTopLeftPosition (getWidth() - 14 - CarLength, (CarWidth + hGap) * i + 4);
         }
         else
         {
@@ -532,7 +536,7 @@ void ParkingLot::setAutoMove (const bool shouldAutoMove)
 {
     if (shouldAutoMove)
     {
-        startTimer (speedLevel * 100);
+        startTimer (speedLevel * timerIntervel);
     }
     else
     {
@@ -549,6 +553,7 @@ void ParkingLot::reset()
     trainingCar->setAlpha (alphaOfThings);
     clearAllRestingCars = false;
 
+    stopTimer();
     resized();
 }
 

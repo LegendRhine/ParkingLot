@@ -199,6 +199,7 @@ void SetupPanel::buttonClicked (Button* bt)
     {
         parkinglot->reset();
         hideCarBt->setToggleState (false, sendNotification);
+        autoMoveBt->setToggleState (false, dontSendNotification);
         clearBt->setEnabled (true);
 
         typeGroup->setEnabled (true);
