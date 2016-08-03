@@ -33,7 +33,7 @@ public:
 
     /** -1: turn left, 0: straight, 1: turn right */
     void setDirection (const int newDirection);
-    void moveTheCar (const bool backward);
+    const bool moveTheCar (const bool backward);
     const bool dontShowRestingCars() const              { return clearAllRestingCars; }
 
     void showLeftFrontPath (const bool showIt);

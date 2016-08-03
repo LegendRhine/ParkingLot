@@ -66,10 +66,10 @@ void ParkingLot::paint (Graphics& g)
     }
 
 	/*g.setColour (Colours::darkred);
-	g.fillRect (car->getBounds ().expanded (8));
+	g.fillRect (trainingCar->getBounds ().expanded (8));
 
 	g.setColour (Colours::darkgoldenrod);
-	g.fillRect (car->getBoundsInParent ().expanded (5));	*/
+	g.fillRect (trainingCar->getBoundsInParent ().expanded (5));*/
 }
 //=========================================================================
 void ParkingLot::resized ()
@@ -183,11 +183,14 @@ void ParkingLot::mouseUp (const MouseEvent& e)
 //=================================================================================================
 void ParkingLot::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& wheel)
 {
-    moveTheCar (wheel.deltaY > 0);
+    const bool direction = (wheel.deltaY > 0);
+    
+    if (!moveTheCar (direction))
+        moveTheCar (!direction);
 }
 
 //=================================================================================================
-void ParkingLot::moveTheCar (const bool backward)
+const bool ParkingLot::moveTheCar (const bool backward)
 {
     if (0 == trainingCar->getDirection())  // straight forward
     {
@@ -215,8 +218,7 @@ void ParkingLot::moveTheCar (const bool backward)
             false);
 
         splash->deleteAfterDelay (RelativeTime (1), true); 
-
-        moveTheCar (!backward);
+        return false;
     }
     else if (isSuccessful())
     {
@@ -237,6 +239,8 @@ void ParkingLot::moveTheCar (const bool backward)
 
         repaint();
     }
+
+    return true;
 }
 
 //=================================================================================================
