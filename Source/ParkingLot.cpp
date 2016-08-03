@@ -215,7 +215,7 @@ void ParkingLot::moveTheCar (const bool backward)
             false);
 
         splash->deleteAfterDelay (RelativeTime (1), true);        
-        //moveTheCar (!backward);
+        moveTheCar (!backward);
     }
     else if (isSuccessful())
     {
