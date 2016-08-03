@@ -298,6 +298,8 @@ void ParkingLot::clearRestingCars ()
     clearAllRestingCars = true;
     restingCars.clear();
 
+    stopAreaOne = stopAreaTwo = stopAreaThree = nullptr;
+
     // tell maincomponent don't draw stop-lines
     getParentComponent()->repaint();
 }
@@ -400,6 +402,7 @@ void ParkingLot::getCurrentCheckPoints ()
 void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
 {
     restingCars.clear (true);
+    stopAreaOne = stopAreaTwo = stopAreaThree = nullptr;
 
     if (clearAllRestingCars)
         return;
