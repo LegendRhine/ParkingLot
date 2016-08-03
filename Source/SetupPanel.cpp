@@ -33,10 +33,6 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     addAndMakeVisible (clearBt = new TextButton (L"清场"));
     clearBt->addListener (this);
 
-    addAndMakeVisible (autoMoveBt = new TextButton (L"自行"));
-    autoMoveBt->setColour (TextButton::textColourOnId, Colours::lightgrey);
-    autoMoveBt->addListener (this);
-
     // show path buttons
     addAndMakeVisible (leftFrontPathBt = new ToggleButton (L"左前角轨迹"));
     leftFrontPathBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
@@ -85,28 +81,6 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
 
     nonSlopeBt->setToggleState (true, dontSendNotification);
 
-    // speed bts
-    addAndMakeVisible (slowSpeedBt = new ToggleButton (L"慢速"));
-    slowSpeedBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
-    slowSpeedBt->addListener (this);
-    slowSpeedBt->setEnabled (false);
-
-    addAndMakeVisible (normalSpeedBt = new ToggleButton (L"中速"));
-    normalSpeedBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
-    normalSpeedBt->addListener (this);
-    normalSpeedBt->setEnabled (false);
-
-    addAndMakeVisible (fastSpeedBt = new ToggleButton (L"快速"));
-    fastSpeedBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
-    fastSpeedBt->addListener (this);
-    fastSpeedBt->setEnabled (false);
-
-    slowSpeedBt->setRadioGroupId (1235);
-    normalSpeedBt->setRadioGroupId (1235);
-    fastSpeedBt->setRadioGroupId (1235);
-
-    slowSpeedBt->setToggleState (true, dontSendNotification);
-
     // group component..
     addAndMakeVisible (pathGroup = new GroupComponent (String(), L"轨迹显示"));
     pathGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
@@ -115,11 +89,6 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     addAndMakeVisible (typeGroup = new GroupComponent (String(), L"车位类型"));
     typeGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
     typeGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
-
-    addAndMakeVisible (speedGroup = new GroupComponent (String(), L"自动车速"));
-    speedGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
-    speedGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
-    speedGroup->setEnabled (false);
 
     addAndMakeVisible (othersGroup = new GroupComponent (String(), L"其他选项"));
     othersGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
@@ -130,7 +99,7 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
 SetupPanel::~SetupPanel()
 {
 }
-
+//=========================================================================
 void SetupPanel::paint (Graphics& g)
 {
     g.setColour (Colours::lightgrey);
@@ -145,7 +114,6 @@ void SetupPanel::resized()
     versionLb->setBounds (0, 35, getWidth(), 25);
 
     // buttons
-    autoMoveBt->setBounds (10, getHeight() - 30, 50, 25);
     resetBt->setBounds (getWidth() - 60, getHeight() - 30, 50, 25);
     clearBt->setBounds (resetBt->getX() - 60, getHeight() - 30, 50, 25);
 
@@ -166,15 +134,8 @@ void SetupPanel::resized()
     slopeBt->setBounds (nonSlopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
     antiSlopeBt->setBounds (slopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
 
-    // speed
-    speedGroup->setBounds (leftGap - 10, 240, getWidth() - 15, 60);
-
-    slowSpeedBt->setBounds (leftGap, speedGroup->getY() + 20, 62, 25);
-    normalSpeedBt->setBounds (slowSpeedBt->getRight() + 5, slowSpeedBt->getY(), 61, 25);
-    fastSpeedBt->setBounds (normalSpeedBt->getRight() + 5, slowSpeedBt->getY(), 61, 25);
-
     // others..
-    othersGroup->setBounds (leftGap - 10, 310, getWidth() - 15, 60);
+    othersGroup->setBounds (leftGap - 10, 240, getWidth() - 15, 60);
 
     showPoleBt->setBounds (leftGap, othersGroup->getY() + 20, 100, 25);
     hideCarBt->setBounds (showPoleBt->getRight() + 5, showPoleBt->getY(), 100, 25);
@@ -184,22 +145,10 @@ void SetupPanel::resized()
 //=================================================================================================
 void SetupPanel::buttonClicked (Button* bt)
 {
-    if (bt == autoMoveBt)
-    {
-        const bool autoMove = autoMoveBt->getToggleState();
-        autoMoveBt->setToggleState (!autoMove, dontSendNotification);
-
-        parkinglot->setAutoMove (!autoMove);
-        speedGroup->setEnabled (!autoMove);
-        slowSpeedBt->setEnabled (!autoMove);
-        normalSpeedBt->setEnabled (!autoMove);
-        fastSpeedBt->setEnabled (!autoMove);
-    }
-    else if (bt == resetBt)
+    if (bt == resetBt)
     {
         parkinglot->reset();
         hideCarBt->setToggleState (false, sendNotification);
-        autoMoveBt->setToggleState (false, dontSendNotification);
         clearBt->setEnabled (true);
 
         typeGroup->setEnabled (true);
@@ -245,13 +194,5 @@ void SetupPanel::buttonClicked (Button* bt)
 
     else if (bt == antiSlopeBt)
         parkinglot->setSlopedRestingCars (true, true);
-
-    else if (bt == slowSpeedBt)
-        parkinglot->setSpeed (3);
-
-    else if (bt == normalSpeedBt)
-        parkinglot->setSpeed (2);
-
-    else if (bt == fastSpeedBt)
-        parkinglot->setSpeed (1);
+        
 }

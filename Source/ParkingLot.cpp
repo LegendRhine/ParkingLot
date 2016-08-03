@@ -12,12 +12,10 @@
 #include "RestingCar.h"
 
 const float alphaOfThings = 1.0f;
-const int timerIntervel = 50;
 
 //==============================================================================
 ParkingLot::ParkingLot()
 	: pathHudu (0.0f),
-    speedLevel (2),
     leftFrontPathShow (false),
     rightFrontPathShow (false),
     leftRearPathShow (true),
@@ -25,8 +23,7 @@ ParkingLot::ParkingLot()
     shouldShowPole (false),
     xiexiang (false),
     fanxiexiang (false),
-    clearAllRestingCars (false),
-    isBackNow (false)
+    clearAllRestingCars (false)
 {
 	addAndMakeVisible (trainingCar = new TrainingCar());
     addChildComponent (leftPlacer = new PolePlacer());
@@ -186,14 +183,7 @@ void ParkingLot::mouseUp (const MouseEvent& e)
 //=================================================================================================
 void ParkingLot::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& wheel)
 {
-    isBackNow = (wheel.deltaY > 0);
-    moveTheCar (isBackNow);
-}
-
-//=================================================================================================
-void ParkingLot::timerCallback ()
-{
-    moveTheCar (isBackNow);
+    moveTheCar (wheel.deltaY > 0);
 }
 
 //=================================================================================================
@@ -220,8 +210,6 @@ void ParkingLot::moveTheCar (const bool backward)
 
     if (isCrashed())
     {
-        stopTimer();
-
         if (AlertWindow::showNativeDialogBox (L"撞了!!",
                                               L"点击[确定]按钮或直接回车继续玩。\n"
                                               L"点击[取消]按钮复位车辆重新开始。",
@@ -232,7 +220,6 @@ void ParkingLot::moveTheCar (const bool backward)
     }
     else if (isSuccessful())
     {
-        stopTimer();
         AlertWindow::showNativeDialogBox (L"漂亮!!", L"完美入位!!", false);
     }
     else  // link path point and draw them...
@@ -317,15 +304,6 @@ void ParkingLot::clearRestingCars ()
 
     // tell maincomponent don't draw stop-lines
     getParentComponent()->repaint();
-}
-
-//=================================================================================================
-void ParkingLot::setSpeed (const int speedLevel_)
-{
-    stopTimer();
-    speedLevel = speedLevel_;
-
-    startTimer (speedLevel * timerIntervel);
 }
 
 //=================================================================================================
@@ -532,19 +510,6 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
 }
 
 //=================================================================================================
-void ParkingLot::setAutoMove (const bool shouldAutoMove)
-{
-    if (shouldAutoMove)
-    {
-        startTimer (speedLevel * timerIntervel);
-    }
-    else
-    {
-        stopTimer();
-    }
-}
-
-//=================================================================================================
 void ParkingLot::reset()
 {
     leftPlacer->setVisible (false);
@@ -553,7 +518,6 @@ void ParkingLot::reset()
     trainingCar->setAlpha (alphaOfThings);
     clearAllRestingCars = false;
 
-    stopTimer();
     resized();
 }
 
