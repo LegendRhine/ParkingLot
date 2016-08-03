@@ -20,7 +20,8 @@ class RestingCar;
     Mouse click (left/right/middle) for turning the direction.
     Mouse wheel for back/forward the training-car.
 */
-class ParkingLot   : public Component
+class ParkingLot   : public Component,
+                     private Timer
 {
 public:
     //==============================================================================
@@ -45,10 +46,13 @@ public:
     void showTrainingCar (const bool showIt);
     void setSlopedRestingCars (const bool slope, const bool backslash);
     void clearRestingCars();
-    
+
+    /** 3-slow, 2-normal, 1-fast */
+    void setSpeed (const int speedLevel_);
+    void setAutoMove (const bool shouldAutoMove);
+
     void reset();
-    
-    
+        
     virtual void mouseUp (const MouseEvent& event) override;
     virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
 
@@ -62,7 +66,9 @@ private:
     void getCurrentCheckPoints();    
     const bool isCrashed();
     const bool isSuccessful();
-    
+
+    // auto move    
+    virtual void timerCallback () override;
     //=========================================================================
     /** This class will show the Axis-point when turning. */
     class PolePlacer : public Component
@@ -131,9 +137,10 @@ private:
     Array<Point<int>> checkPoints;
     Path leftFrontPath, rightFrontPath, leftRearPath, rightRearPath;
     float pathHudu;
+    int speedLevel;
 
     bool leftFrontPathShow, rightFrontPathShow, leftRearPathShow, rightRearPathShow;
-    bool shouldShowPole;
+    bool shouldShowPole, isBackNow;
     bool xiexiang, fanxiexiang;
     bool clearAllRestingCars;
 

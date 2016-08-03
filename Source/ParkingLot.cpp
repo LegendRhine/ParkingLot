@@ -16,6 +16,7 @@ const float alphaOfThings = 1.0f;
 //==============================================================================
 ParkingLot::ParkingLot()
 	: pathHudu (0.0f),
+    speedLevel (2),
     leftFrontPathShow (false),
     rightFrontPathShow (false),
     leftRearPathShow (true),
@@ -23,7 +24,8 @@ ParkingLot::ParkingLot()
     shouldShowPole (false),
     xiexiang (false),
     fanxiexiang (false),
-    clearAllRestingCars (false)
+    clearAllRestingCars (false),
+    isBackNow (false)
 {
 	addAndMakeVisible (trainingCar = new TrainingCar());
     addChildComponent (leftPlacer = new PolePlacer());
@@ -183,7 +185,14 @@ void ParkingLot::mouseUp (const MouseEvent& e)
 //=================================================================================================
 void ParkingLot::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& wheel)
 {
-    moveTheCar (wheel.deltaY > 0);
+    isBackNow = (wheel.deltaY > 0);
+    moveTheCar (isBackNow);
+}
+
+//=================================================================================================
+void ParkingLot::timerCallback ()
+{
+    moveTheCar (isBackNow);
 }
 
 //=================================================================================================
@@ -191,7 +200,7 @@ void ParkingLot::moveTheCar (const bool backward)
 {
     if (0 == trainingCar->getDirection())  // straight forward
     {
-        const int dist (backward ? StraightStep : -StraightStep);
+        const int dist = (backward ? StraightStep : -StraightStep);
         trainingCar->setTopLeftPosition (trainingCar->getX(), trainingCar->getY() + dist);
 
         leftPlacer->setTopLeftPosition (leftPlacer->getX(), leftPlacer->getY() + dist);
@@ -210,6 +219,8 @@ void ParkingLot::moveTheCar (const bool backward)
 
     if (isCrashed())
     {
+        stopTimer();
+
         if (AlertWindow::showNativeDialogBox (L"撞了!!",
                                               L"点击[确定]按钮或直接回车继续玩。\n"
                                               L"点击[取消]按钮复位车辆重新开始。",
@@ -220,6 +231,7 @@ void ParkingLot::moveTheCar (const bool backward)
     }
     else if (isSuccessful())
     {
+        stopTimer();
         AlertWindow::showNativeDialogBox (L"漂亮!!", L"完美入位!!", false);
     }
     else  // link path point and draw them...
@@ -233,6 +245,8 @@ void ParkingLot::moveTheCar (const bool backward)
 
         repaint();
     }
+
+    //if (speedLevel == 2)
 }
 
 //=================================================================================================
@@ -302,6 +316,15 @@ void ParkingLot::clearRestingCars ()
 
     // tell maincomponent don't draw stop-lines
     getParentComponent()->repaint();
+}
+
+//=================================================================================================
+void ParkingLot::setSpeed (const int speedLevel_)
+{
+    stopTimer();
+    speedLevel = speedLevel_;
+
+    startTimer (speedLevel * 100);
 }
 
 //=================================================================================================
@@ -422,7 +445,7 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
         if (i == 3)
         {
             car = stopAreaOne = new StopArea();
-            car->setSize (CarLength + 6, CarWidth + 8);
+            car->setSize (CarLength + 8, CarWidth + 8);
             car->setTopLeftPosition (6, (CarWidth + hGap) * i + 14);
         }
         else
@@ -455,8 +478,8 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
         if (i == 1)
         {
             car = stopAreaTwo = new StopArea();
-            car->setSize (CarLength + 6, CarWidth + 8);
-            car->setTopLeftPosition (getWidth() - 13 - CarLength, (CarWidth + hGap) * i + 6);
+            car->setSize (CarLength + 8, CarWidth + 8);
+            car->setTopLeftPosition (getWidth() - 14 - CarLength, (CarWidth + hGap) * i + 6);
         }
         else
         {
@@ -495,12 +518,25 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
         else
         {
             car = stopAreaThree = new StopArea();
-            car->setSize (CarWidth + 8, CarLength + 6);
+            car->setSize (CarWidth + 8, CarLength + 8);
             car->setTopLeftPosition (getWidth() / 2 - CarWidth / 2 - 4, (CarLength + vGap) * i + 10);
         }
 
         addAndMakeVisible (car);
         car->toBack();
+    }
+}
+
+//=================================================================================================
+void ParkingLot::setAutoMove (const bool shouldAutoMove)
+{
+    if (shouldAutoMove)
+    {
+        startTimer (speedLevel * 100);
+    }
+    else
+    {
+        stopTimer();
     }
 }
 
