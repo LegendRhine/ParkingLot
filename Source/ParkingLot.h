@@ -14,29 +14,6 @@
 class TrainingCar;
 class RestingCar;
 
-//=========================================================================
-/** This class will show the Axis-point when turning. 
-*/
-class PolePlacer : public Component
-{
-public:
-    PolePlacer ()       { setSize (wh, wh); }
-    ~PolePlacer()       { }
-
-    virtual void paint (Graphics& g) override
-    {
-        g.setColour (Colours::lightgreen.withAlpha (0.65f));
-        g.fillEllipse (0.f, 0.f, float(wh), float(wh));
-    }
-
-    bool hitTest (int, int) override            { return false; }
-
-private:
-    const int wh = 10;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PolePlacer)
-};
-
 //==============================================================================
 /** The parking lot which holds few resting cars, the training-car and controls it. 
 
@@ -82,19 +59,76 @@ private:
     void placeTheCar (const int oldFangxiang, const int newFangxiang);
 
     void resetPath ();
-    void getCurrentCheckPoints();
-    
+    void getCurrentCheckPoints();    
     const bool isCrashed();
     
     //=========================================================================
+    /** This class will show the Axis-point when turning. */
+    class PolePlacer : public Component
+    {
+    public:
+        PolePlacer () { setSize (wh, wh); }
+        ~PolePlacer() { }
+
+        virtual void paint (Graphics& g) override
+        {
+            g.setColour (Colours::lightgreen.withAlpha (0.65f));
+            g.fillEllipse (0.f, 0.f, float(wh), float(wh));
+        }
+
+        bool hitTest (int, int) override { return false; }
+
+    private:
+        const int wh = 10;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PolePlacer)
+    };
+    //=========================================================================
     ScopedPointer<PolePlacer> leftPlacer, rightPlacer;
+    OwnedArray<Component> restingCars;
     ScopedPointer<TrainingCar> trainingCar;
 
-	float pathHudu;
+    /** This class repersent stop-area */
+    class StopArea : public Component
+    {
+    public:
+        StopArea() { }
 
+        virtual void paint (Graphics& g) override
+        {
+            g.setColour (Colours::lightgreen.withAlpha (0.6f));
+            g.drawRoundedRectangle (getLocalBounds().toFloat(), 5.0f, 0.6f);
+
+            for (int i = -60; i <= getBottom() + 60; i += 20)
+            {
+                Line<int> lineOne (-80, i, getWidth() + 80, i);
+                lineOne.applyTransform (AffineTransform::rotation (
+                    45.0f / 180.0f * float_Pi, getWidth() / 2.0f, getHeight() / 2.0f));
+
+                g.drawLine (lineOne.toFloat(), 0.6f);
+
+                Line<int> lineTwo (-80, i, getWidth() + 80, i);
+                lineTwo.applyTransform (AffineTransform::rotation (
+                    -45.0f / 180.0f * float_Pi, getWidth() / 2.0f, getHeight() / 2.0f));
+
+                g.drawLine (lineTwo.toFloat(), 0.6f);
+            }
+        }
+
+        void mouseUp (const MouseEvent& e) override
+        {
+            getParentComponent()->mouseUp (e);
+        }
+
+    private:
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StopArea)
+    };
+    //=========================================================================
+    ScopedPointer<StopArea> stopAreaOne, stopAreaTwo, stopAreaThree;
+    
     Array<Point<int>> checkPoints;
-    OwnedArray<RestingCar> restingCars;
     Path leftFrontPath, rightFrontPath, leftRearPath, rightRearPath;
+    float pathHudu;
 
     bool leftFrontPathShow, rightFrontPathShow, leftRearPathShow, rightRearPathShow;
     bool shouldShowPole;

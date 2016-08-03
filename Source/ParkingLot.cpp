@@ -372,71 +372,96 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
         return;
     
     const int hGap = 25 + (slope ? 50 : 0);
-    const int vGap = 45;
-    
+    const int vGap = 45;    
     const int hNumbers = getHeight() / (CarWidth + hGap) +
-                         ((getHeight() % (CarWidth + hGap) == 0) ? 0 : 1);
-    
+                         ((getHeight() % (CarWidth + hGap) == 0) ? 0 : 1);    
     const int vNumbers = getHeight() / (CarLength + vGap) +
                          ((getHeight() % (CarLength + vGap) == 0) ? 0 : 1);
     
     // left side for h-car arrange
     for (int i = hNumbers; --i >= 0; )
     {
+        Component* car = nullptr;
+
         if (i != 3)
         {
-            RestingCar* car = new RestingCar();
+            car = new RestingCar();
             restingCars.add (car);
-            addAndMakeVisible (car);
             car->setSize (CarLength, CarWidth);
             car->setTopLeftPosition (8, (CarWidth + hGap) * i + 8);
+        }
+        else
+        {
+            car = stopAreaOne = new StopArea();
+            car->setSize (CarLength + 15, CarWidth + 28);
+            car->setTopLeftPosition (3, (CarWidth + hGap) * i - 5);
+        }
+        
+        addAndMakeVisible (car);
 
-            // slope and backslash
-            if (slope)
-            {
-                const float cx (car->getBounds().toFloat().getCentreX());
-                const float cy (car->getBounds().toFloat().getCentreY());
-                const float hudu = float_Pi / 4.0f;
+        // slope and backslash
+        if (slope)
+        {
+            const float cx (car->getBounds().toFloat().getCentreX());
+            const float cy (car->getBounds().toFloat().getCentreY());
+            const float hudu = float_Pi / 4.0f;
 
-                car->setTransform (AffineTransform::rotation (backslash ? hudu : -hudu, cx, cy));
-            }
+            car->setTransform (AffineTransform::rotation (backslash ? hudu : -hudu, cx, cy));
         }
     }
     
     // right side for h-car arrange
     for (int i = hNumbers; --i >= 0; )
     {
-        if (!(i == 1 || i == 5))
+        Component* car = nullptr;
+
+        if (i == 1)
         {
-            RestingCar* car = new RestingCar();
+            car = stopAreaTwo = new StopArea();
+            car->setSize (CarLength + 10, CarWidth + 28);
+            car->setTopLeftPosition (getWidth() - 16 - CarLength, (CarWidth + hGap) * i - 5);
+        }
+        else
+        {
+            car = new RestingCar();
             restingCars.add (car);
-            addAndMakeVisible (car);
             car->setSize (CarLength, CarWidth);
             car->setTopLeftPosition (getWidth() - 8 - CarLength, (CarWidth + hGap) * i + 8);
+        }
+        
+        addAndMakeVisible (car);
+        
+        // slope and backslash
+        if (slope)
+        {
+            const float cx (car->getBounds().toFloat().getCentreX());
+            const float cy (car->getBounds().toFloat().getCentreY());
+            const float hudu = float_Pi / 4.0f;
 
-            // slope and backslash
-            if (slope)
-            {
-                const float cx (car->getBounds().toFloat().getCentreX());
-                const float cy (car->getBounds().toFloat().getCentreY());
-                const float hudu = float_Pi / 4.0f;
-
-                car->setTransform (AffineTransform::rotation (backslash ? -hudu : hudu, cx, cy));
-            }
+            car->setTransform (AffineTransform::rotation (backslash ? -hudu : hudu, cx, cy));
         }
     }
     
     // v-car arrange
     for (int i = 0; i < vNumbers; ++i)
     {
+        Component* car = nullptr;
+
         if (i != 1)
         {
-            RestingCar* car = new RestingCar();
+            car = new RestingCar();
             restingCars.add (car);
-            addAndMakeVisible (car);
             car->setSize (CarWidth, CarLength);
             car->setTopLeftPosition (getWidth() / 2 - CarWidth / 2, (CarLength + vGap) * i + 8);
         }
+        else
+        {
+            car = stopAreaThree = new StopArea();
+            car->setSize (CarWidth + 20, CarLength + 60);
+            car->setTopLeftPosition (getWidth() / 2 - CarWidth / 2 - 10, (CarLength + vGap) * i - 20);
+        }
+
+        addAndMakeVisible (car);
     }
 }
 
