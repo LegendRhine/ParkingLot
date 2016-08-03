@@ -210,17 +210,20 @@ void ParkingLot::moveTheCar (const bool backward)
 
     if (isCrashed())
     {
-        if (AlertWindow::showNativeDialogBox (L"撞了!!",
-                                              L"点击[确定]按钮或直接回车继续玩。\n"
-                                              L"点击[取消]按钮复位车辆重新开始。",
-                                              true))
-            moveTheCar (!backward);
-        else
-            reset();
+        SplashScreen* splash = new SplashScreen ("Splash",
+            ImageCache::getFromMemory (BinaryData::crashed_png, BinaryData::crashed_pngSize),
+            false);
+
+        splash->deleteAfterDelay (RelativeTime (1), true);        
+        //moveTheCar (!backward);
     }
     else if (isSuccessful())
     {
-        AlertWindow::showNativeDialogBox (L"漂亮!!", L"完美入位!!", false);
+        SplashScreen* splash = new SplashScreen ("Splash",
+            ImageCache::getFromMemory (BinaryData::good_png, BinaryData::good_pngSize),
+            false);
+
+        splash->deleteAfterDelay (RelativeTime (1), true);
     }
     else  // link path point and draw them...
     {
@@ -435,7 +438,7 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
             car = new RestingCar();
             restingCars.add (car);
             car->setSize (CarLength, CarWidth);
-            car->setTopLeftPosition (10, (CarWidth + hGap) * i + 18);            
+            car->setTopLeftPosition (10, (CarWidth + hGap) * i + 15);            
         }
         
         addAndMakeVisible (car);
@@ -468,7 +471,7 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
             car = new RestingCar();
             restingCars.add (car);
             car->setSize (CarLength, CarWidth);
-            car->setTopLeftPosition (getWidth() - 8 - CarLength, (CarWidth + hGap) * i + 8);
+            car->setTopLeftPosition (getWidth() - 8 - CarLength, (CarWidth + hGap) * i + 15);
         }
         
         addAndMakeVisible (car);

@@ -6,6 +6,8 @@
   <MAINGROUP id="HITcTa" name="Parking Lot">
     <GROUP id="{662A7673-0387-25A7-C779-2B1AF86634D2}" name="Source">
       <GROUP id="{D4BF5535-797D-031C-A9DE-A85EA0265543}" name="BinaryData">
+        <FILE id="v16JD1" name="crashed.png" compile="0" resource="1" file="Source/BinaryData/crashed.png"/>
+        <FILE id="F0I6wn" name="good.png" compile="0" resource="1" file="Source/BinaryData/good.png"/>
         <FILE id="cTG37C" name="icon.png" compile="0" resource="1" file="Source/BinaryData/icon.png"/>
       </GROUP>
       <FILE id="PO10uK" name="CommonData.h" compile="0" resource="0" file="Source/CommonData.h"/>
