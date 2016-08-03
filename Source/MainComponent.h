@@ -29,6 +29,8 @@ public:
     void resized() override;
 
 private:
+    OpenGLContext openGL;
+
     ScopedPointer<ParkingLot> parkinglot;
     ScopedPointer<SetupPanel> setupPanel;
 

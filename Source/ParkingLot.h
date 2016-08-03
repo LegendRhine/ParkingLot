@@ -61,6 +61,7 @@ private:
     void resetPath ();
     void getCurrentCheckPoints();    
     const bool isCrashed();
+    const bool isSuccessful();
     
     //=========================================================================
     /** This class will show the Axis-point when turning. */
@@ -96,7 +97,8 @@ private:
 
         virtual void paint (Graphics& g) override
         {
-            g.setColour (Colours::lightgreen.withAlpha (0.6f));
+            g.setColour (Colours::lightgrey.withAlpha (0.5f));
+            //g.fillRoundedRectangle (getLocalBounds().toFloat(), 5.0f);
             g.drawRoundedRectangle (getLocalBounds().toFloat(), 5.0f, 0.6f);
 
             for (int i = -60; i <= getBottom() + 60; i += 20)

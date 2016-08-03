@@ -16,6 +16,8 @@
 //==============================================================================
 MainComponent::MainComponent()
 {
+    openGL.attachTo (*this);
+
     addAndMakeVisible (parkinglot = new ParkingLot());
     addAndMakeVisible (setupPanel = new SetupPanel (parkinglot));
 
@@ -24,6 +26,7 @@ MainComponent::MainComponent()
 
 MainComponent::~MainComponent()
 {
+    openGL.detach();
 }
 
 void MainComponent::paint (Graphics& g)

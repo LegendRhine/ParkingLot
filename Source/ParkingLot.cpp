@@ -218,6 +218,10 @@ void ParkingLot::moveTheCar (const bool backward)
         else
             reset();
     }
+    else if (isSuccessful())
+    {
+        AlertWindow::showNativeDialogBox (L"漂亮!!", L"完美入位!!", false);
+    }
     else  // link path point and draw them...
     {
         AffineTransform atf (trainingCar->getTransform());
@@ -306,13 +310,42 @@ const bool ParkingLot::isCrashed()
     for (int i = checkPoints.size(); --i >= 0; )
     {
         Point<int> p (checkPoints[i].transformedBy (atf));
+
+        if (!contains (p))
+            return true;
+
         Component* comp = getComponentAt (p);
 
-        if (!contains (p) || (comp != nullptr && comp != this && comp != trainingCar))
-            return true;
+        for (int j = restingCars.size(); --j >= 0; )
+        {
+            if (comp == restingCars[j])
+                return true;
+        }
     }
 
     return false;
+}
+
+//=================================================================================================
+const bool ParkingLot::isSuccessful ()
+{
+    AffineTransform atf (trainingCar->getTransform());
+
+    for (int i = checkPoints.size(); --i >= 0; )
+    {
+        Point<int> p (checkPoints[i].transformedBy (atf));
+
+        Rectangle<int> stopOne (stopAreaOne->getBounds().transformedBy (stopAreaOne->getTransform()));
+        Rectangle<int> stopTwo (stopAreaTwo->getBounds().transformedBy (stopAreaTwo->getTransform()));
+        Rectangle<int> stopThree (stopAreaThree->getBounds().transformedBy (stopAreaThree->getTransform()));
+
+        if (stopOne.contains (p) || stopTwo.contains (p) || stopThree.contains (p))
+            continue;
+        else
+            return false;
+    }
+
+    return true;
 }
 
 //=================================================================================================
@@ -383,21 +416,22 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
     {
         Component* car = nullptr;
 
-        if (i != 3)
+        if (i == 3)
+        {
+            car = stopAreaOne = new StopArea();
+            car->setSize (CarLength + 6, CarWidth + 8);
+            car->setTopLeftPosition (6, (CarWidth + hGap) * i + 14);
+        }
+        else
         {
             car = new RestingCar();
             restingCars.add (car);
             car->setSize (CarLength, CarWidth);
-            car->setTopLeftPosition (8, (CarWidth + hGap) * i + 8);
-        }
-        else
-        {
-            car = stopAreaOne = new StopArea();
-            car->setSize (CarLength + 15, CarWidth + 28);
-            car->setTopLeftPosition (3, (CarWidth + hGap) * i - 5);
+            car->setTopLeftPosition (10, (CarWidth + hGap) * i + 18);            
         }
         
         addAndMakeVisible (car);
+        car->toBack();
 
         // slope and backslash
         if (slope)
@@ -418,8 +452,8 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
         if (i == 1)
         {
             car = stopAreaTwo = new StopArea();
-            car->setSize (CarLength + 10, CarWidth + 28);
-            car->setTopLeftPosition (getWidth() - 16 - CarLength, (CarWidth + hGap) * i - 5);
+            car->setSize (CarLength + 6, CarWidth + 8);
+            car->setTopLeftPosition (getWidth() - 13 - CarLength, (CarWidth + hGap) * i + 6);
         }
         else
         {
@@ -430,7 +464,8 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
         }
         
         addAndMakeVisible (car);
-        
+        car->toBack();
+
         // slope and backslash
         if (slope)
         {
@@ -457,11 +492,12 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
         else
         {
             car = stopAreaThree = new StopArea();
-            car->setSize (CarWidth + 20, CarLength + 60);
-            car->setTopLeftPosition (getWidth() / 2 - CarWidth / 2 - 10, (CarLength + vGap) * i - 20);
+            car->setSize (CarWidth + 8, CarLength + 6);
+            car->setTopLeftPosition (getWidth() / 2 - CarWidth / 2 - 4, (CarLength + vGap) * i + 10);
         }
 
         addAndMakeVisible (car);
+        car->toBack();
     }
 }
 
