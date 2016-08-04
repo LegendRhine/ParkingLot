@@ -104,10 +104,10 @@ void ParkingLot::resetPath ()
 
     repaint();
 
-    leftFrontPath.startNewSubPath (checkPoints[0].toFloat());
-    rightFrontPath.startNewSubPath (checkPoints[1].toFloat());
-    leftRearPath.startNewSubPath (checkPoints[2].toFloat());
-    rightRearPath.startNewSubPath (checkPoints[3].toFloat());
+    leftFrontPath.startNewSubPath (checkPoints[0].transformedBy (trainingCar->getTransform()).toFloat());
+    rightFrontPath.startNewSubPath (checkPoints[1].transformedBy (trainingCar->getTransform()).toFloat());
+    leftRearPath.startNewSubPath (checkPoints[2].transformedBy (trainingCar->getTransform()).toFloat());
+    rightRearPath.startNewSubPath (checkPoints[3].transformedBy (trainingCar->getTransform()).toFloat());
 }
 
 //=================================================================================================
@@ -573,7 +573,7 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
 }
 
 //=================================================================================================
-void ParkingLot::reset()
+void ParkingLot::resetAll()
 {
     leftPlacer->setVisible (false);
     rightPlacer->setVisible (false);

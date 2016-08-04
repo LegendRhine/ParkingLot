@@ -38,6 +38,7 @@ private:
     ScopedPointer<Label> nameLb;
     ScopedPointer<Label> versionLb;
 
+    ScopedPointer<TextButton> erasePathBt;
     ScopedPointer<TextButton> resetBt;
     ScopedPointer<TextButton> clearBt;
 

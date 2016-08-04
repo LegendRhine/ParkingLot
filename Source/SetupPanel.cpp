@@ -27,6 +27,9 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     versionLb->setColour (Label::textColourId, Colours::lightgrey);
 
     // buttons
+    addAndMakeVisible (erasePathBt = new TextButton (L"清除已有轨迹"));
+    erasePathBt->addListener (this);
+
     addAndMakeVisible (resetBt = new TextButton (L"复位"));
     resetBt->addListener (this);
 
@@ -120,22 +123,23 @@ void SetupPanel::resized()
     // pathes..
     const int leftGap = 20;
 
-    pathGroup->setBounds (leftGap - 10, 70, getWidth() - 15, 90);
+    pathGroup->setBounds (leftGap - 10, 70, getWidth() - 15, 115);
 
     leftFrontPathBt->setBounds (leftGap, pathGroup->getY() + 20, 100, 25);
     rightFrontPathBt->setBounds (leftFrontPathBt->getRight() + 5, leftFrontPathBt->getY(), 100, 25);
     leftRearPathBt->setBounds (leftGap, leftFrontPathBt->getBottom() + 5, 100, 25);
     rightRearPathBt->setBounds (leftRearPathBt->getRight() + 5, leftRearPathBt->getY(), 100, 25);
+    erasePathBt->setBounds (getWidth() - 105, rightRearPathBt->getBottom() + 5, 90, 25);
 
     // slope..
-    typeGroup->setBounds (leftGap - 10, 170, getWidth() - 15, 60);
+    typeGroup->setBounds (leftGap - 10, erasePathBt->getBottom() + 20, getWidth() - 15, 60);
 
     nonSlopeBt->setBounds (leftGap, typeGroup->getY() + 20, 62, 25);
     slopeBt->setBounds (nonSlopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
     antiSlopeBt->setBounds (slopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
 
     // others..
-    othersGroup->setBounds (leftGap - 10, 240, getWidth() - 15, 60);
+    othersGroup->setBounds (leftGap - 10, antiSlopeBt->getBottom() + 25, getWidth() - 15, 60);
 
     showPoleBt->setBounds (leftGap, othersGroup->getY() + 20, 100, 25);
     hideCarBt->setBounds (showPoleBt->getRight() + 5, showPoleBt->getY(), 100, 25);
@@ -147,7 +151,7 @@ void SetupPanel::buttonClicked (Button* bt)
 {
     if (bt == resetBt)
     {
-        parkinglot->reset();
+        parkinglot->resetAll();
         hideCarBt->setToggleState (false, sendNotification);
         clearBt->setEnabled (true);
 
@@ -179,6 +183,9 @@ void SetupPanel::buttonClicked (Button* bt)
 
     else if (bt == rightRearPathBt)
         parkinglot->showRightRearPath (rightRearPathBt->getToggleState());
+
+    else if (bt == erasePathBt)
+        parkinglot->resetPath();
 
     else if (bt == showPoleBt)
         parkinglot->showPole (showPoleBt->getToggleState());

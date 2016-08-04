@@ -48,7 +48,8 @@ public:
     void setSlopedRestingCars (const bool slope, const bool backslash);
     void clearRestingCars();
 
-    void reset();
+    void resetPath ();
+    void resetAll();
         
     virtual void mouseUp (const MouseEvent& event) override;
     virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
@@ -63,7 +64,6 @@ private:
     void placeAfterSetDirection (const int oldFangxiang, const int newFangxiang);
     void placeTheCarAfterDraged (const int newX, const int newY);
 
-    void resetPath ();
     void getCurrentCheckPoints();    
     const bool isCrashed();
     const bool isSuccessful();
