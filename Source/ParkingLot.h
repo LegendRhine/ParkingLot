@@ -20,7 +20,9 @@ class RestingCar;
     Mouse click (left/right/middle) for turning the direction.
     Mouse wheel for back/forward the training-car.
 */
-class ParkingLot   : public Component
+class ParkingLot   : public Component,
+    public DragAndDropContainer,
+    public DragAndDropTarget
 {
 public:
     //==============================================================================
@@ -51,11 +53,15 @@ public:
     virtual void mouseUp (const MouseEvent& event) override;
     virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
 
+    virtual bool isInterestedInDragSource (const SourceDetails& dragSourceDetails) override;
+    virtual void itemDropped (const SourceDetails& dragSourceDetails) override;
+
 private:
     //==============================================================================
     void arrangeRestingCars (const bool slope, const bool backslash);
     void turnDirection (const bool shunshizhen, const bool turnLeft);
-    void placeTheCar (const int oldFangxiang, const int newFangxiang);
+    void placeAfterSetDirection (const int oldFangxiang, const int newFangxiang);
+    void placeTheCarAfterDraged (const int newX, const int newY);
 
     void resetPath ();
     void getCurrentCheckPoints();    

@@ -23,7 +23,6 @@ public:
     ~TrainingCar() { }
 
     void paint (Graphics&) override;
-    bool hitTest (int, int) override                { return false; }
     void reset();
 
     /** The argument: -1: left-turning, 0: straight, 1: right-turning */
@@ -31,6 +30,12 @@ public:
 
     /** Return: -1: left-turning, 0: straight, 1: right-turning */
     const int getDirection() const { return direction; }
+
+    /** drag this object */
+    virtual void mouseDrag (const MouseEvent& event) override;
+
+    virtual void mouseUp (const MouseEvent& event) override;
+    virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
 
 private:
 	// -1: left; 0:center; 1: right. 

@@ -88,20 +88,21 @@ void ParkingLot::resized ()
     rightPlacer->setCentrePosition (trainingCar->getRight() + FromInnerWheel, trainingCar->getY() + 190);
     rightPlacer->setVisible (false);
 
-    getCurrentCheckPoints();
     resetPath();
-    repaint();
-
     arrangeRestingCars (xiexiang, fanxiexiang);
 }
 
 //=================================================================================================
 void ParkingLot::resetPath ()
 {
+    getCurrentCheckPoints();
+
     leftFrontPath.clear();
     rightFrontPath.clear();
     leftRearPath.clear();
     rightRearPath.clear();
+
+    repaint();
 
     leftFrontPath.startNewSubPath (checkPoints[0].toFloat());
     rightFrontPath.startNewSubPath (checkPoints[1].toFloat());
@@ -115,7 +116,7 @@ void ParkingLot::setDirection (const int newDirection)
     const int oldFangxiang = trainingCar->getDirection();
 
     trainingCar->setDirection (newDirection);
-    placeTheCar (oldFangxiang, newDirection);
+    placeAfterSetDirection (oldFangxiang, newDirection);
 
     leftPlacer->setVisible (false);
     rightPlacer->setVisible (false);
@@ -133,7 +134,7 @@ void ParkingLot::setDirection (const int newDirection)
 }
 
 //=================================================================================================
-void ParkingLot::placeTheCar (const int oldFangxiang, const int newFangxiang)
+void ParkingLot::placeAfterSetDirection (const int oldFangxiang, const int newFangxiang)
 {
     if (newFangxiang != 0 && oldFangxiang != newFangxiang)  
     {
@@ -187,6 +188,61 @@ void ParkingLot::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& whe
     
     if (!moveTheCar (direction))
         moveTheCar (!direction);
+}
+
+//=================================================================================================
+bool ParkingLot::isInterestedInDragSource (const SourceDetails& dragSourceDetails)
+{
+    return (dragSourceDetails.sourceComponent == trainingCar);
+}
+
+//=================================================================================================
+void ParkingLot::itemDropped (const SourceDetails& details)
+{
+    String offsetPointString (details.description.toString());
+    const int offsetX = offsetPointString.upToFirstOccurrenceOf (",", false, true).getIntValue();
+    const int offsetY = offsetPointString.fromFirstOccurrenceOf (",", false, true).getIntValue();
+
+    const int x = details.localPosition.getX() - offsetX;
+    const int y = details.localPosition.getY() - offsetY;
+
+    placeTheCarAfterDraged (x, y);
+}
+
+//=================================================================================================
+void ParkingLot::placeTheCarAfterDraged (const int newX, const int newY)
+{
+    // for crash check.. first, create a 'fake' car
+    ScopedPointer<TrainingCar> newCar = new TrainingCar();
+
+    newCar->setDirection (trainingCar->getDirection());
+    newCar->setBounds (trainingCar->getBounds());
+    newCar->setTransform (trainingCar->getTransform());
+
+    // then, move the real car, and perform check..
+    trainingCar->setTransform (AffineTransform ());
+    trainingCar->setTopLeftPosition (newX, newY);
+    getCurrentCheckPoints();
+
+    if (isCrashed())
+    {
+        trainingCar = newCar;
+        addAndMakeVisible (trainingCar);
+    }
+    else
+    {
+        newCar = nullptr;
+        pathHudu = 0.0f;
+        resetPath();
+
+        leftPlacer->setTransform (AffineTransform());
+        rightPlacer->setTransform (AffineTransform());
+
+        leftPlacer->setCentrePosition (trainingCar->getX() - FromInnerWheel, trainingCar->getY() + 190);
+        rightPlacer->setCentrePosition (trainingCar->getRight() + FromInnerWheel, trainingCar->getY() + 190);
+
+        trainingCar->setDirection (0);
+    }    
 }
 
 //=================================================================================================
@@ -307,6 +363,7 @@ void ParkingLot::clearRestingCars ()
     restingCars.clear();
 
     stopAreaOne = stopAreaTwo = stopAreaThree = nullptr;
+    resetPath();
 
     // tell maincomponent don't draw stop-lines
     getParentComponent()->repaint();

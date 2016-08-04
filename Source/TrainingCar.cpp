@@ -34,7 +34,7 @@ void TrainingCar::paint (Graphics& g)
 
     // border
     g.setColour (Colours::lightgrey);
-    g.drawRoundedRectangle (getLocalBounds ().toFloat (), 15.0f, 0.5f);
+    g.drawRoundedRectangle (getLocalBounds ().toFloat (), 15.0f, 1.0f);
 
     // an identity for forward direction
     g.setColour (Colours::lightgrey.withAlpha (0.45f));
@@ -79,5 +79,28 @@ void TrainingCar::setDirection (const int newDirection)
 
     if (oldFangxiang != direction)
         repaint ();
+}
+
+//=================================================================================================
+void TrainingCar::mouseDrag (const MouseEvent& e)
+{
+    DragAndDropContainer* dc = dynamic_cast<DragAndDropContainer*>(getParentComponent());
+
+    if (dc != nullptr)
+        dc->startDragging (var (e.getPosition().toString()), this);
+}
+
+//=================================================================================================
+void TrainingCar::mouseUp (const MouseEvent& event)
+{
+    if (getParentComponent() != nullptr && event.mouseWasClicked())
+        getParentComponent()->mouseUp (event);
+}
+
+//=================================================================================================
+void TrainingCar::mouseWheelMove (const MouseEvent& event, const MouseWheelDetails& wheel)
+{
+    if (getParentComponent() != nullptr)
+        getParentComponent()->mouseWheelMove (event, wheel);
 }
 
