@@ -71,65 +71,44 @@ void ParkingLot::paint (Graphics& g)
     {   
         forecastPath1.clear ();
         forecastPath2.clear ();
+
         static float dashArray[2] = { 2, 5 };
         g.setColour (Colours::yellow);
 
-        if (0 == trainingCar->getDirection()) // straight forward
-        {
-            // left forecast line
-            Line<float> leftLine (checkPoints[2].toFloat(), checkPoints[4].toFloat());
-            leftLine = leftLine.withShortenedStart (-300.0f).withShortenedEnd (-400.f);
-            leftLine.applyTransform (trainingCar->getTransform());
+        // there is no need display straightforward forecast-line
 
-            g.drawDashedLine (leftLine, dashArray, 2, 0.8f);
-
-            // right forecast line
-            Line<float> rightLine (checkPoints[3].toFloat(), checkPoints[5].toFloat());
-            rightLine = rightLine.withShortenedStart (-300.0f).withShortenedEnd (-400.f);
-            rightLine.applyTransform (trainingCar->getTransform());
-
-            g.drawDashedLine (rightLine, dashArray, 2, 0.8f);
-
-        }
-        else if (-1 == trainingCar->getDirection())  // turn left
+        if (-1 == trainingCar->getDirection())  // turn left
         {
             forecastPath1.addCentredArc (leftPlacer->getBounds().toFloat().getCentreX(),
                 leftPlacer->getBounds().toFloat().getCentreY(),
                 280.0f, 280.f, 
                 pathHudu, -float_Pi / 5.0f, float_Pi + float_Pi / 5.0f, true);
 
-            PathStrokeType strokeType (0.3f);
-            strokeType.createDashedStroke (forecastPath1, forecastPath1, dashArray, 2);
-            g.strokePath (forecastPath1, strokeType);
-
             forecastPath2.addCentredArc (leftPlacer->getBounds().toFloat().getCentreX(),
                 leftPlacer->getBounds().toFloat().getCentreY(),
                 FromInnerWheel - 1.f, FromInnerWheel - 1.f,
                 pathHudu, -float_Pi / 5.0f, float_Pi + float_Pi / 5.0f, true);
-
-            strokeType.createDashedStroke (forecastPath2, forecastPath2, dashArray, 2);
-            g.strokePath (forecastPath2, strokeType);
-
         }
-        else  // turn right
+        else if (1 == trainingCar->getDirection()) // turn right
         {
             forecastPath1.addCentredArc (rightPlacer->getBounds().toFloat().getCentreX(),
                 rightPlacer->getBounds().toFloat().getCentreY(),
                 280.0f, 280.f,
                 pathHudu, float_Pi / 5.0f, -float_Pi - float_Pi / 5.0f, true);
 
-            PathStrokeType strokeType (0.3f);
-            strokeType.createDashedStroke (forecastPath1, forecastPath1, dashArray, 2);
-            g.strokePath (forecastPath1, strokeType);
-
             forecastPath2.addCentredArc (rightPlacer->getBounds().toFloat().getCentreX(),
                 rightPlacer->getBounds().toFloat().getCentreY(),
                 FromInnerWheel - 1.f, FromInnerWheel - 1.f,
                 pathHudu, float_Pi / 5.0f, -float_Pi - float_Pi / 5.0f, true);
-
-            strokeType.createDashedStroke (forecastPath2, forecastPath2, dashArray, 2);
-            g.strokePath (forecastPath2, strokeType);
         }
+
+        PathStrokeType strokeType (0.3f);
+
+        strokeType.createDashedStroke (forecastPath1, forecastPath1, dashArray, 2);
+        g.strokePath (forecastPath1, strokeType);
+
+        strokeType.createDashedStroke (forecastPath2, forecastPath2, dashArray, 2);
+        g.strokePath (forecastPath2, strokeType);
     }
 
 	/*g.setColour (Colours::darkred);
@@ -287,10 +266,12 @@ void ParkingLot::placeTheCarAfterDraged (const int newX, const int newY)
     newCar->setDirection (trainingCar->getDirection());
     newCar->setBounds (trainingCar->getBounds());
     newCar->setTransform (trainingCar->getTransform());
+    newCar->setAlpha (trainingCar->getAlpha());
 
     // then, move the real car, and perform check..
     trainingCar->setTransform (AffineTransform ());
     trainingCar->setTopLeftPosition (newX, newY);
+
     getCurrentCheckPoints();
 
     if (isCrashed())
@@ -309,8 +290,6 @@ void ParkingLot::placeTheCarAfterDraged (const int newX, const int newY)
 
         leftPlacer->setCentrePosition (trainingCar->getX() - FromInnerWheel, trainingCar->getY() + 190);
         rightPlacer->setCentrePosition (trainingCar->getRight() + FromInnerWheel, trainingCar->getY() + 190);
-
-        trainingCar->setDirection (0);
     }    
 }
 
@@ -420,7 +399,7 @@ void ParkingLot::showForecastPath (const bool showIt)
 //=================================================================================================
 void ParkingLot::transparentTrainingCar (const bool transparentIt)
 {
-    trainingCar->setAlpha (transparentIt ? 0.2f : alphaOfThings);
+    trainingCar->setAlpha (transparentIt ? 0.3f : alphaOfThings);
 }
 
 //=================================================================================================

@@ -55,7 +55,7 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     rightRearPathBt->addListener (this);
     rightRearPathBt->setToggleState (true, dontSendNotification);
 
-    addAndMakeVisible (forecastBt = new ToggleButton (L"预测轨迹"));
+    addAndMakeVisible (forecastBt = new ToggleButton (L"转弯辅助轨迹"));
     forecastBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
     forecastBt->addListener (this);
     forecastBt->setToggleState (false, dontSendNotification);
@@ -90,15 +90,15 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     nonSlopeBt->setToggleState (true, dontSendNotification);
 
     // group component..
-    addAndMakeVisible (pathGroup = new GroupComponent (String(), L"轨迹显示"));
+    addAndMakeVisible (pathGroup = new GroupComponent (String(), L"轨迹"));
     pathGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
     pathGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
 
-    addAndMakeVisible (typeGroup = new GroupComponent (String(), L"车位类型"));
+    addAndMakeVisible (typeGroup = new GroupComponent (String(), L"场地"));
     typeGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
     typeGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
 
-    addAndMakeVisible (othersGroup = new GroupComponent (String(), L"其他选项"));
+    addAndMakeVisible (othersGroup = new GroupComponent (String(), L"其它"));
     othersGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
     othersGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
 
@@ -135,7 +135,7 @@ void SetupPanel::resized()
     leftRearPathBt->setBounds (leftGap, leftFrontPathBt->getBottom() + 5, 100, 25);
     rightRearPathBt->setBounds (leftRearPathBt->getRight() + 5, leftRearPathBt->getY(), 100, 25);
     erasePathBt->setBounds (getWidth() - 105, rightRearPathBt->getBottom() + 5, 90, 25);
-    forecastBt->setBounds (leftGap + 10, rightRearPathBt->getBottom() + 5, 90, 25);
+    forecastBt->setBounds (leftGap, rightRearPathBt->getBottom() + 5, 100, 25);
 
     // slope..
     typeGroup->setBounds (leftGap - 10, erasePathBt->getBottom() + 20, getWidth() - 15, 60);

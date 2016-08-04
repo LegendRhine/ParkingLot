@@ -106,7 +106,7 @@ private:
             g.setColour (Colours::lightgrey.withAlpha (0.4f));
 
             g.drawRoundedRectangle (getLocalBounds().toFloat(), 5.0f, 0.6f);
-            g.fillCheckerBoard (getLocalBounds(), 27, 27, Colour (0x00), Colours::lightgrey.withAlpha (0.15f));
+            g.fillCheckerBoard (getLocalBounds(), 28, 27, Colour (0x00), Colours::lightgrey.withAlpha (0.15f));
         }
 
         void mouseUp (const MouseEvent& e) override
