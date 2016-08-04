@@ -29,11 +29,11 @@ void TrainingCar::reset ()
 void TrainingCar::paint (Graphics& g)
 {    
     // whole car
-    g.setColour (Colours::lightseagreen);
+    g.setColour (Colours::lightseagreen.darker (0.3f));
     g.fillRoundedRectangle (getLocalBounds ().toFloat (), 15.0f);
 
     // border
-    g.setColour (Colours::lightgrey);
+    g.setColour (Colours::grey);
     g.drawRoundedRectangle (getLocalBounds ().toFloat (), 15.0f, 1.0f);
 
     // an identity for forward direction

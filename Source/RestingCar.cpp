@@ -13,7 +13,7 @@
 
 //==============================================================================
 RestingCar::RestingCar() 
-    : cl (Random::getSystemRandom().nextFloat(), 0.8f, 0.5f, 1.0f)
+    : cl (Random::getSystemRandom().nextFloat(), 0.8f, 0.25f, 1.0f)
 {
     //setSize (CarWidth, CarLength);
     setWantsKeyboardFocus(false);
@@ -30,8 +30,8 @@ void RestingCar::paint (Graphics& g)
     g.fillRoundedRectangle (getLocalBounds ().toFloat (), 10.0f);
 
     // border
-    g.setColour (Colours::lightgrey);
-    g.drawRoundedRectangle (getLocalBounds ().toFloat (), 10.0f, 0.5f);
+    g.setColour (Colours::grey);
+    g.drawRoundedRectangle (getLocalBounds ().toFloat (), 10.0f, 0.6f);
 }
 
 void RestingCar::resized()
