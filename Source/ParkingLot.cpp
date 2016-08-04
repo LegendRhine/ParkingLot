@@ -16,6 +16,7 @@ const float alphaOfThings = 1.0f;
 //==============================================================================
 ParkingLot::ParkingLot()
     : pathHudu (0.0f),
+    arrangeState (0),
     leftFrontPathShow (false),
     rightFrontPathShow (false),
     leftRearPathShow (true),
@@ -330,7 +331,7 @@ const bool ParkingLot::moveTheCar (const bool backward)
             ImageCache::getFromMemory (BinaryData::good_png, BinaryData::good_pngSize),
             false);
 
-        splash->deleteAfterDelay (RelativeTime (1), true);
+        splash->deleteAfterDelay (RelativeTime (2.5), true);
     }
     else  // link path point and draw them...
     {
@@ -412,16 +413,51 @@ void ParkingLot::setSlopedRestingCars (const bool slope, const bool backslash)
 }
 
 //=================================================================================================
-void ParkingLot::clearRestingCars ()
+const int ParkingLot::getFieldState () const
 {
-    clearAllRestingCars = true;
-    restingCars.clear();
+    if (restingCars.size() < 1)
+        return 0;   // training field
 
-    stopAreaOne = stopAreaTwo = stopAreaThree = nullptr;
-    resetPath();
+    else  // -1-parking field, 1-block (hard) field
+        return (restingCars[0]->getWidth() >= CarWidth) ? -1 : 1;
+}
 
-    // tell maincomponent don't draw stop-lines
-    getParentComponent()->repaint();
+//=================================================================================================
+void ParkingLot::setFieldState (const int stateCode)
+{
+    if (0 == stateCode)  // training field
+    {
+        clearAllRestingCars = true;
+        restingCars.clear();
+
+        stopAreaOne = stopAreaTwo = stopAreaThree = nullptr;
+        resetPath();
+
+        // tell maincomponent don't draw stop-lines
+        getParentComponent()->repaint();
+    }
+
+    else if (-1 == stateCode)  // parking field
+    {
+        leftPlacer->setVisible (false);
+        rightPlacer->setVisible (false);
+
+        trainingCar->setAlpha (alphaOfThings);
+        clearAllRestingCars = false;
+    }
+    else  // hard (block) field
+    {
+        clearAllRestingCars = true;
+        restingCars.clear();
+
+        stopAreaOne = stopAreaTwo = stopAreaThree = nullptr;
+        resetPath();
+
+        // tell maincomponent don't draw stop-lines
+        getParentComponent()->repaint();
+    }
+
+    resized();
 }
 
 //=================================================================================================
@@ -529,7 +565,12 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
 
     if (clearAllRestingCars)
         return;
-    
+
+    if (!slope)
+        arrangeState = 0;
+    else
+        arrangeState = backslash ? -1 : 1;
+  
     const int hGap = 25 + (slope ? 50 : 0);
     const int vGap = 45;    
     const int hNumbers = getHeight() / (CarWidth + hGap) +
@@ -567,7 +608,7 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
             const float hudu = float_Pi / 4.0f;
 
             car->setTransform (AffineTransform::rotation (backslash ? hudu : -hudu, cx, cy));
-        }
+        }        
     }
     
     // right side for h-car arrange
@@ -625,18 +666,6 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
         addAndMakeVisible (car);
         car->toBack();
     }
-}
-
-//=================================================================================================
-void ParkingLot::resetAll()
-{
-    leftPlacer->setVisible (false);
-    rightPlacer->setVisible (false);
-
-    trainingCar->setAlpha (alphaOfThings);
-    clearAllRestingCars = false;
-
-    resized();
 }
 
 //=================================================================================================

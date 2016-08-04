@@ -29,13 +29,7 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     // buttons
     addAndMakeVisible (erasePathBt = new TextButton (L"清除已有轨迹"));
     erasePathBt->addListener (this);
-
-    addAndMakeVisible (resetBt = new TextButton (L"复位"));
-    resetBt->addListener (this);
-
-    addAndMakeVisible (clearBt = new TextButton (L"清场"));
-    clearBt->addListener (this);
-
+    
     // show path buttons
     addAndMakeVisible (leftFrontPathBt = new ToggleButton (L"左前角轨迹"));
     leftFrontPathBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
@@ -69,6 +63,25 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     addAndMakeVisible (hideCarBt = new ToggleButton (L"车体半透明"));
     hideCarBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
     hideCarBt->addListener (this);
+
+    // filed bts
+    addAndMakeVisible (trainingBt = new ToggleButton (L"训练场"));
+    trainingBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
+    trainingBt->addListener (this);
+
+    addAndMakeVisible (parkingBt = new ToggleButton (L"停车场"));
+    parkingBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
+    parkingBt->addListener (this);
+
+    addAndMakeVisible (hardBt = new ToggleButton (L"障碍赛"));
+    hardBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
+    hardBt->addListener (this);
+
+    trainingBt->setRadioGroupId (1233);
+    parkingBt->setRadioGroupId (1233);
+    hardBt->setRadioGroupId (1233);
+
+    parkingBt->setToggleState (true, dontSendNotification);
 
     // slope bts
     addAndMakeVisible (nonSlopeBt = new ToggleButton (L"非字型"));
@@ -121,10 +134,6 @@ void SetupPanel::resized()
     nameLb->setBounds (0, 10, getWidth(), 30);
     versionLb->setBounds (0, 35, getWidth(), 25);
 
-    // buttons
-    resetBt->setBounds (getWidth() - 60, getHeight() - 30, 50, 25);
-    clearBt->setBounds (resetBt->getX() - 60, getHeight() - 30, 50, 25);
-
     // pathes..
     const int leftGap = 20;
 
@@ -138,9 +147,13 @@ void SetupPanel::resized()
     forecastBt->setBounds (leftGap, rightRearPathBt->getBottom() + 5, 100, 25);
 
     // slope..
-    typeGroup->setBounds (leftGap - 10, erasePathBt->getBottom() + 20, getWidth() - 15, 60);
+    typeGroup->setBounds (leftGap - 10, erasePathBt->getBottom() + 20, getWidth() - 15, 90);
 
-    nonSlopeBt->setBounds (leftGap, typeGroup->getY() + 20, 62, 25);
+    trainingBt->setBounds (leftGap, typeGroup->getY() + 20, 62, 25);
+    parkingBt->setBounds (trainingBt->getRight() + 5, trainingBt->getY(), 62, 25);
+    hardBt->setBounds (parkingBt->getRight() + 5, trainingBt->getY(), 62, 25);
+
+    nonSlopeBt->setBounds (leftGap, hardBt->getBottom() + 5, 62, 25);
     slopeBt->setBounds (nonSlopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
     antiSlopeBt->setBounds (slopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
 
@@ -155,30 +168,7 @@ void SetupPanel::resized()
 //=================================================================================================
 void SetupPanel::buttonClicked (Button* bt)
 {
-    if (bt == resetBt)
-    {
-        parkinglot->resetAll();
-        hideCarBt->setToggleState (false, sendNotification);
-        clearBt->setEnabled (true);
-
-        typeGroup->setEnabled (true);
-        nonSlopeBt->setEnabled (true);
-        slopeBt->setEnabled (true);
-        antiSlopeBt->setEnabled (true);
-    }
-
-    else if (bt == clearBt && clearBt->isEnabled())
-    {
-        clearBt->setEnabled (false);
-        parkinglot->clearRestingCars();
-
-        typeGroup->setEnabled (false);
-        nonSlopeBt->setEnabled (false);
-        slopeBt->setEnabled (false);
-        antiSlopeBt->setEnabled (false);
-    }
-
-    else if (bt == leftFrontPathBt)
+    if (bt == leftFrontPathBt)
         parkinglot->showLeftFrontPath (leftFrontPathBt->getToggleState());
 
     else if (bt == rightFrontPathBt)
@@ -202,13 +192,43 @@ void SetupPanel::buttonClicked (Button* bt)
     else if (bt == hideCarBt)
         parkinglot->transparentTrainingCar (hideCarBt->getToggleState());
 
-    else if (bt == nonSlopeBt)
+    else if (bt == trainingBt && parkinglot->getFieldState() != 0)
+    {
+        parkinglot->setFieldState (0);
+        hideCarBt->setToggleState (false, sendNotification);
+
+        nonSlopeBt->setEnabled (false);
+        slopeBt->setEnabled (false);
+        antiSlopeBt->setEnabled (false);
+    }
+
+    else if (bt == parkingBt && parkinglot->getFieldState() != -1)
+    {
+        parkinglot->setFieldState (-1);
+        hideCarBt->setToggleState (false, sendNotification);
+
+        nonSlopeBt->setEnabled (true);
+        slopeBt->setEnabled (true);
+        antiSlopeBt->setEnabled (true);
+    }
+
+    else if (bt == hardBt && parkinglot->getFieldState() != 1)
+    {
+        parkinglot->setFieldState (1);
+        hideCarBt->setToggleState (false, sendNotification);
+
+        nonSlopeBt->setEnabled (false);
+        slopeBt->setEnabled (false);
+        antiSlopeBt->setEnabled (false);
+    }
+
+    else if (bt == nonSlopeBt && parkinglot->getSlopeState() != 0)
         parkinglot->setSlopedRestingCars (false, false);
 
-    else if (bt == slopeBt)
+    else if (bt == slopeBt && parkinglot->getSlopeState() != 1)
         parkinglot->setSlopedRestingCars (true, false);
 
-    else if (bt == antiSlopeBt)
+    else if (bt == antiSlopeBt && parkinglot->getSlopeState() != -1)
         parkinglot->setSlopedRestingCars (true, true);
         
 }

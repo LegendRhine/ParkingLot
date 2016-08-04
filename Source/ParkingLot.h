@@ -47,10 +47,15 @@ public:
     void showForecastPath (const bool showIt);
     void transparentTrainingCar (const bool transparentIt);
     void setSlopedRestingCars (const bool slope, const bool backslash);
-    void clearRestingCars();
+
+    /** return 0-non slope, 1-slope, -1-anti slope */
+    const int getSlopeState() const                 { return arrangeState;  }  
+
+    /** return 0-training field, -1-parking field, 1-block (hard) field */
+    const int getFieldState() const;
+    void setFieldState (const int stateCode);
 
     void resetPath ();
-    void resetAll();
         
     virtual void mouseUp (const MouseEvent& event) override;
     virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
@@ -121,8 +126,10 @@ private:
     ScopedPointer<StopArea> stopAreaOne, stopAreaTwo, stopAreaThree;
     
     Array<Point<int>> checkPoints;
-    Path leftFrontPath, rightFrontPath, leftRearPath, rightRearPath, forecastPath1, forecastPath2;
+    Path leftFrontPath, rightFrontPath, leftRearPath, rightRearPath;
+    Path forecastPath1, forecastPath2;
     float pathHudu;
+    int arrangeState;
 
     bool leftFrontPathShow, rightFrontPathShow, leftRearPathShow, rightRearPathShow;
     bool shouldShowPole, shouldShowForecastPath;
