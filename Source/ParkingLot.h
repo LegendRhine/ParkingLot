@@ -44,7 +44,8 @@ public:
     void showRightRearPath (const bool showIt);
 
     void showPole (const bool showIt);
-    void showTrainingCar (const bool showIt);
+    void showForecastPath (const bool showIt);
+    void transparentTrainingCar (const bool transparentIt);
     void setSlopedRestingCars (const bool slope, const bool backslash);
     void clearRestingCars();
 
@@ -102,24 +103,10 @@ private:
 
         virtual void paint (Graphics& g) override
         {
-            g.setColour (Colours::lightgrey.withAlpha (0.5f));
-            //g.fillRoundedRectangle (getLocalBounds().toFloat(), 5.0f);
+            g.setColour (Colours::lightgrey.withAlpha (0.4f));
+
             g.drawRoundedRectangle (getLocalBounds().toFloat(), 5.0f, 0.6f);
-
-            for (int i = -60; i <= getBottom() + 60; i += 20)
-            {
-                Line<int> lineOne (-80, i, getWidth() + 80, i);
-                lineOne.applyTransform (AffineTransform::rotation (
-                    45.0f / 180.0f * float_Pi, getWidth() / 2.0f, getHeight() / 2.0f));
-
-                g.drawLine (lineOne.toFloat(), 0.6f);
-
-                Line<int> lineTwo (-80, i, getWidth() + 80, i);
-                lineTwo.applyTransform (AffineTransform::rotation (
-                    -45.0f / 180.0f * float_Pi, getWidth() / 2.0f, getHeight() / 2.0f));
-
-                g.drawLine (lineTwo.toFloat(), 0.6f);
-            }
+            g.fillCheckerBoard (getLocalBounds(), 27, 27, Colour (0x00), Colours::lightgrey.withAlpha (0.15f));
         }
 
         void mouseUp (const MouseEvent& e) override
@@ -134,11 +121,11 @@ private:
     ScopedPointer<StopArea> stopAreaOne, stopAreaTwo, stopAreaThree;
     
     Array<Point<int>> checkPoints;
-    Path leftFrontPath, rightFrontPath, leftRearPath, rightRearPath;
+    Path leftFrontPath, rightFrontPath, leftRearPath, rightRearPath, forecastPath1, forecastPath2;
     float pathHudu;
 
     bool leftFrontPathShow, rightFrontPathShow, leftRearPathShow, rightRearPathShow;
-    bool shouldShowPole;
+    bool shouldShowPole, shouldShowForecastPath;
     bool xiexiang, fanxiexiang;
     bool clearAllRestingCars;
 

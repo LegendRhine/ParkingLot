@@ -15,12 +15,13 @@ const float alphaOfThings = 1.0f;
 
 //==============================================================================
 ParkingLot::ParkingLot()
-	: pathHudu (0.0f),
+    : pathHudu (0.0f),
     leftFrontPathShow (false),
     rightFrontPathShow (false),
     leftRearPathShow (true),
     rightRearPathShow (true),
     shouldShowPole (false),
+    shouldShowForecastPath (false),
     xiexiang (false),
     fanxiexiang (false),
     clearAllRestingCars (false)
@@ -63,6 +64,72 @@ void ParkingLot::paint (Graphics& g)
     {
         g.setColour (Colours::lightpink);
         g.strokePath (rightRearPath, PathStrokeType (0.5f));
+    }
+
+    // draw forecast-path
+    if (shouldShowForecastPath)
+    {   
+        forecastPath1.clear ();
+        forecastPath2.clear ();
+        static float dashArray[2] = { 2, 5 };
+        g.setColour (Colours::yellow);
+
+        if (0 == trainingCar->getDirection()) // straight forward
+        {
+            // left forecast line
+            Line<float> leftLine (checkPoints[2].toFloat(), checkPoints[4].toFloat());
+            leftLine = leftLine.withShortenedStart (-300.0f).withShortenedEnd (-400.f);
+            leftLine.applyTransform (trainingCar->getTransform());
+
+            g.drawDashedLine (leftLine, dashArray, 2, 0.8f);
+
+            // right forecast line
+            Line<float> rightLine (checkPoints[3].toFloat(), checkPoints[5].toFloat());
+            rightLine = rightLine.withShortenedStart (-300.0f).withShortenedEnd (-400.f);
+            rightLine.applyTransform (trainingCar->getTransform());
+
+            g.drawDashedLine (rightLine, dashArray, 2, 0.8f);
+
+        }
+        else if (-1 == trainingCar->getDirection())  // turn left
+        {
+            forecastPath1.addCentredArc (leftPlacer->getBounds().toFloat().getCentreX(),
+                leftPlacer->getBounds().toFloat().getCentreY(),
+                280.0f, 280.f, 
+                pathHudu, -float_Pi / 5.0f, float_Pi + float_Pi / 5.0f, true);
+
+            PathStrokeType strokeType (0.3f);
+            strokeType.createDashedStroke (forecastPath1, forecastPath1, dashArray, 2);
+            g.strokePath (forecastPath1, strokeType);
+
+            forecastPath2.addCentredArc (leftPlacer->getBounds().toFloat().getCentreX(),
+                leftPlacer->getBounds().toFloat().getCentreY(),
+                FromInnerWheel - 1.f, FromInnerWheel - 1.f,
+                pathHudu, -float_Pi / 5.0f, float_Pi + float_Pi / 5.0f, true);
+
+            strokeType.createDashedStroke (forecastPath2, forecastPath2, dashArray, 2);
+            g.strokePath (forecastPath2, strokeType);
+
+        }
+        else  // turn right
+        {
+            forecastPath1.addCentredArc (rightPlacer->getBounds().toFloat().getCentreX(),
+                rightPlacer->getBounds().toFloat().getCentreY(),
+                280.0f, 280.f,
+                pathHudu, float_Pi / 5.0f, -float_Pi - float_Pi / 5.0f, true);
+
+            PathStrokeType strokeType (0.3f);
+            strokeType.createDashedStroke (forecastPath1, forecastPath1, dashArray, 2);
+            g.strokePath (forecastPath1, strokeType);
+
+            forecastPath2.addCentredArc (rightPlacer->getBounds().toFloat().getCentreX(),
+                rightPlacer->getBounds().toFloat().getCentreY(),
+                FromInnerWheel - 1.f, FromInnerWheel - 1.f,
+                pathHudu, float_Pi / 5.0f, -float_Pi - float_Pi / 5.0f, true);
+
+            strokeType.createDashedStroke (forecastPath2, forecastPath2, dashArray, 2);
+            g.strokePath (forecastPath2, strokeType);
+        }
     }
 
 	/*g.setColour (Colours::darkred);
@@ -179,6 +246,8 @@ void ParkingLot::mouseUp (const MouseEvent& e)
         setDirection (1);
     else if (e.mods.isMiddleButtonDown())
         setDirection (0);
+
+    repaint();
 }
 
 //=================================================================================================
@@ -342,9 +411,16 @@ void ParkingLot::showPole (const bool showIt)
 }
 
 //=================================================================================================
-void ParkingLot::showTrainingCar (const bool showIt)
+void ParkingLot::showForecastPath (const bool showIt)
 {
-    trainingCar->setAlpha (showIt ? 0.2f : alphaOfThings);
+    shouldShowForecastPath = showIt;
+    repaint();
+}
+
+//=================================================================================================
+void ParkingLot::transparentTrainingCar (const bool transparentIt)
+{
+    trainingCar->setAlpha (transparentIt ? 0.2f : alphaOfThings);
 }
 
 //=================================================================================================
@@ -423,7 +499,7 @@ void ParkingLot::getCurrentCheckPoints ()
 {
     checkPoints.clearQuick();
 
-    // add 50 points of the car for crash-check
+    // add 52 points of the car for crash-check
     const int x = trainingCar->getX();
     const int y = trainingCar->getY();
     const int w = trainingCar->getWidth();
@@ -433,29 +509,29 @@ void ParkingLot::getCurrentCheckPoints ()
 
     // front conners
     const int frontGap = 3;
-    checkPoints.add (Point<int> (x + frontGap, y + frontGap));
-    checkPoints.add (Point<int> (r - frontGap, y + frontGap));
+    checkPoints.add (Point<int> (x + frontGap, y + frontGap)); // index: 0
+    checkPoints.add (Point<int> (r - frontGap, y + frontGap)); // 1
 
     // rear path point
-    checkPoints.add (Point<int> (x, b - h / 4 + 10)); 
-    checkPoints.add (Point<int> (r, b - h / 4 + 10)); 
+    checkPoints.add (Point<int> (x, b - h / 4 + 10)); //  2
+    checkPoints.add (Point<int> (r, b - h / 4 + 10));  // 3
 
     // addtional 2 points
-    checkPoints.add (Point<int> (x, b - h / 4 - 5));
-    checkPoints.add (Point<int> (r, b - h / 4 - 5));
+    checkPoints.add (Point<int> (x, b - h / 4 - 5));  // 4
+    checkPoints.add (Point<int> (r, b - h / 4 - 5));  // 5
 
     // rear conners
-    checkPoints.add (Point<int> (x + 4, b - 4));
-    checkPoints.add (Point<int> (r - 4, b - 4));
+    checkPoints.add (Point<int> (x + frontGap, b - frontGap));
+    checkPoints.add (Point<int> (r - frontGap, b - frontGap));
 
-    // top and bottom sides
+    // top and bottom sides, 8-20
     for (int i = 1; i < 8; ++i)
     {
         checkPoints.add (Point<int> (x + i * (w / 8), y - 1));
         checkPoints.add (Point<int> (x + i * (w / 8), b + 1));
     }
     
-    // left and right sides
+    // left and right sides,
     for (int i = 1; i < 16; ++i)
     {
         if (i != 11)  // alreay added (rear path point)

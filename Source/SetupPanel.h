@@ -46,6 +46,7 @@ private:
     ScopedPointer<ToggleButton> rightFrontPathBt;
     ScopedPointer<ToggleButton> leftRearPathBt;
     ScopedPointer<ToggleButton> rightRearPathBt;
+    ScopedPointer<ToggleButton> forecastBt;
 
     ScopedPointer<ToggleButton> showPoleBt;
     ScopedPointer<ToggleButton> hideCarBt;

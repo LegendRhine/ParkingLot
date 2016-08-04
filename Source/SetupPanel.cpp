@@ -55,6 +55,11 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     rightRearPathBt->addListener (this);
     rightRearPathBt->setToggleState (true, dontSendNotification);
 
+    addAndMakeVisible (forecastBt = new ToggleButton (L"预测轨迹"));
+    forecastBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
+    forecastBt->addListener (this);
+    forecastBt->setToggleState (false, dontSendNotification);
+
     // show pole button
     addAndMakeVisible (showPoleBt = new ToggleButton (L"转向圆圆心"));
     showPoleBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
@@ -130,6 +135,7 @@ void SetupPanel::resized()
     leftRearPathBt->setBounds (leftGap, leftFrontPathBt->getBottom() + 5, 100, 25);
     rightRearPathBt->setBounds (leftRearPathBt->getRight() + 5, leftRearPathBt->getY(), 100, 25);
     erasePathBt->setBounds (getWidth() - 105, rightRearPathBt->getBottom() + 5, 90, 25);
+    forecastBt->setBounds (leftGap + 10, rightRearPathBt->getBottom() + 5, 90, 25);
 
     // slope..
     typeGroup->setBounds (leftGap - 10, erasePathBt->getBottom() + 20, getWidth() - 15, 60);
@@ -187,11 +193,14 @@ void SetupPanel::buttonClicked (Button* bt)
     else if (bt == erasePathBt)
         parkinglot->resetPath();
 
+    else if (bt == forecastBt)
+        parkinglot->showForecastPath (forecastBt->getToggleState());
+
     else if (bt == showPoleBt)
         parkinglot->showPole (showPoleBt->getToggleState());
 
     else if (bt == hideCarBt)
-        parkinglot->showTrainingCar (hideCarBt->getToggleState());
+        parkinglot->transparentTrainingCar (hideCarBt->getToggleState());
 
     else if (bt == nonSlopeBt)
         parkinglot->setSlopedRestingCars (false, false);
