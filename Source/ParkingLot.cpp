@@ -266,21 +266,29 @@ bool ParkingLot::keyPressed (const KeyPress& key)
 {
     if (key == KeyPress::leftKey)
     {
+        const int newAngle = jmax (-33, trainingCar->getTurningAngle() - 3);
+        trainingCar->setTurningAngle (newAngle, true);
 
         return true;
     }
     else if (key == KeyPress::rightKey)
     {
+        const int newAngle = jmin (33, trainingCar->getTurningAngle() + 3);
+        trainingCar->setTurningAngle (newAngle, true);
 
         return true;
     }
     else if (key == KeyPress::upKey)
     {
+        if (!moveTheCar (false))
+            moveTheCar (true);
 
         return true;
     }
     else if (key == KeyPress::downKey)
     {
+        if (!moveTheCar (true))
+            moveTheCar (false);
 
         return true;
     }
@@ -294,7 +302,7 @@ void ParkingLot::placeTheCarAfterDraged (const int newX, const int newY)
     // for crash check.. first, create a 'fake' car
     ScopedPointer<TrainingCar> newCar = new TrainingCar (this);
 
-    newCar->setTurningAngle (trainingCar->getTurningAngle());
+    newCar->setTurningAngle (trainingCar->getTurningAngle(), false);
     newCar->setBounds (trainingCar->getBounds());
     newCar->setTransform (trainingCar->getTransform());
     newCar->setAlpha (trainingCar->getAlpha());

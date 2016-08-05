@@ -24,12 +24,12 @@ public:
     TrainingCar (ParkingLot* park);
     ~TrainingCar() { }
 
-    /** return: -X: left direction; 0:center; x: right direction. Value range: -32 ~ 32 */
+    /** return: -X: left direction; 0:center; x: right direction.  */
     const int getTurningAngle() const                   { return turningAngle; }
-    const float getCurrentEachHudu() const              { return eachHudu; }
-    void setTurningAngle (const int newAngle);
+    void setTurningAngle (const int newAngle, const bool shouldTellParentRepaint);
 
     const float getDistanceFromInnerWheel()             { return fromInnerWheel; }
+    const float getCurrentEachHudu() const { return eachHudu; }
 
     /** turn left or right.  */
     virtual void mouseUp (const MouseEvent& event) override;

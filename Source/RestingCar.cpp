@@ -32,9 +32,6 @@ void RestingCar::paint (Graphics& g)
     // border
     g.setColour (Colours::grey);
     g.drawRoundedRectangle (getLocalBounds ().toFloat (), 10.0f, 0.6f);
-
-   /* Image img (ImageCache::getFromMemory (BinaryData::car_jpg, BinaryData::car_jpgSize));
-    g.drawImageWithin (img, 0, 0, getWidth (), getHeight (), RectanglePlacement::stretchToFit);*/
 }
 
 void RestingCar::resized()

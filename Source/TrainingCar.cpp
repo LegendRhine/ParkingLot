@@ -137,10 +137,10 @@ void TrainingCar::mouseWheelMove (const MouseEvent& event, const MouseWheelDetai
 }
 
 //=================================================================================================
-void TrainingCar::setTurningAngle (const int newAngle)
+void TrainingCar::setTurningAngle (const int newAngle, const bool shouldTellParentRepaint)
 {
     turningAngle = newAngle;
-    afterSetAngle (false);
+    afterSetAngle (shouldTellParentRepaint);
 }
 
 
