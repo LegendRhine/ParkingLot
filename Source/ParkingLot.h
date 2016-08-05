@@ -63,6 +63,9 @@ public:
     virtual bool isInterestedInDragSource (const SourceDetails& dragSourceDetails) override;
     virtual void itemDropped (const SourceDetails& dragSourceDetails) override;
 
+
+    virtual bool keyPressed (const KeyPress& key) override;
+
 private:
     //==============================================================================
     void arrangeRestingCars (const bool slope, const bool backslash);

@@ -89,6 +89,9 @@ public:
 
 			centreWithSize (getWidth (), getHeight ());
 			setVisible (true);
+
+            setWantsKeyboardFocus (false);
+            getContentComponent()->grabKeyboardFocus();
         }
 
         void closeButtonPressed() override

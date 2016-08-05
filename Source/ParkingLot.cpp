@@ -269,6 +269,13 @@ void ParkingLot::itemDropped (const SourceDetails& details)
 }
 
 //=================================================================================================
+bool ParkingLot::keyPressed (const KeyPress& key)
+{
+    DBG ("hello");
+    return true;
+}
+
+//=================================================================================================
 void ParkingLot::placeTheCarAfterDraged (const int newX, const int newY)
 {
     // for crash check.. first, create a 'fake' car
@@ -665,6 +672,5 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
         car->toBack();
     }
 }
-
 
 

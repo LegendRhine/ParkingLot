@@ -47,7 +47,7 @@ public:
     void reset();
 
     void paint (Graphics&) override;
-
+    
 private:
     //=========================================================================
     void afterSetAngle (const bool shouldRepaintParent);
