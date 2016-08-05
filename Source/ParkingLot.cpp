@@ -228,13 +228,6 @@ void ParkingLot::mouseUp (const MouseEvent& e)
 }
 
 //=================================================================================================
-void ParkingLot::mouseDown (const MouseEvent& e)
-{
-    trainingCar->mouseDown (e);
-    beginDragAutoRepeat (IntervelHoldMouse);
-}
-
-//=================================================================================================
 void ParkingLot::mouseDrag (const MouseEvent& e)
 {
     trainingCar->mouseDrag (e);
@@ -271,8 +264,28 @@ void ParkingLot::itemDropped (const SourceDetails& details)
 //=================================================================================================
 bool ParkingLot::keyPressed (const KeyPress& key)
 {
-    DBG ("hello");
-    return true;
+    if (key == KeyPress::leftKey)
+    {
+
+        return true;
+    }
+    else if (key == KeyPress::rightKey)
+    {
+
+        return true;
+    }
+    else if (key == KeyPress::upKey)
+    {
+
+        return true;
+    }
+    else if (key == KeyPress::downKey)
+    {
+
+        return true;
+    }
+
+    return false;
 }
 
 //=================================================================================================

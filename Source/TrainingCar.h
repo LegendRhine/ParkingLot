@@ -31,9 +31,6 @@ public:
 
     const float getDistanceFromInnerWheel()             { return fromInnerWheel; }
 
-    /** hold mouse down to continuously turn left or right.  */
-    virtual void mouseDown (const MouseEvent& e) override;
-
     /** turn left or right.  */
     virtual void mouseUp (const MouseEvent& event) override;
 

@@ -73,27 +73,12 @@ void TrainingCar::paint (Graphics& g)
 }
 
 //=================================================================================================
-void TrainingCar::mouseDown (const MouseEvent& e)
-{
-    mouseDrag (e);
-    beginDragAutoRepeat (IntervelHoldMouse);
-}
-
-//=================================================================================================
 void TrainingCar::mouseDrag (const MouseEvent& e)
 {
-    if (e.getDistanceFromDragStartX() > 3 || e.getDistanceFromDragStartY() > 3)
-    {
-        DragAndDropContainer* dc = dynamic_cast<DragAndDropContainer*>(getParentComponent());
+    DragAndDropContainer* dc = dynamic_cast<DragAndDropContainer*>(getParentComponent());
 
-        if (dc != nullptr)
-            dc->startDragging (var (e.getPosition().toString()), this);
-    }
-    else
-    {
-        if (e.getLengthOfMousePress() > 300)
-            mouseUp (e);
-    }
+    if (dc != nullptr)
+        dc->startDragging (var (e.getPosition().toString()), this);
 }
 
 //=================================================================================================
@@ -104,10 +89,10 @@ void TrainingCar::mouseUp (const MouseEvent& e)
         const int oldAngle = turningAngle;
 
         if (e.mods.isLeftButtonDown())
-            turningAngle = jmax (turningAngle - 1, -33);
+            turningAngle = jmax (turningAngle - 3, -33);
 
         else if (e.mods.isRightButtonDown())
-            turningAngle = jmin (turningAngle + 1, 33);
+            turningAngle = jmin (turningAngle + 3, 33);
 
         else if (e.mods.isMiddleButtonDown())
             turningAngle = 0;
@@ -128,7 +113,7 @@ void TrainingCar::afterSetAngle (const bool shouldRepaintParent)
         fromInnerWheel = 0.f;
 
     // set current hudu
-    for (int i = 33; --i > 0; )
+    for (int i = 3; i <=33; i += 3)
     {
         if (i == std::abs (turningAngle))
         {
