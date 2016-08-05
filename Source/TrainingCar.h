@@ -50,7 +50,7 @@ public:
 
 private:
     //=========================================================================
-    void afterSetAngle();
+    void afterSetAngle (const bool shouldRepaintParent);
 
     ParkingLot* parkingLot;
     float fromInnerWheel;

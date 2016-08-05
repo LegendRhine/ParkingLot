@@ -82,7 +82,7 @@ void TrainingCar::mouseDown (const MouseEvent& e)
 //=================================================================================================
 void TrainingCar::mouseDrag (const MouseEvent& e)
 {
-    if (e.getDistanceFromDragStart() > 2)
+    if (e.getDistanceFromDragStart() > 3)
     {
         DragAndDropContainer* dc = dynamic_cast<DragAndDropContainer*>(getParentComponent());
 
@@ -113,12 +113,12 @@ void TrainingCar::mouseUp (const MouseEvent& e)
             turningAngle = 0;
 
         if (oldAngle != turningAngle)
-            afterSetAngle();
+            afterSetAngle (true);
     }
 }
 
 //=================================================================================================
-void TrainingCar::afterSetAngle ()
+void TrainingCar::afterSetAngle (const bool shouldRepaintParent)
 {
     repaint();
 
@@ -137,8 +137,11 @@ void TrainingCar::afterSetAngle ()
         }
     }
 
-    parkingLot->placeAfterSetDirection (turningAngle);
-    parkingLot->repaint(); // for real-time change forecast-lines
+    if (shouldRepaintParent)
+    {
+        parkingLot->placeAfterSetDirection (turningAngle);
+        parkingLot->repaint(); // for real-time change forecast-lines
+    }
 }
 
 //=================================================================================================
@@ -152,7 +155,7 @@ void TrainingCar::mouseWheelMove (const MouseEvent& event, const MouseWheelDetai
 void TrainingCar::setTurningAngle (const int newAngle)
 {
     turningAngle = newAngle;
-    repaint();
+    afterSetAngle (false);
 }
 
 
