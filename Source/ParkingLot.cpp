@@ -96,13 +96,13 @@ void ParkingLot::paint (Graphics& g)
             Point<float> frontPoint;
 
             if (trainingCar->getTurningAngle() < 0)
-                frontPoint.setXY (trainingCar->getRight() - 1.f, trainingCar->getY() + 1.f);
+                frontPoint.setXY (trainingCar->getRight() - 0.f, trainingCar->getY() + 0.f);
             else
-                frontPoint.setXY (trainingCar->getX() - 1.f, trainingCar->getY() + 1.f);
+                frontPoint.setXY (trainingCar->getX() - 0.f, trainingCar->getY() + 0.f);
 
             frontPoint.applyTransform (trainingCar->getTransform());
 
-            const float banjing = polePoint.getDistanceFrom (frontPoint);
+            const float banjing = polePoint.getDistanceFrom (frontPoint) + 1.f;
             //DBG (banjing);
             
             if (trainingCar->getTurningAngle() < 0)  // turn left
@@ -181,10 +181,8 @@ void ParkingLot::resetPath ()
 }
 
 //=================================================================================================
-void ParkingLot::placeAfterSetDirection (const int oldAngle, const int newAngle)
+void ParkingLot::placeAfterSetDirection (const int newAngle)
 {
-    jassert (oldAngle != newAngle);
-
     if (newAngle == 0)
         return;
     
@@ -227,6 +225,19 @@ void ParkingLot::placeAfterSetDirection (const int oldAngle, const int newAngle)
 void ParkingLot::mouseUp (const MouseEvent& e)
 {
     trainingCar->mouseUp (e);
+}
+
+//=================================================================================================
+void ParkingLot::mouseDown (const MouseEvent& e)
+{
+    trainingCar->mouseDown (e);
+    beginDragAutoRepeat (50);
+}
+
+//=================================================================================================
+void ParkingLot::mouseDrag (const MouseEvent& e)
+{
+    trainingCar->mouseDrag (e);
 }
 
 //=================================================================================================

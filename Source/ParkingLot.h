@@ -32,7 +32,7 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
-    void placeAfterSetDirection (const int oldAngle, const int newAngle);
+    void placeAfterSetDirection (const int newAngle);
     const bool moveTheCar (const bool backward);
     const bool dontShowRestingCars() const              { return clearAllRestingCars; }
 
@@ -55,7 +55,9 @@ public:
 
     void resetPath ();
         
+    virtual void mouseDown (const MouseEvent& e) override;
     virtual void mouseUp (const MouseEvent& event) override;
+    virtual void mouseDrag (const MouseEvent& event) override;
     virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
 
     virtual bool isInterestedInDragSource (const SourceDetails& dragSourceDetails) override;

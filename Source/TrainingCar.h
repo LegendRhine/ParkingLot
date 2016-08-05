@@ -31,7 +31,10 @@ public:
 
     const float getDistanceFromInnerWheel()             { return fromInnerWheel; }
 
-    /** turn left or right. each click = (+-8) degree */
+    /** hold mouse down to continuously turn left or right.  */
+    virtual void mouseDown (const MouseEvent& e) override;
+
+    /** turn left or right.  */
     virtual void mouseUp (const MouseEvent& event) override;
 
     /** tell parent component to move the car forward or back */
@@ -46,6 +49,9 @@ public:
     void paint (Graphics&) override;
 
 private:
+    //=========================================================================
+    void afterSetAngle();
+
     ParkingLot* parkingLot;
     float fromInnerWheel;
     float eachHudu;

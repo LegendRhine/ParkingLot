@@ -73,19 +73,27 @@ void TrainingCar::paint (Graphics& g)
 }
 
 //=================================================================================================
-void TrainingCar::mouseDrag (const MouseEvent& e)
+void TrainingCar::mouseDown (const MouseEvent& e)
 {
-    DragAndDropContainer* dc = dynamic_cast<DragAndDropContainer*>(getParentComponent());
-
-    if (dc != nullptr)
-        dc->startDragging (var (e.getPosition().toString()), this);
+    mouseDrag (e);
+    beginDragAutoRepeat (50);
 }
 
 //=================================================================================================
-void TrainingCar::setTurningAngle (const int newAngle)
+void TrainingCar::mouseDrag (const MouseEvent& e)
 {
-    turningAngle = newAngle;
-    repaint();
+    if (e.getDistanceFromDragStart() > 2)
+    {
+        DragAndDropContainer* dc = dynamic_cast<DragAndDropContainer*>(getParentComponent());
+
+        if (dc != nullptr)
+            dc->startDragging (var (e.getPosition().toString()), this);
+    }
+    else
+    {
+        if (e.getLengthOfMousePress() > 300)
+            mouseUp (e);
+    }
 }
 
 //=================================================================================================
@@ -105,28 +113,32 @@ void TrainingCar::mouseUp (const MouseEvent& e)
             turningAngle = 0;
 
         if (oldAngle != turningAngle)
+            afterSetAngle();
+    }
+}
+
+//=================================================================================================
+void TrainingCar::afterSetAngle ()
+{
+    repaint();
+
+    if (turningAngle != 0)
+        fromInnerWheel = Zhouju / std::sin (float_Pi / 180.f * std::abs (turningAngle)) - 150.f;
+    else
+        fromInnerWheel = 0.f;
+
+    // set current hudu
+    for (int i = 33; --i > 0; )
+    {
+        if (i == std::abs (turningAngle))
         {
-            repaint();
-
-            if (turningAngle != 0)
-                fromInnerWheel = Zhouju / std::sin (float_Pi / 180.f * std::abs (turningAngle)) - 150.f;
-            else
-                fromInnerWheel = 0.f;
-
-            parkingLot->placeAfterSetDirection (oldAngle, turningAngle);
-            parkingLot->repaint(); // for real-time change forecast-lines
-        }
-
-        // set current hudu
-        for (int i = 33; --i > 0; )
-        {
-            if (i == std::abs (turningAngle))
-            {
-                eachHudu = 0.018f / 33.f * i;
-                break;
-            }
+            eachHudu = 0.018f / 33.f * i;
+            break;
         }
     }
+
+    parkingLot->placeAfterSetDirection (turningAngle);
+    parkingLot->repaint(); // for real-time change forecast-lines
 }
 
 //=================================================================================================
@@ -135,4 +147,12 @@ void TrainingCar::mouseWheelMove (const MouseEvent& event, const MouseWheelDetai
     if (getParentComponent() != nullptr)
         getParentComponent()->mouseWheelMove (event, wheel);
 }
+
+//=================================================================================================
+void TrainingCar::setTurningAngle (const int newAngle)
+{
+    turningAngle = newAngle;
+    repaint();
+}
+
 
