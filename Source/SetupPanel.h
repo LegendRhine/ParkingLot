@@ -49,7 +49,7 @@ private:
     ScopedPointer<ToggleButton> trainingBt, parkingBt, hardBt;
     ScopedPointer<ToggleButton> nonSlopeBt, slopeBt, antiSlopeBt;
 
-    ScopedPointer<ToggleButton> showPoleBt;
+    ScopedPointer<ToggleButton> showViewLineBt;
     ScopedPointer<ToggleButton> hideCarBt;
         
     ScopedPointer<GroupComponent> pathGroup, typeGroup, othersGroup;

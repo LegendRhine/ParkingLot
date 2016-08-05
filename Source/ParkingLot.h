@@ -32,9 +32,7 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
-
-    /** -1: turn left, 0: straight, 1: turn right */
-    void setDirection (const int newDirection);
+    void placeAfterSetDirection (const int oldAngle, const int newAngle);
     const bool moveTheCar (const bool backward);
     const bool dontShowRestingCars() const              { return clearAllRestingCars; }
 
@@ -42,9 +40,9 @@ public:
     void showRightFrontPath (const bool showIt);
     void showLeftRearPath (const bool showIt);
     void showRightRearPath (const bool showIt);
-
-    void showPole (const bool showIt);
     void showForecastPath (const bool showIt);
+    void showViewLine (const bool showIt);
+
     void transparentTrainingCar (const bool transparentIt);
     void setSlopedRestingCars (const bool slope, const bool backslash);
 
@@ -67,7 +65,6 @@ private:
     //==============================================================================
     void arrangeRestingCars (const bool slope, const bool backslash);
     void turnDirection (const bool shunshizhen, const bool turnLeft);
-    void placeAfterSetDirection (const int oldFangxiang, const int newFangxiang);
     void placeTheCarAfterDraged (const int newX, const int newY);
 
     void getCurrentCheckPoints();    
@@ -79,19 +76,13 @@ private:
     class PolePlacer : public Component
     {
     public:
-        PolePlacer () { setSize (wh, wh); }
-        ~PolePlacer() { }
-
-        virtual void paint (Graphics& g) override
-        {
-            g.setColour (Colours::lightgreen.withAlpha (0.65f));
-            g.fillEllipse (0.f, 0.f, float(wh), float(wh));
-        }
+        PolePlacer ()       { setSize (wh, wh); }
+        ~PolePlacer()       { }
 
         bool hitTest (int, int) override { return false; }
 
     private:
-        const int wh = 6;
+        const int wh = 2;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PolePlacer)
     };
@@ -132,7 +123,7 @@ private:
     int arrangeState;
 
     bool leftFrontPathShow, rightFrontPathShow, leftRearPathShow, rightRearPathShow;
-    bool shouldShowPole, shouldShowForecastPath;
+    bool shouldShowForecastPath, shouldShowViewLine;
     bool xiexiang, fanxiexiang;
     bool clearAllRestingCars;
 

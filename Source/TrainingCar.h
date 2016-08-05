@@ -13,34 +13,41 @@
 
 #include "JuceHeader.h"
 
+class ParkingLot;
+
 //==============================================================================
 /** Training-car which be held and controled by the parking-lot.
 */
 class TrainingCar    : public Component
 {
 public:
-    TrainingCar ();
+    TrainingCar (ParkingLot* park);
     ~TrainingCar() { }
 
-    void paint (Graphics&) override;
-    void reset();
+    /** return: -X: left direction; 0:center; x: right direction. Value range: -32 ~ 32 */
+    const int getTurningAngle() const                   { return turningAngle; }
+    void setTurningAngle (const int newAngle);
 
-    /** The argument: -1: left-turning, 0: straight, 1: right-turning */
-    void setDirection (const int newDirection);
+    const float getDistanceFromInnerWheel()             { return fromInnerWheel; }
 
-    /** Return: -1: left-turning, 0: straight, 1: right-turning */
-    const int getDirection() const { return direction; }
-
-    /** drag this object */
-    virtual void mouseDrag (const MouseEvent& event) override;
-
+    /** turn left or right. each click = (+-8) degree */
     virtual void mouseUp (const MouseEvent& event) override;
+
+    /** tell parent component to move the car forward or back */
     virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
 
+    /** drag this object for manual place it */
+    virtual void mouseDrag (const MouseEvent& event) override;
+
+    /** direction = 0, repaint front wheels etc.. */
+    void reset();
+
+    void paint (Graphics&) override;
+
 private:
-	// -1: left; 0:center; 1: right. 
-    // both left-turning and right-turning are the same angle.
-	int direction; 
+    ParkingLot* parkingLot;
+    float fromInnerWheel;
+    int turningAngle;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrainingCar)
 };

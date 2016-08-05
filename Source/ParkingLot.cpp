@@ -21,13 +21,13 @@ ParkingLot::ParkingLot()
     rightFrontPathShow (false),
     leftRearPathShow (true),
     rightRearPathShow (true),
-    shouldShowPole (false),
     shouldShowForecastPath (false),
+    shouldShowViewLine (false),
     xiexiang (false),
     fanxiexiang (false),
     clearAllRestingCars (false)
 {
-	addAndMakeVisible (trainingCar = new TrainingCar());
+	addAndMakeVisible (trainingCar = new TrainingCar (this));
     addChildComponent (leftPlacer = new PolePlacer());
     addChildComponent (rightPlacer = new PolePlacer());
 
@@ -74,11 +74,13 @@ void ParkingLot::paint (Graphics& g)
         forecastPath2.clear ();
 
         static float dashArray[2] = { 2, 5 };
+        const float fromInnerWheel = trainingCar->getDistanceFromInnerWheel();
+
         g.setColour (Colours::yellow);
 
         // there is no need display straightforward forecast-line
 
-        if (-1 == trainingCar->getDirection())  // turn left
+        if (trainingCar->getTurningAngle() < 0)  // turn left
         {
             forecastPath1.addCentredArc (leftPlacer->getBounds().toFloat().getCentreX(),
                 leftPlacer->getBounds().toFloat().getCentreY(),
@@ -87,10 +89,10 @@ void ParkingLot::paint (Graphics& g)
 
             forecastPath2.addCentredArc (leftPlacer->getBounds().toFloat().getCentreX(),
                 leftPlacer->getBounds().toFloat().getCentreY(),
-                FromInnerWheel - 1.f, FromInnerWheel - 1.f,
+                fromInnerWheel - 1.f, fromInnerWheel - 1.f,
                 pathHudu, -float_Pi / 5.0f, float_Pi + float_Pi / 5.0f, true);
         }
-        else if (1 == trainingCar->getDirection()) // turn right
+        else if (trainingCar->getTurningAngle() > 0) // turn right
         {
             forecastPath1.addCentredArc (rightPlacer->getBounds().toFloat().getCentreX(),
                 rightPlacer->getBounds().toFloat().getCentreY(),
@@ -99,7 +101,7 @@ void ParkingLot::paint (Graphics& g)
 
             forecastPath2.addCentredArc (rightPlacer->getBounds().toFloat().getCentreX(),
                 rightPlacer->getBounds().toFloat().getCentreY(),
-                FromInnerWheel - 1.f, FromInnerWheel - 1.f,
+                fromInnerWheel - 1.f, fromInnerWheel - 1.f,
                 pathHudu, float_Pi / 5.0f, -float_Pi - float_Pi / 5.0f, true);
         }
 
@@ -122,17 +124,18 @@ void ParkingLot::paint (Graphics& g)
 void ParkingLot::resized ()
 {
     pathHudu = 0.0f;
+    const int fromInnerWheel = roundToInt (trainingCar->getDistanceFromInnerWheel());
 
     trainingCar->setTransform (AffineTransform ());
 	trainingCar->setCentrePosition (getWidth() - CarLength - 95, getHeight() - 140);
     trainingCar->reset();
 
     leftPlacer->setTransform (AffineTransform());
-    leftPlacer->setCentrePosition (trainingCar->getX() - FromInnerWheel, trainingCar->getY() + 190);
+    leftPlacer->setCentrePosition (trainingCar->getX() - fromInnerWheel, trainingCar->getY() + 190);
     leftPlacer->setVisible (false);
 
     rightPlacer->setTransform (AffineTransform());
-    rightPlacer->setCentrePosition (trainingCar->getRight() + FromInnerWheel, trainingCar->getY() + 190);
+    rightPlacer->setCentrePosition (trainingCar->getRight() + fromInnerWheel, trainingCar->getY() + 190);
     rightPlacer->setVisible (false);
 
     resetPath();
@@ -158,32 +161,11 @@ void ParkingLot::resetPath ()
 }
 
 //=================================================================================================
-void ParkingLot::setDirection (const int newDirection)
+void ParkingLot::placeAfterSetDirection (const int oldAngle, const int newAngle)
 {
-    const int oldFangxiang = trainingCar->getDirection();
+    jassert (oldAngle != newAngle);
 
-    trainingCar->setDirection (newDirection);
-    placeAfterSetDirection (oldFangxiang, newDirection);
-
-    leftPlacer->setVisible (false);
-    rightPlacer->setVisible (false);
-
-    if (shouldShowPole && newDirection == -1)
-    {
-        leftPlacer->setVisible (true);
-        leftPlacer->toFront(false);
-    }
-    else if (shouldShowPole && newDirection == 1)
-    {
-        rightPlacer->setVisible (true);
-        rightPlacer->toFront(false);
-    }
-}
-
-//=================================================================================================
-void ParkingLot::placeAfterSetDirection (const int oldFangxiang, const int newFangxiang)
-{
-    if (newFangxiang != 0 && oldFangxiang != newFangxiang)  
+    if (newAngle != 0)  
     {
         float centerX = 0.f;
         float centerY = 0.f;
@@ -192,24 +174,26 @@ void ParkingLot::placeAfterSetDirection (const int oldFangxiang, const int newFa
         // First, place the car base on the matches placer, then transform the car. 
         // the pole base on the placer.
         // second, place two placer base on the car, then transform them.
-        if (newFangxiang == -1)
+        const int fromInnerWheel = roundToInt (trainingCar->getDistanceFromInnerWheel());
+
+        if (newAngle < 0)
         {
-            centerX = leftPlacer->getBoundsInParent().getCentreX() + FromInnerWheel + 50.f;
+            centerX = leftPlacer->getBoundsInParent().getCentreX() + fromInnerWheel + 50.f;
             centerY = leftPlacer->getBoundsInParent().getCentreY() - 70.f;
             aft = AffineTransform::rotation (pathHudu,
-                centerX - FromInnerWheel - 50.f, centerY + 70.f);
+                centerX - fromInnerWheel - 50.f, centerY + 70.f);
         }
         else
         {
-            centerX = rightPlacer->getBoundsInParent().getCentreX() - FromInnerWheel - 50.f;
+            centerX = rightPlacer->getBoundsInParent().getCentreX() - fromInnerWheel - 50.f;
             centerY = rightPlacer->getBoundsInParent().getCentreY() - 70.f;
             aft = AffineTransform::rotation (pathHudu,
-                centerX + FromInnerWheel + 50.f, centerY + 70.f);
+                centerX + fromInnerWheel + 50.f, centerY + 70.f);
         }
 
         trainingCar->setCentrePosition (roundToInt (centerX), roundToInt (centerY));
-        leftPlacer->setCentrePosition (trainingCar->getX() - FromInnerWheel, trainingCar->getY() + 190);
-        rightPlacer->setCentrePosition (trainingCar->getRight() + FromInnerWheel, trainingCar->getY() + 190);
+        leftPlacer->setCentrePosition (trainingCar->getX() - fromInnerWheel, trainingCar->getY() + 190);
+        rightPlacer->setCentrePosition (trainingCar->getRight() + fromInnerWheel, trainingCar->getY() + 190);
 
         trainingCar->setTransform (aft);
         leftPlacer->setTransform (aft);
@@ -220,13 +204,7 @@ void ParkingLot::placeAfterSetDirection (const int oldFangxiang, const int newFa
 //=================================================================================================
 void ParkingLot::mouseUp (const MouseEvent& e)
 {
-    if (e.mods.isLeftButtonDown())
-        setDirection (-1);
-    else if (e.mods.isRightButtonDown())
-        setDirection (1);
-    else if (e.mods.isMiddleButtonDown())
-        setDirection (0);
-
+    trainingCar->mouseUp (e);
     repaint();
 }
 
@@ -262,9 +240,9 @@ void ParkingLot::itemDropped (const SourceDetails& details)
 void ParkingLot::placeTheCarAfterDraged (const int newX, const int newY)
 {
     // for crash check.. first, create a 'fake' car
-    ScopedPointer<TrainingCar> newCar = new TrainingCar();
+    ScopedPointer<TrainingCar> newCar = new TrainingCar (this);
 
-    newCar->setDirection (trainingCar->getDirection());
+    newCar->setTurningAngle (trainingCar->getTurningAngle());
     newCar->setBounds (trainingCar->getBounds());
     newCar->setTransform (trainingCar->getTransform());
     newCar->setAlpha (trainingCar->getAlpha());
@@ -289,15 +267,17 @@ void ParkingLot::placeTheCarAfterDraged (const int newX, const int newY)
         leftPlacer->setTransform (AffineTransform());
         rightPlacer->setTransform (AffineTransform());
 
-        leftPlacer->setCentrePosition (trainingCar->getX() - FromInnerWheel, trainingCar->getY() + 190);
-        rightPlacer->setCentrePosition (trainingCar->getRight() + FromInnerWheel, trainingCar->getY() + 190);
+        const int fromInnerWheel = roundToInt (trainingCar->getDistanceFromInnerWheel());
+
+        leftPlacer->setCentrePosition (trainingCar->getX() - fromInnerWheel, trainingCar->getY() + 190);
+        rightPlacer->setCentrePosition (trainingCar->getRight() + fromInnerWheel, trainingCar->getY() + 190);
     }    
 }
 
 //=================================================================================================
 const bool ParkingLot::moveTheCar (const bool backward)
 {
-    if (0 == trainingCar->getDirection())  // straight forward
+    if (0 == trainingCar->getTurningAngle())  // straight forward
     {
         const int dist = (backward ? StraightStep : -StraightStep);
         trainingCar->setTopLeftPosition (trainingCar->getX(), trainingCar->getY() + dist);
@@ -305,11 +285,11 @@ const bool ParkingLot::moveTheCar (const bool backward)
         leftPlacer->setTopLeftPosition (leftPlacer->getX(), leftPlacer->getY() + dist);
         rightPlacer->setTopLeftPosition (rightPlacer->getX(), rightPlacer->getY() + dist);
     }
-    else if (-1 == trainingCar->getDirection()) // -1 is turn left
+    else if (-1 == trainingCar->getTurningAngle()) // -1 is turn left
     {
         turnDirection (backward, true);
     }
-    else  if (1 == trainingCar->getDirection()) // 1 is turn right
+    else  if (1 == trainingCar->getTurningAngle()) // 1 is turn right
     {
         turnDirection (!backward, false);
     }
@@ -377,23 +357,16 @@ void ParkingLot::showRightRearPath (const bool showIt)
 }
 
 //=================================================================================================
-void ParkingLot::showPole (const bool showIt)
-{
-    shouldShowPole = showIt;
-
-    leftPlacer->setVisible (false);
-    rightPlacer->setVisible (false);
-
-    if (shouldShowPole && trainingCar->getDirection() == -1)
-        leftPlacer->setVisible (true);
-    else if (shouldShowPole && trainingCar->getDirection() == 1)
-        rightPlacer->setVisible (true);
-}
-
-//=================================================================================================
 void ParkingLot::showForecastPath (const bool showIt)
 {
     shouldShowForecastPath = showIt;
+    repaint();
+}
+
+//=================================================================================================
+void ParkingLot::showViewLine (const bool showIt)
+{
+    shouldShowViewLine = showIt;
     repaint();
 }
 
@@ -672,11 +645,13 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
 void ParkingLot::turnDirection (const bool shunshizhen, const bool turnLeft)
 {
     pathHudu += shunshizhen ? EachHudu : -EachHudu;
+    const float fromInnerWheel = trainingCar->getDistanceFromInnerWheel();
 
-    const int x = turnLeft ? (trainingCar->getX() - FromInnerWheel) : (trainingCar->getRight() + FromInnerWheel);
-    const int y = trainingCar->getY() + 190;
+    const float x = turnLeft ? (trainingCar->getX() - fromInnerWheel) : (trainingCar->getRight() + fromInnerWheel);
+    const float y = trainingCar->getY() + 190.f;
 
-    AffineTransform aft (AffineTransform::rotation (pathHudu, float(x), float(y)));
+    AffineTransform aft (AffineTransform::rotation (pathHudu, x, y));
+
     trainingCar->setTransform (aft);
     rightPlacer->setTransform (aft);
     leftPlacer->setTransform (aft);

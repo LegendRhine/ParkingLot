@@ -9,11 +9,14 @@
 */
 
 #include "CommonData.h"
+#include "ParkingLot.h"
 #include "TrainingCar.h"
 
 //==============================================================================
-TrainingCar::TrainingCar ()
-	: direction (0)
+TrainingCar::TrainingCar (ParkingLot* park)
+	: parkingLot (park),
+    turningAngle (0),
+    fromInnerWheel (0.f)
 {
 	setSize (CarWidth, CarLength);
 }
@@ -21,7 +24,7 @@ TrainingCar::TrainingCar ()
 //=================================================================================================
 void TrainingCar::reset ()
 {
-    direction = 0;
+    turningAngle = 0;
     repaint ();
 }
 
@@ -29,7 +32,7 @@ void TrainingCar::reset ()
 void TrainingCar::paint (Graphics& g)
 {    
     // whole car
-    g.setColour (Colours::lightseagreen.darker (0.3f));
+    g.setColour (Colours::lightseagreen);
     g.fillRoundedRectangle (getLocalBounds ().toFloat (), 15.0f);
 
     // border
@@ -46,39 +49,26 @@ void TrainingCar::paint (Graphics& g)
     g.fillEllipse (15.0f, 100.0f, 16.0f, 22.0f);
 
     // links
-    g.drawHorizontalLine (45, 15.0f, getWidth () - 15.0f);
+    g.drawHorizontalLine (50, 15.0f, getWidth () - 15.0f);
     g.drawHorizontalLine (190, 15.0f, getWidth () - 15.0f);
 
     // rear wheels
     g.fillRect (6, 170, 10, 40);
     g.fillRect (84, 170, 10, 40);
 
+    // this line repersent 2 front wheels
+    Line<float> leftWheel (12.f, 30.f, 12.f, 30.f + 40);
+    Line<float> rightWheel (getWidth() - 12.f, 30.f, getWidth() - 12.f, 30.f + 40);
+
+    // turning the wheel
+    const float turningHudu = float_Pi / 180.f * turningAngle;
+
+    leftWheel.applyTransform (AffineTransform::rotation (turningHudu, 14.f, 50.f));
+    rightWheel.applyTransform (AffineTransform::rotation (turningHudu, getWidth() - 14.f, 50.f));
+
     // front wheels
-    if (0 == direction)
-    {
-        g.fillRect (7, 25, 10, 40);
-        g.fillRect (83, 25, 10, 40);
-    }
-    else if (-1 == direction)
-    {
-        g.drawLine (5.0f, 27.0f, 23.0f, 64.0f, 10.0f);
-        g.drawLine (78.0f, 27.0f, 96.0f, 64.0f, 10.0f);
-    }
-    else if (1 == direction)
-    {
-        g.drawLine (23.0f, 27.0f, 5.0f, 64.0f, 10.0f);
-        g.drawLine (96.0f, 27.0f, 78.0f, 64.0f, 10.0f);
-    }
-}
-
-//=================================================================================================
-void TrainingCar::setDirection (const int newDirection)
-{
-    const int oldFangxiang = direction;
-    direction = newDirection;
-
-    if (oldFangxiang != direction)
-        repaint ();
+    g.drawLine (leftWheel, 10.f);
+    g.drawLine (rightWheel, 10.f);
 }
 
 //=================================================================================================
@@ -91,10 +81,34 @@ void TrainingCar::mouseDrag (const MouseEvent& e)
 }
 
 //=================================================================================================
-void TrainingCar::mouseUp (const MouseEvent& event)
+void TrainingCar::setTurningAngle (const int newAngle)
 {
-    if (getParentComponent() != nullptr && event.mouseWasClicked())
-        getParentComponent()->mouseUp (event);
+    turningAngle = newAngle;
+    repaint();
+}
+
+//=================================================================================================
+void TrainingCar::mouseUp (const MouseEvent& e)
+{
+    const int oldAngle = turningAngle;
+
+    if (e.mods.isLeftButtonDown())
+        turningAngle = jmax (turningAngle - 4, -32);
+
+    else if (e.mods.isRightButtonDown())
+        turningAngle = jmin (turningAngle + 4, 32);
+
+    else if (e.mods.isMiddleButtonDown())
+        turningAngle = 0;
+
+    if (oldAngle != turningAngle)
+    {
+        repaint();
+        fromInnerWheel = std::abs (Zhouju / std::cos (float_Pi / 180.f * turningAngle) - CarWidth);
+        DBG (fromInnerWheel);
+
+        parkingLot->placeAfterSetDirection (oldAngle, turningAngle);
+    }
 }
 
 //=================================================================================================

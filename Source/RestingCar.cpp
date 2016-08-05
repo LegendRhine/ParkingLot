@@ -13,7 +13,7 @@
 
 //==============================================================================
 RestingCar::RestingCar() 
-    : cl (Random::getSystemRandom().nextFloat(), 0.8f, 0.25f, 1.0f)
+    : cl (Random::getSystemRandom().nextFloat(), 0.8f, 0.4f, 1.0f)
 {
     //setSize (CarWidth, CarLength);
     setWantsKeyboardFocus(false);

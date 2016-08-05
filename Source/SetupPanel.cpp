@@ -55,9 +55,9 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     forecastBt->setToggleState (false, dontSendNotification);
 
     // show pole button
-    addAndMakeVisible (showPoleBt = new ToggleButton (L"转向圆圆心"));
-    showPoleBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
-    showPoleBt->addListener (this);
+    addAndMakeVisible (showViewLineBt = new ToggleButton (L"辅助观察线"));
+    showViewLineBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
+    showViewLineBt->addListener (this);
 
     // hide car button
     addAndMakeVisible (hideCarBt = new ToggleButton (L"车体半透明"));
@@ -160,8 +160,8 @@ void SetupPanel::resized()
     // others..
     othersGroup->setBounds (leftGap - 10, antiSlopeBt->getBottom() + 25, getWidth() - 15, 60);
 
-    showPoleBt->setBounds (leftGap, othersGroup->getY() + 20, 100, 25);
-    hideCarBt->setBounds (showPoleBt->getRight() + 5, showPoleBt->getY(), 100, 25);
+    showViewLineBt->setBounds (leftGap, othersGroup->getY() + 20, 100, 25);
+    hideCarBt->setBounds (showViewLineBt->getRight() + 5, showViewLineBt->getY(), 100, 25);
 
 }
 
@@ -186,8 +186,8 @@ void SetupPanel::buttonClicked (Button* bt)
     else if (bt == forecastBt)
         parkinglot->showForecastPath (forecastBt->getToggleState());
 
-    else if (bt == showPoleBt)
-        parkinglot->showPole (showPoleBt->getToggleState());
+    else if (bt == showViewLineBt)
+        parkinglot->showViewLine (showViewLineBt->getToggleState());
 
     else if (bt == hideCarBt)
         parkinglot->transparentTrainingCar (hideCarBt->getToggleState());
