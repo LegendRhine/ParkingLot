@@ -40,6 +40,9 @@ public:
     /** drag this object for manual place it */
     virtual void mouseDrag (const MouseEvent& event) override;
 
+    /** turn the most left or right */
+    virtual void mouseDoubleClick (const MouseEvent& e) override;
+    
     /** direction = 0, repaint front wheels etc.. */
     void reset();
 

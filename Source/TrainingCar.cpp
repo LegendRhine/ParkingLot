@@ -82,6 +82,24 @@ void TrainingCar::mouseDrag (const MouseEvent& e)
 }
 
 //=================================================================================================
+void TrainingCar::mouseDoubleClick (const MouseEvent & e)
+{
+    const int oldAngle = turningAngle;
+
+    if (e.mods.isLeftButtonDown())
+    {
+        turningAngle = -33;
+    }
+    else if (e.mods.isRightButtonDown())
+    {
+        turningAngle = 33;
+    }
+
+    if (oldAngle != turningAngle)
+        afterSetAngle (true);
+}
+
+//=================================================================================================
 void TrainingCar::mouseUp (const MouseEvent& e)
 {
     if (e.mouseWasClicked())

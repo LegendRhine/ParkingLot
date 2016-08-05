@@ -58,6 +58,7 @@ public:
     virtual void mouseUp (const MouseEvent& event) override;
     virtual void mouseDrag (const MouseEvent& event) override;
     virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
+    virtual void mouseDoubleClick (const MouseEvent& e) override;
 
     virtual bool isInterestedInDragSource (const SourceDetails& dragSourceDetails) override;
     virtual void itemDropped (const SourceDetails& dragSourceDetails) override;

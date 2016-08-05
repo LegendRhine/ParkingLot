@@ -115,6 +115,9 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     othersGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
     othersGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
 
+    // cancel all widgets's focus for shortcut of ParkingLot (turning and moving car)
+    for (int i = getNumChildComponents(); --i >= 0; )
+        getChildComponent (i)->setWantsKeyboardFocus (false);
 }
 //=========================================================================
 SetupPanel::~SetupPanel()
@@ -162,7 +165,6 @@ void SetupPanel::resized()
 
     showViewLineBt->setBounds (leftGap, othersGroup->getY() + 20, 100, 25);
     hideCarBt->setBounds (showViewLineBt->getRight() + 5, showViewLineBt->getY(), 100, 25);
-
 }
 
 //=================================================================================================

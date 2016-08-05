@@ -26,6 +26,7 @@ ParkingLot::ParkingLot()
     clearAllRestingCars (false)
 {
 	addAndMakeVisible (trainingCar = new TrainingCar (this));
+    MouseEvent::setDoubleClickTimeout (200);
 }
 
 ParkingLot::~ParkingLot()
@@ -230,7 +231,7 @@ void ParkingLot::mouseUp (const MouseEvent& e)
 //=================================================================================================
 void ParkingLot::mouseDrag (const MouseEvent& e)
 {
-    trainingCar->mouseDrag (e);
+    
 }
 
 //=================================================================================================
@@ -240,6 +241,11 @@ void ParkingLot::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& whe
     
     if (!moveTheCar (direction))
         moveTheCar (!direction);
+}
+
+void ParkingLot::mouseDoubleClick(const MouseEvent & e)
+{
+    trainingCar->mouseDoubleClick (e);
 }
 
 //=================================================================================================
@@ -264,20 +270,25 @@ void ParkingLot::itemDropped (const SourceDetails& details)
 //=================================================================================================
 bool ParkingLot::keyPressed (const KeyPress& key)
 {
-    if (key == KeyPress::leftKey)
+    const int currentAngle = trainingCar->getTurningAngle();
+
+    // turn left
+    if (key == KeyPress::leftKey && currentAngle != -33)
     {
-        const int newAngle = jmax (-33, trainingCar->getTurningAngle() - 3);
+        const int newAngle = jmax (-33, currentAngle - 3);
         trainingCar->setTurningAngle (newAngle, true);
 
         return true;
     }
-    else if (key == KeyPress::rightKey)
+    // turn right
+    else if (key == KeyPress::rightKey && currentAngle != 33)
     {
-        const int newAngle = jmin (33, trainingCar->getTurningAngle() + 3);
+        const int newAngle = jmin (33, currentAngle + 3);
         trainingCar->setTurningAngle (newAngle, true);
 
         return true;
     }
+    // move forward
     else if (key == KeyPress::upKey)
     {
         if (!moveTheCar (false))
@@ -285,6 +296,7 @@ bool ParkingLot::keyPressed (const KeyPress& key)
 
         return true;
     }
+    // move back
     else if (key == KeyPress::downKey)
     {
         if (!moveTheCar (true))
@@ -363,7 +375,7 @@ const bool ParkingLot::moveTheCar (const bool backward)
             ImageCache::getFromMemory (BinaryData::crashed_png, BinaryData::crashed_pngSize),
             false);
 
-        splash->deleteAfterDelay (RelativeTime (1), true); 
+        splash->deleteAfterDelay (RelativeTime (1.0), true); 
         return false;
     }
     else if (isSuccessful())
@@ -372,7 +384,7 @@ const bool ParkingLot::moveTheCar (const bool backward)
             ImageCache::getFromMemory (BinaryData::good_png, BinaryData::good_pngSize),
             false);
 
-        splash->deleteAfterDelay (RelativeTime (2.5), true);
+        splash->deleteAfterDelay (RelativeTime (2.0), true);
     }
     else  // link path point and draw them...
     {
