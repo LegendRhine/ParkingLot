@@ -168,6 +168,18 @@ void ParkingLot::placeAfterSetDirection (const int oldAngle, const int newAngle)
 
     trainingCar->setCentrePosition (roundToInt (centerX), roundToInt (centerY));
     trainingCar->setTransform (AffineTransform::rotation (pathHudu, polePoint.getX(), polePoint.getY()));
+
+    // zhuanwan banjing
+    /*Point<float> frontPoint;
+
+    if (newAngle < 0)
+        frontPoint.setXY (trainingCar->getRight(), trainingCar->getY());
+    else
+        frontPoint.setXY (trainingCar->getX(), trainingCar->getY());
+
+    frontPoint.applyTransform (trainingCar->getTransform());
+    DBG (polePoint.getDistanceFrom (frontPoint));*/
+
 }
 
 //=================================================================================================
@@ -234,7 +246,11 @@ void ParkingLot::placeTheCarAfterDraged (const int newX, const int newY)
         resetPath();
 
         const float fromInnerWheel = trainingCar->getDistanceFromInnerWheel();
-        polePoint.setXY (trainingCar->getX() - fromInnerWheel, trainingCar->getY() + 190.f);
+
+        if (trainingCar->getTurningAngle() < 0)
+            polePoint.setXY (trainingCar->getX() - fromInnerWheel, trainingCar->getY() + 190.f);
+        else
+            polePoint.setXY (trainingCar->getRight() + fromInnerWheel, trainingCar->getY() + 190.f);
     }    
 }
 
@@ -248,8 +264,12 @@ const bool ParkingLot::moveTheCar (const bool backward)
     }
     else 
     {
-        pathHudu += backward ? EachHudu : -EachHudu;
-        trainingCar->setTransform (AffineTransform::rotation (pathHudu, polePoint.getX(), polePoint.getY()));
+        if (trainingCar->getTurningAngle() < 0)
+            pathHudu += backward ? EachHudu : -EachHudu;
+        else
+            pathHudu += backward ? -EachHudu : EachHudu;
+
+        trainingCar->setTransform (AffineTransform::rotation (pathHudu, polePoint.getX(), polePoint.getY()));        
     }
 
     getCurrentCheckPoints();

@@ -106,13 +106,16 @@ void TrainingCar::mouseUp (const MouseEvent& e)
             fromInnerWheel = 0.f;
         }
 
-        if (oldAngle != turningAngle && turningAngle != 0)
+        if (oldAngle != turningAngle)
         {
             repaint();
-            fromInnerWheel = Zhouju / std::sin (float_Pi / 180.f * std::abs (turningAngle)) - 140.f;
-            //DBG (fromInnerWheel);
 
-            parkingLot->placeAfterSetDirection (oldAngle, turningAngle);
+            if (turningAngle != 0)
+            {
+                // 165 == zuixiao zhuanwan banjing 275px (5.5M)
+                fromInnerWheel = Zhouju / std::sin (float_Pi / 180.f * std::abs (turningAngle)) - 165.f;
+                parkingLot->placeAfterSetDirection (oldAngle, turningAngle);
+            }
         }
     }
 }
