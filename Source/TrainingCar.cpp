@@ -82,7 +82,7 @@ void TrainingCar::mouseDown (const MouseEvent& e)
 //=================================================================================================
 void TrainingCar::mouseDrag (const MouseEvent& e)
 {
-    if (e.getDistanceFromDragStart() > 5)
+    if (e.getDistanceFromDragStartX() > 2 || e.getDistanceFromDragStartY() > 2)
     {
         DragAndDropContainer* dc = dynamic_cast<DragAndDropContainer*>(getParentComponent());
 
