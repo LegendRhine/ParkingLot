@@ -154,7 +154,7 @@ void ParkingLot::resized ()
     const int fromInnerWheel = roundToInt (trainingCar->getDistanceFromInnerWheel());
 
     trainingCar->setTransform (AffineTransform ());
-	trainingCar->setCentrePosition (getWidth() - CarLength - 95, getHeight() - 140);
+	trainingCar->setCentrePosition (getWidth() / 2, CarLength + 179);
     trainingCar->reset();
 
     polePoint.setXY (0.f, 0.f);
