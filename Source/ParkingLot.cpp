@@ -11,8 +11,6 @@
 #include "TrainingCar.h"
 #include "RestingCar.h"
 
-const float alphaOfThings = 1.0f;
-
 //==============================================================================
 ParkingLot::ParkingLot()
     : pathHudu (0.0f),
@@ -28,12 +26,6 @@ ParkingLot::ParkingLot()
     clearAllRestingCars (false)
 {
 	addAndMakeVisible (trainingCar = new TrainingCar (this));
-    addChildComponent (leftPlacer = new PolePlacer());
-    addChildComponent (rightPlacer = new PolePlacer());
-
-    trainingCar->setAlpha (alphaOfThings);
-    leftPlacer->setAlpha (alphaOfThings);
-    rightPlacer->setAlpha (alphaOfThings);
 }
 
 ParkingLot::~ParkingLot()
@@ -82,25 +74,21 @@ void ParkingLot::paint (Graphics& g)
 
         if (trainingCar->getTurningAngle() < 0)  // turn left
         {
-            forecastPath1.addCentredArc (leftPlacer->getBounds().toFloat().getCentreX(),
-                leftPlacer->getBounds().toFloat().getCentreY(),
+            forecastPath1.addCentredArc (polePoint.getX(), polePoint.getY(),
                 280.0f, 280.f, 
                 pathHudu, -float_Pi / 5.0f, float_Pi + float_Pi / 5.0f, true);
 
-            forecastPath2.addCentredArc (leftPlacer->getBounds().toFloat().getCentreX(),
-                leftPlacer->getBounds().toFloat().getCentreY(),
+            forecastPath2.addCentredArc (polePoint.getX(), polePoint.getY(), 
                 fromInnerWheel - 1.f, fromInnerWheel - 1.f,
                 pathHudu, -float_Pi / 5.0f, float_Pi + float_Pi / 5.0f, true);
         }
         else if (trainingCar->getTurningAngle() > 0) // turn right
         {
-            forecastPath1.addCentredArc (rightPlacer->getBounds().toFloat().getCentreX(),
-                rightPlacer->getBounds().toFloat().getCentreY(),
+            forecastPath1.addCentredArc (polePoint.getX(), polePoint.getY(),
                 280.0f, 280.f,
                 pathHudu, float_Pi / 5.0f, -float_Pi - float_Pi / 5.0f, true);
 
-            forecastPath2.addCentredArc (rightPlacer->getBounds().toFloat().getCentreX(),
-                rightPlacer->getBounds().toFloat().getCentreY(),
+            forecastPath2.addCentredArc (polePoint.getX(), polePoint.getY(),
                 fromInnerWheel - 1.f, fromInnerWheel - 1.f,
                 pathHudu, float_Pi / 5.0f, -float_Pi - float_Pi / 5.0f, true);
         }
@@ -113,6 +101,10 @@ void ParkingLot::paint (Graphics& g)
         strokeType.createDashedStroke (forecastPath2, forecastPath2, dashArray, 2);
         g.strokePath (forecastPath2, strokeType);
     }
+
+    // draw pole
+    g.setColour (Colours::red);
+    g.fillEllipse (polePoint.getX() - 5, polePoint.getY() - 5, 10.f, 10.f);
 
 	/*g.setColour (Colours::darkred);
 	g.fillRect (trainingCar->getBounds ().expanded (8));
@@ -130,14 +122,7 @@ void ParkingLot::resized ()
 	trainingCar->setCentrePosition (getWidth() - CarLength - 95, getHeight() - 140);
     trainingCar->reset();
 
-    leftPlacer->setTransform (AffineTransform());
-    leftPlacer->setCentrePosition (trainingCar->getX() - fromInnerWheel, trainingCar->getY() + 190);
-    leftPlacer->setVisible (false);
-
-    rightPlacer->setTransform (AffineTransform());
-    rightPlacer->setCentrePosition (trainingCar->getRight() + fromInnerWheel, trainingCar->getY() + 190);
-    rightPlacer->setVisible (false);
-
+    polePoint.setXY (0.f, 0.f);
     resetPath();
     arrangeRestingCars (xiexiang, fanxiexiang);
 }
@@ -163,42 +148,26 @@ void ParkingLot::resetPath ()
 //=================================================================================================
 void ParkingLot::placeAfterSetDirection (const int oldAngle, const int newAngle)
 {
-    jassert (oldAngle != newAngle);
+    jassert (oldAngle != newAngle && newAngle != 0);
+    
+    // first, place the pole-point base on transformed car
+    const float fromInnerWheel = trainingCar->getDistanceFromInnerWheel();
 
-    if (newAngle != 0)  
-    {
-        float centerX = 0.f;
-        float centerY = 0.f;
-        AffineTransform aft;
+    Point<float> leftRearPoint (trainingCar->getX() + 0.f, trainingCar->getY() + 190.f);
+    Point<float> rightRearPoint (trainingCar->getRight() + 0.f, trainingCar->getY() + 190.f);
 
-        // First, place the car base on the matches placer, then transform the car. 
-        // the pole base on the placer.
-        // second, place two placer base on the car, then transform them.
-        const int fromInnerWheel = roundToInt (trainingCar->getDistanceFromInnerWheel());
+    leftRearPoint.applyTransform (trainingCar->getTransform());
+    rightRearPoint.applyTransform (trainingCar->getTransform());
 
-        if (newAngle < 0)
-        {
-            centerX = leftPlacer->getBoundsInParent().getCentreX() + fromInnerWheel + 50.f;
-            centerY = leftPlacer->getBoundsInParent().getCentreY() - 70.f;
-            aft = AffineTransform::rotation (pathHudu,
-                centerX - fromInnerWheel - 50.f, centerY + 70.f);
-        }
-        else
-        {
-            centerX = rightPlacer->getBoundsInParent().getCentreX() - fromInnerWheel - 50.f;
-            centerY = rightPlacer->getBoundsInParent().getCentreY() - 70.f;
-            aft = AffineTransform::rotation (pathHudu,
-                centerX + fromInnerWheel + 50.f, centerY + 70.f);
-        }
+    Line<float> banjing (leftRearPoint, rightRearPoint);
+    polePoint = banjing.getPointAlongLine (newAngle < 0 ? -fromInnerWheel : (fromInnerWheel + CarWidth));
+    
+    // second, place the car base on pole-point
+    const float centerX = polePoint.getX() + ((newAngle < 0) ? (fromInnerWheel + 50.f) : (-fromInnerWheel - 50.f));
+    const float centerY = polePoint.getY() - 70.f;
 
-        trainingCar->setCentrePosition (roundToInt (centerX), roundToInt (centerY));
-        leftPlacer->setCentrePosition (trainingCar->getX() - fromInnerWheel, trainingCar->getY() + 190);
-        rightPlacer->setCentrePosition (trainingCar->getRight() + fromInnerWheel, trainingCar->getY() + 190);
-
-        trainingCar->setTransform (aft);
-        leftPlacer->setTransform (aft);
-        rightPlacer->setTransform (aft);
-    }
+    trainingCar->setCentrePosition (roundToInt (centerX), roundToInt (centerY));
+    trainingCar->setTransform (AffineTransform::rotation (pathHudu, polePoint.getX(), polePoint.getY()));
 }
 
 //=================================================================================================
@@ -264,13 +233,8 @@ void ParkingLot::placeTheCarAfterDraged (const int newX, const int newY)
         pathHudu = 0.0f;
         resetPath();
 
-        leftPlacer->setTransform (AffineTransform());
-        rightPlacer->setTransform (AffineTransform());
-
-        const int fromInnerWheel = roundToInt (trainingCar->getDistanceFromInnerWheel());
-
-        leftPlacer->setCentrePosition (trainingCar->getX() - fromInnerWheel, trainingCar->getY() + 190);
-        rightPlacer->setCentrePosition (trainingCar->getRight() + fromInnerWheel, trainingCar->getY() + 190);
+        const float fromInnerWheel = trainingCar->getDistanceFromInnerWheel();
+        polePoint.setXY (trainingCar->getX() - fromInnerWheel, trainingCar->getY() + 190.f);
     }    
 }
 
@@ -281,17 +245,11 @@ const bool ParkingLot::moveTheCar (const bool backward)
     {
         const int dist = (backward ? StraightStep : -StraightStep);
         trainingCar->setTopLeftPosition (trainingCar->getX(), trainingCar->getY() + dist);
-
-        leftPlacer->setTopLeftPosition (leftPlacer->getX(), leftPlacer->getY() + dist);
-        rightPlacer->setTopLeftPosition (rightPlacer->getX(), rightPlacer->getY() + dist);
     }
-    else if (-1 == trainingCar->getTurningAngle()) // -1 is turn left
+    else 
     {
-        turnDirection (backward, true);
-    }
-    else  if (1 == trainingCar->getTurningAngle()) // 1 is turn right
-    {
-        turnDirection (!backward, false);
+        pathHudu += backward ? EachHudu : -EachHudu;
+        trainingCar->setTransform (AffineTransform::rotation (pathHudu, polePoint.getX(), polePoint.getY()));
     }
 
     getCurrentCheckPoints();
@@ -373,7 +331,7 @@ void ParkingLot::showViewLine (const bool showIt)
 //=================================================================================================
 void ParkingLot::transparentTrainingCar (const bool transparentIt)
 {
-    trainingCar->setAlpha (transparentIt ? 0.3f : alphaOfThings);
+    trainingCar->setAlpha (transparentIt ? 0.3f : 1.f);
 }
 
 //=================================================================================================
@@ -412,10 +370,7 @@ void ParkingLot::setFieldState (const int stateCode)
 
     else if (-1 == stateCode)  // parking field
     {
-        leftPlacer->setVisible (false);
-        rightPlacer->setVisible (false);
-
-        trainingCar->setAlpha (alphaOfThings);
+        trainingCar->setAlpha (1.f);
         clearAllRestingCars = false;
     }
     else  // hard (block) field
@@ -500,9 +455,9 @@ void ParkingLot::getCurrentCheckPoints ()
     checkPoints.add (Point<int> (x + frontGap, y + frontGap)); // index: 0
     checkPoints.add (Point<int> (r - frontGap, y + frontGap)); // 1
 
-    // rear path point
-    checkPoints.add (Point<int> (x, b - h / 4 + 10)); //  2
-    checkPoints.add (Point<int> (r, b - h / 4 + 10));  // 3
+    // rear links/path point
+    checkPoints.add (Point<int> (x, b - 50)); //  2
+    checkPoints.add (Point<int> (r, b - 50));  // 3
 
     // addtional 2 points
     checkPoints.add (Point<int> (x, b - h / 4 - 5));  // 4
@@ -641,19 +596,5 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
     }
 }
 
-//=================================================================================================
-void ParkingLot::turnDirection (const bool shunshizhen, const bool turnLeft)
-{
-    pathHudu += shunshizhen ? EachHudu : -EachHudu;
-    const float fromInnerWheel = trainingCar->getDistanceFromInnerWheel();
 
-    const float x = turnLeft ? (trainingCar->getX() - fromInnerWheel) : (trainingCar->getRight() + fromInnerWheel);
-    const float y = trainingCar->getY() + 190.f;
-
-    AffineTransform aft (AffineTransform::rotation (pathHudu, x, y));
-
-    trainingCar->setTransform (aft);
-    rightPlacer->setTransform (aft);
-    leftPlacer->setTransform (aft);
-}
 

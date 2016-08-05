@@ -90,24 +90,30 @@ void TrainingCar::setTurningAngle (const int newAngle)
 //=================================================================================================
 void TrainingCar::mouseUp (const MouseEvent& e)
 {
-    const int oldAngle = turningAngle;
-
-    if (e.mods.isLeftButtonDown())
-        turningAngle = jmax (turningAngle - 4, -32);
-
-    else if (e.mods.isRightButtonDown())
-        turningAngle = jmin (turningAngle + 4, 32);
-
-    else if (e.mods.isMiddleButtonDown())
-        turningAngle = 0;
-
-    if (oldAngle != turningAngle)
+    if (e.mouseWasClicked())
     {
-        repaint();
-        fromInnerWheel = std::abs (Zhouju / std::cos (float_Pi / 180.f * turningAngle) - CarWidth);
-        DBG (fromInnerWheel);
+        const int oldAngle = turningAngle;
 
-        parkingLot->placeAfterSetDirection (oldAngle, turningAngle);
+        if (e.mods.isLeftButtonDown())
+            turningAngle = jmax (turningAngle - 4, -32);
+
+        else if (e.mods.isRightButtonDown())
+            turningAngle = jmin (turningAngle + 4, 32);
+
+        else if (e.mods.isMiddleButtonDown())
+        {
+            turningAngle = 0;
+            fromInnerWheel = 0.f;
+        }
+
+        if (oldAngle != turningAngle && turningAngle != 0)
+        {
+            repaint();
+            fromInnerWheel = Zhouju / std::sin (float_Pi / 180.f * std::abs (turningAngle)) - 140.f;
+            //DBG (fromInnerWheel);
+
+            parkingLot->placeAfterSetDirection (oldAngle, turningAngle);
+        }
     }
 }
 

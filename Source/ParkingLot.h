@@ -64,30 +64,14 @@ public:
 private:
     //==============================================================================
     void arrangeRestingCars (const bool slope, const bool backslash);
-    void turnDirection (const bool shunshizhen, const bool turnLeft);
     void placeTheCarAfterDraged (const int newX, const int newY);
 
     void getCurrentCheckPoints();    
     const bool isCrashed();
     const bool isSuccessful();
 
-    //=========================================================================
-    /** This class will show the Axis-point when turning. */
-    class PolePlacer : public Component
-    {
-    public:
-        PolePlacer ()       { setSize (wh, wh); }
-        ~PolePlacer()       { }
-
-        bool hitTest (int, int) override { return false; }
-
-    private:
-        const int wh = 2;
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PolePlacer)
-    };
-    //=========================================================================
-    ScopedPointer<PolePlacer> leftPlacer, rightPlacer;
+     //=========================================================================
+    Point<float> polePoint;
     OwnedArray<Component> restingCars;
     ScopedPointer<TrainingCar> trainingCar;
 
