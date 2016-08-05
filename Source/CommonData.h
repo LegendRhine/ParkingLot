@@ -14,10 +14,11 @@
 #include "JuceHeader.h"
 
 /** 1px == 2cm */
-static const int CarWidth       = 100;
-static const int CarLength      = 240;
-static const int Zhouju = 140;
-static const int StraightStep   = 5;
+static const int CarWidth           = 100;
+static const int CarLength          = 240;
+static const int Zhouju             = 140;
+static const int StraightStep       = 5;
+static const int IntervelHoldMouse  = 40;
 
 
 #endif  // COMMONDATA_H_INCLUDED

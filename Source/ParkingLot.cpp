@@ -231,7 +231,7 @@ void ParkingLot::mouseUp (const MouseEvent& e)
 void ParkingLot::mouseDown (const MouseEvent& e)
 {
     trainingCar->mouseDown (e);
-    beginDragAutoRepeat (50);
+    beginDragAutoRepeat (IntervelHoldMouse);
 }
 
 //=================================================================================================

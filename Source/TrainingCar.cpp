@@ -76,13 +76,13 @@ void TrainingCar::paint (Graphics& g)
 void TrainingCar::mouseDown (const MouseEvent& e)
 {
     mouseDrag (e);
-    beginDragAutoRepeat (50);
+    beginDragAutoRepeat (IntervelHoldMouse);
 }
 
 //=================================================================================================
 void TrainingCar::mouseDrag (const MouseEvent& e)
 {
-    if (e.getDistanceFromDragStartX() > 2 || e.getDistanceFromDragStartY() > 2)
+    if (e.getDistanceFromDragStartX() > 3 || e.getDistanceFromDragStartY() > 3)
     {
         DragAndDropContainer* dc = dynamic_cast<DragAndDropContainer*>(getParentComponent());
 
