@@ -26,6 +26,7 @@ public:
 
     /** return: -X: left direction; 0:center; x: right direction. Value range: -32 ~ 32 */
     const int getTurningAngle() const                   { return turningAngle; }
+    const float getCurrentEachHudu() const              { return eachHudu; }
     void setTurningAngle (const int newAngle);
 
     const float getDistanceFromInnerWheel()             { return fromInnerWheel; }
@@ -47,6 +48,7 @@ public:
 private:
     ParkingLot* parkingLot;
     float fromInnerWheel;
+    float eachHudu;
     int turningAngle;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrainingCar)

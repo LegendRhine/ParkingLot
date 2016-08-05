@@ -15,8 +15,9 @@
 //==============================================================================
 TrainingCar::TrainingCar (ParkingLot* park)
 	: parkingLot (park),
-    turningAngle (0),
-    fromInnerWheel (0.f)
+    fromInnerWheel (0.f),
+    eachHudu (0.f),
+    turningAngle (0)
 {
 	setSize (CarWidth, CarLength);
 }
@@ -95,26 +96,34 @@ void TrainingCar::mouseUp (const MouseEvent& e)
         const int oldAngle = turningAngle;
 
         if (e.mods.isLeftButtonDown())
-            turningAngle = jmax (turningAngle - 4, -32);
+            turningAngle = jmax (turningAngle - 1, -33);
 
         else if (e.mods.isRightButtonDown())
-            turningAngle = jmin (turningAngle + 4, 32);
+            turningAngle = jmin (turningAngle + 1, 33);
 
         else if (e.mods.isMiddleButtonDown())
-        {
             turningAngle = 0;
-            fromInnerWheel = 0.f;
-        }
 
         if (oldAngle != turningAngle)
         {
             repaint();
 
             if (turningAngle != 0)
+                fromInnerWheel = Zhouju / std::sin (float_Pi / 180.f * std::abs (turningAngle)) - 150.f;
+            else
+                fromInnerWheel = 0.f;
+
+            parkingLot->placeAfterSetDirection (oldAngle, turningAngle);
+            parkingLot->repaint(); // for real-time change forecast-lines
+        }
+
+        // set current hudu
+        for (int i = 33; --i > 0; )
+        {
+            if (i == std::abs (turningAngle))
             {
-                // 165 == zuixiao zhuanwan banjing 275px (5.5M)
-                fromInnerWheel = Zhouju / std::sin (float_Pi / 180.f * std::abs (turningAngle)) - 165.f;
-                parkingLot->placeAfterSetDirection (oldAngle, turningAngle);
+                eachHudu = 0.018f / 33.f * i;
+                break;
             }
         }
     }

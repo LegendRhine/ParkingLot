@@ -17,7 +17,6 @@
 static const int CarWidth       = 100;
 static const int CarLength      = 240;
 static const int Zhouju = 140;
-static const float EachHudu     = 0.018f;
 static const int StraightStep   = 5;
 
 

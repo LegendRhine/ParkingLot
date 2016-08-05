@@ -66,46 +66,81 @@ void ParkingLot::paint (Graphics& g)
         forecastPath2.clear ();
 
         static float dashArray[2] = { 2, 5 };
-        const float fromInnerWheel = trainingCar->getDistanceFromInnerWheel();
-
         g.setColour (Colours::yellow);
 
-        // there is no need display straightforward forecast-line
-
-        if (trainingCar->getTurningAngle() < 0)  // turn left
+        // straightforward forecast-line
+        if (0 == trainingCar->getTurningAngle()) // straight forward
         {
-            forecastPath1.addCentredArc (polePoint.getX(), polePoint.getY(),
-                280.0f, 280.f, 
-                pathHudu, -float_Pi / 5.0f, float_Pi + float_Pi / 5.0f, true);
+            // left forecast line
+            Line<float> leftLine (trainingCar->getX() + 0.5f, trainingCar->getY() - 0.5f, 
+                trainingCar->getX() + 0.5f, trainingCar->getBottom() + 0.5f);
 
-            forecastPath2.addCentredArc (polePoint.getX(), polePoint.getY(), 
-                fromInnerWheel - 1.f, fromInnerWheel - 1.f,
-                pathHudu, -float_Pi / 5.0f, float_Pi + float_Pi / 5.0f, true);
+            leftLine = leftLine.withShortenedStart (-600.f).withShortenedEnd (-600.f);
+            leftLine.applyTransform (trainingCar->getTransform());
+
+            g.drawDashedLine (leftLine, dashArray, 2, 0.8f);
+
+            // right forecast line
+            Line<float> rightLine (trainingCar->getRight() + 0.5f, trainingCar->getY() - 0.5f, 
+                trainingCar->getRight() - 0.5f, trainingCar->getBottom() + 0.5f);
+
+            rightLine = rightLine.withShortenedStart (-600.0f).withShortenedEnd (-600.f);
+            rightLine.applyTransform (trainingCar->getTransform());
+
+            g.drawDashedLine (rightLine, dashArray, 2, 0.8f);
         }
-        else if (trainingCar->getTurningAngle() > 0) // turn right
+        else  // turning forecast-line
         {
-            forecastPath1.addCentredArc (polePoint.getX(), polePoint.getY(),
-                280.0f, 280.f,
-                pathHudu, float_Pi / 5.0f, -float_Pi - float_Pi / 5.0f, true);
+            // zuixiao zhuanwan banjing
+            const float fromInnerWheel = trainingCar->getDistanceFromInnerWheel();
+            Point<float> frontPoint;
 
-            forecastPath2.addCentredArc (polePoint.getX(), polePoint.getY(),
-                fromInnerWheel - 1.f, fromInnerWheel - 1.f,
-                pathHudu, float_Pi / 5.0f, -float_Pi - float_Pi / 5.0f, true);
-        }
+            if (trainingCar->getTurningAngle() < 0)
+                frontPoint.setXY (trainingCar->getRight() - 1.f, trainingCar->getY() + 1.f);
+            else
+                frontPoint.setXY (trainingCar->getX() - 1.f, trainingCar->getY() + 1.f);
 
-        PathStrokeType strokeType (0.3f);
+            frontPoint.applyTransform (trainingCar->getTransform());
 
-        strokeType.createDashedStroke (forecastPath1, forecastPath1, dashArray, 2);
-        g.strokePath (forecastPath1, strokeType);
+            const float banjing = polePoint.getDistanceFrom (frontPoint);
+            //DBG (banjing);
+            
+            if (trainingCar->getTurningAngle() < 0)  // turn left
+            {
+                forecastPath1.addCentredArc (polePoint.getX(), polePoint.getY(),
+                    banjing, banjing,
+                    pathHudu, -float_Pi / 5.0f, float_Pi + float_Pi / 5.0f, true);
 
-        strokeType.createDashedStroke (forecastPath2, forecastPath2, dashArray, 2);
-        g.strokePath (forecastPath2, strokeType);
+                forecastPath2.addCentredArc (polePoint.getX(), polePoint.getY(),
+                    fromInnerWheel - 1.f, fromInnerWheel - 1.f,
+                    pathHudu, -float_Pi / 5.0f, float_Pi + float_Pi / 5.0f, true);
+            }
+            else // turn right
+            {
+                forecastPath1.addCentredArc (polePoint.getX(), polePoint.getY(),
+                    banjing, banjing,
+                    pathHudu, float_Pi / 5.0f, -float_Pi - float_Pi / 5.0f, true);
+
+                forecastPath2.addCentredArc (polePoint.getX(), polePoint.getY(),
+                    fromInnerWheel - 1.f, fromInnerWheel - 1.f,
+                    pathHudu, float_Pi / 5.0f, -float_Pi - float_Pi / 5.0f, true);
+            }
+
+            PathStrokeType strokeType (0.3f);
+
+            strokeType.createDashedStroke (forecastPath1, forecastPath1, dashArray, 2);
+            g.strokePath (forecastPath1, strokeType);
+
+            strokeType.createDashedStroke (forecastPath2, forecastPath2, dashArray, 2);
+            g.strokePath (forecastPath2, strokeType);
+        }        
     }
 
     // draw pole
-    g.setColour (Colours::red);
-    g.fillEllipse (polePoint.getX() - 5, polePoint.getY() - 5, 10.f, 10.f);
+    /*g.setColour (Colours::red);
+    g.fillEllipse (polePoint.getX() - 5, polePoint.getY() - 5, 10.f, 10.f);*/
 
+    // show the area of the car and its transformed area
 	/*g.setColour (Colours::darkred);
 	g.fillRect (trainingCar->getBounds ().expanded (8));
 
@@ -148,7 +183,10 @@ void ParkingLot::resetPath ()
 //=================================================================================================
 void ParkingLot::placeAfterSetDirection (const int oldAngle, const int newAngle)
 {
-    jassert (oldAngle != newAngle && newAngle != 0);
+    jassert (oldAngle != newAngle);
+
+    if (newAngle == 0)
+        return;
     
     // first, place the pole-point base on transformed car
     const float fromInnerWheel = trainingCar->getDistanceFromInnerWheel();
@@ -160,10 +198,13 @@ void ParkingLot::placeAfterSetDirection (const int oldAngle, const int newAngle)
     rightRearPoint.applyTransform (trainingCar->getTransform());
 
     Line<float> banjing (leftRearPoint, rightRearPoint);
-    polePoint = banjing.getPointAlongLine (newAngle < 0 ? -fromInnerWheel : (fromInnerWheel + CarWidth));
+    const bool isTurningLeft = newAngle < 0;
+
+    // place the pole point
+    polePoint = banjing.getPointAlongLine (isTurningLeft ? -fromInnerWheel : (fromInnerWheel + CarWidth));
     
     // second, place the car base on pole-point
-    const float centerX = polePoint.getX() + ((newAngle < 0) ? (fromInnerWheel + 50.f) : (-fromInnerWheel - 50.f));
+    const float centerX = polePoint.getX() + (isTurningLeft ? (fromInnerWheel + 50.f) : (-fromInnerWheel - 50.f));
     const float centerY = polePoint.getY() - 70.f;
 
     trainingCar->setCentrePosition (roundToInt (centerX), roundToInt (centerY));
@@ -172,7 +213,7 @@ void ParkingLot::placeAfterSetDirection (const int oldAngle, const int newAngle)
     // zhuanwan banjing
     /*Point<float> frontPoint;
 
-    if (newAngle < 0)
+    if (isTurningLeft)
         frontPoint.setXY (trainingCar->getRight(), trainingCar->getY());
     else
         frontPoint.setXY (trainingCar->getX(), trainingCar->getY());
@@ -186,7 +227,6 @@ void ParkingLot::placeAfterSetDirection (const int oldAngle, const int newAngle)
 void ParkingLot::mouseUp (const MouseEvent& e)
 {
     trainingCar->mouseUp (e);
-    repaint();
 }
 
 //=================================================================================================
@@ -251,7 +291,9 @@ void ParkingLot::placeTheCarAfterDraged (const int newX, const int newY)
             polePoint.setXY (trainingCar->getX() - fromInnerWheel, trainingCar->getY() + 190.f);
         else
             polePoint.setXY (trainingCar->getRight() + fromInnerWheel, trainingCar->getY() + 190.f);
-    }    
+    }  
+
+    repaint();  // for real-time change forecast-lines
 }
 
 //=================================================================================================
@@ -264,10 +306,12 @@ const bool ParkingLot::moveTheCar (const bool backward)
     }
     else 
     {
+        const float eachHudu = trainingCar->getCurrentEachHudu();
+
         if (trainingCar->getTurningAngle() < 0)
-            pathHudu += backward ? EachHudu : -EachHudu;
+            pathHudu += backward ? eachHudu : -eachHudu;
         else
-            pathHudu += backward ? -EachHudu : EachHudu;
+            pathHudu += backward ? -eachHudu : eachHudu;
 
         trainingCar->setTransform (AffineTransform::rotation (pathHudu, polePoint.getX(), polePoint.getY()));        
     }
@@ -462,7 +506,6 @@ void ParkingLot::getCurrentCheckPoints ()
 {
     checkPoints.clearQuick();
 
-    // add 52 points of the car for crash-check
     const int x = trainingCar->getX();
     const int y = trainingCar->getY();
     const int w = trainingCar->getWidth();
@@ -479,28 +522,24 @@ void ParkingLot::getCurrentCheckPoints ()
     checkPoints.add (Point<int> (x, b - 50)); //  2
     checkPoints.add (Point<int> (r, b - 50));  // 3
 
-    // addtional 2 points
-    checkPoints.add (Point<int> (x, b - h / 4 - 5));  // 4
-    checkPoints.add (Point<int> (r, b - h / 4 - 5));  // 5
-
     // rear conners
     checkPoints.add (Point<int> (x + frontGap, b - frontGap));
     checkPoints.add (Point<int> (r - frontGap, b - frontGap));
 
     // top and bottom sides, 8-20
-    for (int i = 1; i < 8; ++i)
+    for (int i = 1; i < 20; ++i)
     {
-        checkPoints.add (Point<int> (x + i * (w / 8), y - 1));
-        checkPoints.add (Point<int> (x + i * (w / 8), b + 1));
+        checkPoints.add (Point<int> (x + i * (w / 20), y - 1));
+        checkPoints.add (Point<int> (x + i * (w / 20), b + 1));
     }
     
     // left and right sides,
-    for (int i = 1; i < 16; ++i)
+    for (int i = 1; i < 40; ++i)
     {
         if (i != 11)  // alreay added (rear path point)
         {
-            checkPoints.add (Point<int> (x - 1, y + i * (h / 16)));
-            checkPoints.add (Point<int> (r + 1, y + i * (h / 16)));
+            checkPoints.add (Point<int> (x - 1, y + i * (h / 40)));
+            checkPoints.add (Point<int> (r + 1, y + i * (h / 40)));
         }
     }
 }
