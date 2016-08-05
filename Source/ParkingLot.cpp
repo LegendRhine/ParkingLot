@@ -202,10 +202,10 @@ void ParkingLot::placeAfterSetDirection (const int newAngle)
     polePoint = banjing.getPointAlongLine (isTurningLeft ? -fromInnerWheel : (fromInnerWheel + CarWidth));
     
     // second, place the car base on pole-point
-    const float centerX = polePoint.getX() + (isTurningLeft ? (fromInnerWheel + 50.f) : (-fromInnerWheel - 50.f));
-    const float centerY = polePoint.getY() - 70.f;
+    const double centerX = polePoint.getX() + (isTurningLeft ? (fromInnerWheel + 50.0) : (-fromInnerWheel - 50.0));
+    const double centerY = polePoint.getY() - 70.0;
 
-    trainingCar->setCentrePosition (roundToInt (centerX), roundToInt (centerY));
+    trainingCar->setCentrePosition (roundToIntAccurate (centerX), roundToIntAccurate (centerY));
     trainingCar->setTransform (AffineTransform::rotation (pathHudu, polePoint.getX(), polePoint.getY()));
 
     // zhuanwan banjing
