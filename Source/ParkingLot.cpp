@@ -536,15 +536,19 @@ const bool ParkingLot::moveTheCar (const bool backward)
             ImageCache::getFromMemory (BinaryData::crashed_png, BinaryData::crashed_pngSize),
             false);
 
-        splash->deleteAfterDelay (RelativeTime (1.0), true); 
+        splash->enterModalState();
+        splash->deleteAfterDelay (RelativeTime (1.5), true);
+
         return false;
     }
-    else if (isSuccessful())
+    
+    if (isSuccessful())
     {
         SplashScreen* splash = new SplashScreen ("Splash",
             ImageCache::getFromMemory (BinaryData::good_png, BinaryData::good_pngSize),
             false);
 
+        splash->enterModalState();
         splash->deleteAfterDelay (RelativeTime (2.0), true);
     }
     else  // link path point and draw them...
@@ -704,9 +708,9 @@ const bool ParkingLot::isCrashed()
 
     for (int i = checkPoints.size(); --i >= 0; )
     {
-        Point<int> p (checkPoints[i].transformedBy (atf));
+        const Point<int> p (checkPoints[i].transformedBy (atf));
 
-        if (!reallyContains (p, true))
+        if (!contains (p))
         {
             stopTimer ();
             return true;
@@ -737,7 +741,7 @@ const bool ParkingLot::isSuccessful ()
 
     for (int i = checkPoints.size(); --i >= 0; )
     {
-        Point<int> p (checkPoints[i].transformedBy (atf));
+        const Point<int> p (checkPoints[i].transformedBy (atf));
 
         Rectangle<int> stopOne (stopAreaOne->getBounds().transformedBy (stopAreaOne->getTransform()));
         Rectangle<int> stopTwo (stopAreaTwo->getBounds().transformedBy (stopAreaTwo->getTransform()));
@@ -748,7 +752,6 @@ const bool ParkingLot::isSuccessful ()
     }
 
     stopTimer();
-
     return true;
 }
 

@@ -168,7 +168,7 @@ void SetupPanel::paint (Graphics& g)
 {
     g.setColour (Colours::lightgrey);
 
-    g.drawHorizontalLine (getHeight() - 40, 10.0f, getWidth() - 10.0f);
+    g.drawHorizontalLine (getHeight() - 38, 8.0f, getWidth() - 8.0f);
 }
 //=========================================================================
 void SetupPanel::resized()
