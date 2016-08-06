@@ -29,6 +29,9 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     // buttons
     addAndMakeVisible (erasePathBt = new TextButton (L"清除已有轨迹"));
     erasePathBt->addListener (this);
+
+    addAndMakeVisible (screenShotBt = new TextButton (L"截屏"));
+    screenShotBt->addListener (this);
     
     // show path buttons
     addAndMakeVisible (leftFrontPathBt = new ToggleButton (L"左前角轨迹"));
@@ -171,6 +174,9 @@ void SetupPanel::resized()
     showViewLineBt->setBounds (leftGap, othersGroup->getY() + 20, 100, 25);
     hideCarBt->setBounds (showViewLineBt->getRight() + 5, showViewLineBt->getY(), 100, 25);
     cejuBt->setBounds (leftGap, hideCarBt->getBottom() + 5, 60, 25);
+
+    // bottom buttons
+    screenShotBt->setBounds (leftGap, getHeight () - 30, 50, 25);
 }
 
 //=================================================================================================
@@ -244,5 +250,44 @@ void SetupPanel::buttonClicked (Button* bt)
 
     else if (bt == antiSlopeBt && parkinglot->getSlopeState() != -1)
         parkinglot->setSlopedRestingCars (true, true);
+
+    else if (bt == screenShotBt)
+        saveScreenShot();
         
 }
+
+//=================================================================================================
+void SetupPanel::saveScreenShot()
+{
+    screenShot = parkinglot->createComponentSnapshot (parkinglot->getLocalBounds());
+
+    FileChooser fc (L"保存屏幕截图", File::nonexistent, "*.png");
+
+    if (fc.browseForFileToSave (true))
+    {
+        File imgFile = fc.getResult();
+
+        if (!imgFile.hasFileExtension (".png"))
+            imgFile = imgFile.withFileExtension (".png");
+
+        if (imgFile.existsAsFile() && !imgFile.deleteFile())
+        {
+            AlertWindow::showMessageBox (AlertWindow::NoIcon, L"提示", L"无法写入所选文件！");
+            return;
+        }
+
+        PNGImageFormat pngFormat;
+        ScopedPointer<FileOutputStream> imgOutStram (imgFile.createOutputStream());
+
+        if (pngFormat.writeImageToStream (screenShot, *imgOutStram))
+        {
+            imgOutStram->flush();
+            imgOutStram = nullptr;
+        }
+        else
+        {
+            AlertWindow::showMessageBox (AlertWindow::NoIcon, L"提示", L"图像数据写入失败！");
+        }
+    }        
+}
+

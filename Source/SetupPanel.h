@@ -33,12 +33,16 @@ public:
 
 private:
     //=========================================================================
+    void saveScreenShot();
+
     ParkingLot* const parkinglot;
+    Image screenShot;
 
     ScopedPointer<Label> nameLb;
     ScopedPointer<Label> versionLb;
 
     ScopedPointer<TextButton> erasePathBt;
+    ScopedPointer<TextButton> screenShotBt;
 
     ScopedPointer<ToggleButton> leftFrontPathBt;
     ScopedPointer<ToggleButton> rightFrontPathBt;

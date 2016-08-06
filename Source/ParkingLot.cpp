@@ -157,7 +157,7 @@ void ParkingLot::paint (Graphics& g)
         const int r = trainingCar->getRight();
         const int b = trainingCar->getBottom();
 
-        Point<int> p1 (x + 30, y + 120);
+        Point<int> p1 (x + 23, y + 110);
         Point<int> p2 (x, y);
         Point<int> p3 (r, y);
         Point<int> p4 (x, y + 80);
