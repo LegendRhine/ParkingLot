@@ -126,7 +126,7 @@ void TrainingCar::afterSetAngle (const bool shouldRepaintParent)
     repaint();
 
     if (turningAngle != 0)
-        fromInnerWheel = Zhouju / std::sin (float_Pi / 180.f * std::abs (turningAngle)) - 150.f;
+        fromInnerWheel = Zhouju / std::sin (float_Pi / 180.f * std::abs (turningAngle)) - 148.f;
     else
         fromInnerWheel = 0.f;
 

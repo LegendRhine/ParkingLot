@@ -14,21 +14,26 @@
 #include "SetupPanel.h"
 
 //==============================================================================
-MainComponent::MainComponent()
+MainComponent::MainComponent() :
+    showPanel (true)
 {
-    openGL.attachTo (*this);
 
     addAndMakeVisible (parkinglot = new ParkingLot());
     addAndMakeVisible (setupPanel = new SetupPanel (parkinglot));
+    addAndMakeVisible (showPanelBt = new TextButton (">|"));
+    showPanelBt->addListener (this);
 
     setSize (1360, 800);
+    openGL.attachTo (*this);
 }
 
+//==============================================================================
 MainComponent::~MainComponent()
 {
     openGL.detach();
 }
 
+//==============================================================================
 void MainComponent::paint (Graphics& g)
 {
     g.fillAll (Colours::darkgrey);
@@ -36,7 +41,7 @@ void MainComponent::paint (Graphics& g)
     g.setColour (Colours::yellow.withAlpha (0.4f));
     g.drawRect (setupPanel->getX(), 0, 3, getHeight());
     
-    // draw stop-line
+    // draw stop-line of parking mode
     if (!parkinglot->dontShowRestingCars())
     {
         g.setColour (Colours::yellow.withAlpha(0.5f));
@@ -47,14 +52,27 @@ void MainComponent::paint (Graphics& g)
     }
 }
 
+//==============================================================================
 void MainComponent::resized()
 {
-    const int panelWidth = 230;
+    const int panelWidth = showPanel ? 230 : 0;
 
     parkinglot->setBounds (0, 0, getWidth() - panelWidth, getHeight());
-    setupPanel->setBounds (getWidth() - panelWidth, 0, panelWidth, getHeight());
+    setupPanel->setBounds (getWidth() - panelWidth, 0, panelWidth, getHeight()); 
+    showPanelBt->setBounds (getWidth() - 35, getHeight() - 30, 25, 25);
 
     setupPanel->setWantsKeyboardFocus (false);
     parkinglot->setWantsKeyboardFocus (true);
     parkinglot->grabKeyboardFocus();
+}
+
+//==============================================================================
+void MainComponent::buttonClicked (Button* bt)
+{
+    if (bt == showPanelBt)
+    {
+        showPanel = !showPanel;
+        showPanelBt->setButtonText (showPanel ? ">|" : "|<");
+        resized();
+    }
 }

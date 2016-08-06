@@ -212,7 +212,7 @@ void SetupPanel::resized()
     cejuBt->setBounds (leftGap, hideCarBt->getBottom() + 5, 60, 25);
 
     // bottom buttons
-    screenShotBt->setBounds (leftGap, getHeight () - 30, 50, 25);
+    screenShotBt->setBounds (leftGap, getHeight () - 30, 45, 25);
 }
 
 //=================================================================================================

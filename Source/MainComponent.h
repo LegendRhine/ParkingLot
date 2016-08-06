@@ -19,7 +19,8 @@ class SetupPanel;
 //==============================================================================
 /*
 */
-class MainComponent    : public Component
+class MainComponent    : public Component,
+    public Button::Listener
 {
 public:
     MainComponent();
@@ -28,13 +29,19 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
+    virtual void buttonClicked (Button* bt) override;
+
 private:
     OpenGLContext openGL;
 
     ScopedPointer<ParkingLot> parkinglot;
     ScopedPointer<SetupPanel> setupPanel;
+    ScopedPointer<TextButton> showPanelBt;
+
+    bool showPanel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
+
 };
 
 
