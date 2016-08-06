@@ -60,13 +60,13 @@ void ParkingLot::paint (Graphics& g)
         g.strokePath (rightRearPath, PathStrokeType (0.5f));
     }
 
+    static float dashArray[2] = { 2, 5 };
+
     // draw forecast-path
     if (shouldShowForecastPath)
     {   
         forecastPath1.clear ();
         forecastPath2.clear ();
-
-        static float dashArray[2] = { 2, 5 };
         g.setColour (Colours::yellow);
 
         // straightforward forecast-line
@@ -135,6 +135,80 @@ void ParkingLot::paint (Graphics& g)
             strokeType.createDashedStroke (forecastPath2, forecastPath2, dashArray, 2);
             g.strokePath (forecastPath2, strokeType);
         }        
+    }
+
+    // fuzhuxian (view lines)
+    /*  the points:
+        2     3
+        4     5
+          1
+        6     7
+        8     9
+        10    11
+    */
+    if (shouldShowViewLine)
+    {
+        const int x = trainingCar->getX();
+        const int y = trainingCar->getY();
+        const int w = trainingCar->getWidth();
+        const int h = trainingCar->getHeight();
+        const int r = trainingCar->getRight();
+        const int b = trainingCar->getBottom();
+
+        Point<int> p1 (x + 30, y + 120);
+        Point<int> p2 (x, y);
+        Point<int> p3 (r, y);
+        Point<int> p4 (x, y + 80);
+        Point<int> p5 (r, y + 80);
+        Point<int> p6 (x, y + 160);
+        Point<int> p7 (r, y + 160);
+        Point<int> p8 (x, b - 50);
+        Point<int> p9 (r, b - 50);
+        Point<int> p10 (x, b);
+        Point<int> p11 (r, b);
+
+        Line<int> l1 (p2, p3);
+        Line<int> l2 (p1, Point<int> (r, y + 120));
+        Line<int> l3 (p8, p9);
+        Line<int> l4 (p10, p11);
+        Line<int> l5 (p1, p4);
+        Line<int> l6 (p1, p5);
+        Line<int> l7 (p1, p6);
+        Line<int> l8 (p1, p7);
+
+        l1 = l1.withShortenedStart (-200).withShortenedEnd (-300);
+        l1.applyTransform (trainingCar->getTransform());
+
+        l2 = l2.withShortenedStart (-200).withShortenedEnd (-300);
+        l2.applyTransform (trainingCar->getTransform());
+
+        l3 = l3.withShortenedStart (-100).withShortenedEnd (-200);
+        l3.applyTransform (trainingCar->getTransform());
+
+        l4 = l4.withShortenedStart (-200).withShortenedEnd (-300);
+        l4.applyTransform (trainingCar->getTransform());
+
+        l5 = l5.withShortenedEnd (-200);
+        l5.applyTransform (trainingCar->getTransform());
+
+        l6 = l6.withShortenedEnd (-300);
+        l6.applyTransform (trainingCar->getTransform());
+
+        l7 = l7.withShortenedEnd (-200);
+        l7.applyTransform (trainingCar->getTransform());
+
+        l8 = l8.withShortenedEnd (-300);
+        l8.applyTransform (trainingCar->getTransform());
+
+        g.setColour (Colours::whitesmoke);
+        g.drawDashedLine (l1.toFloat(), dashArray, 2, 0.6f);
+        g.drawDashedLine (l2.toFloat(), dashArray, 2, 0.6f);
+        g.drawDashedLine (l3.toFloat(), dashArray, 2, 0.6f);
+        g.drawDashedLine (l4.toFloat(), dashArray, 2, 0.6f);
+        g.drawDashedLine (l5.toFloat(), dashArray, 2, 0.6f);
+        g.drawDashedLine (l6.toFloat(), dashArray, 2, 0.6f);
+        g.drawDashedLine (l7.toFloat(), dashArray, 2, 0.6f);
+        g.drawDashedLine (l8.toFloat(), dashArray, 2, 0.6f);
     }
 
     // draw pole
@@ -229,7 +303,7 @@ void ParkingLot::mouseUp (const MouseEvent& e)
 }
 
 //=================================================================================================
-void ParkingLot::mouseDrag (const MouseEvent& e)
+void ParkingLot::mouseDrag (const MouseEvent& )
 {
     
 }
