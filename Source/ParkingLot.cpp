@@ -16,6 +16,7 @@
 ParkingLot::ParkingLot()
     : pathHudu (0.0f),
     arrangeState (0),
+    autoSpeed (SpeedWhenAutoMove * 3),
     leftFrontPathShow (false),
     rightFrontPathShow (false),
     leftRearPathShow (true),
@@ -25,7 +26,9 @@ ParkingLot::ParkingLot()
     isMeasuringDistance (false),
     xiexiang (false),
     fanxiexiang (false),
-    clearAllRestingCars (false)
+    clearAllRestingCars (false),
+    isAutoMode (false),
+    backWhenAutoMove (false)
 {
 	addAndMakeVisible (trainingCar = new TrainingCar (this));
     MouseEvent::setDoubleClickTimeout (200);
@@ -33,6 +36,7 @@ ParkingLot::ParkingLot()
 
 ParkingLot::~ParkingLot()
 {
+    stopTimer();
 }
 //=========================================================================
 void ParkingLot::paint (Graphics& g)
@@ -360,12 +364,26 @@ void ParkingLot::mouseUp (const MouseEvent& e)
 //=================================================================================================
 void ParkingLot::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& wheel)
 {
-    const bool direction = (wheel.deltaY > 0);
-    
-    if (!moveTheCar (direction))
-        moveTheCar (!direction);
+    if (isAutoMode)
+    {
+        if (isTimerRunning())
+        {
+            stopTimer();
+        }
+        else
+        {
+            backWhenAutoMove = (wheel.deltaY > 0);
+            startTimer (autoSpeed);
+        }
+    }
+    else
+    {
+        if (!moveTheCar (backWhenAutoMove))
+            moveTheCar (!backWhenAutoMove);
+    }    
 }
 
+//=================================================================================================
 void ParkingLot::mouseDoubleClick(const MouseEvent & e)
 {
     trainingCar->mouseDoubleClick (e);
@@ -424,6 +442,14 @@ bool ParkingLot::keyPressed (const KeyPress& key)
     {
         if (!moveTheCar (true))
             moveTheCar (false);
+
+        return true;
+    }
+    // brake when auto move
+    else if (key == KeyPress::spaceKey)
+    {
+        if (isAutoMode)
+            isTimerRunning() ? stopTimer() : startTimer (autoSpeed);
 
         return true;
     }
@@ -597,6 +623,23 @@ void ParkingLot::setSlopedRestingCars (const bool slope, const bool backslash)
     resized();
 }
 
+void ParkingLot::setAutoMoveMode (const bool autoMove)
+{
+    isAutoMode = autoMove;
+    isAutoMode ? startTimer (autoSpeed) : stopTimer();
+}
+
+void ParkingLot::setAutoMoveSpped(const int timerIntervel)
+{
+    autoSpeed = timerIntervel;
+
+    if (isTimerRunning())
+    {
+        stopTimer();
+        startTimer (autoSpeed);
+    }
+}
+
 //=================================================================================================
 const int ParkingLot::getFieldState () const
 {
@@ -652,14 +695,20 @@ const bool ParkingLot::isCrashed()
         Point<int> p (checkPoints[i].transformedBy (atf));
 
         if (!reallyContains (p, true))
+        {
+            stopTimer ();
             return true;
+        }
 
         Component* comp = getComponentAt (p);
 
         for (int j = 0; j < restingCars.size(); ++j)
         {
             if (comp == restingCars[j])
+            {
+                stopTimer();
                 return true;
+            }
         }
     }
 
@@ -682,13 +731,19 @@ const bool ParkingLot::isSuccessful ()
         Rectangle<int> stopTwo (stopAreaTwo->getBounds().transformedBy (stopAreaTwo->getTransform()));
         Rectangle<int> stopThree (stopAreaThree->getBounds().transformedBy (stopAreaThree->getTransform()));
 
-        if (stopOne.contains (p) || stopTwo.contains (p) || stopThree.contains (p))
-            continue;
-        else
+        if (!(stopOne.contains (p) || stopTwo.contains (p) || stopThree.contains (p)))
             return false;
     }
 
+    stopTimer();
+
     return true;
+}
+
+//=================================================================================================
+void ParkingLot::timerCallback()
+{
+    moveTheCar (backWhenAutoMove);
 }
 
 //=================================================================================================
@@ -760,7 +815,7 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
     {
         Component* car = nullptr;
 
-        if (i == 1)
+        if (i == 2)
         {
             car = stopAreaOne = new StopArea();
             car->setSize (CarLength + 8, CarWidth + 8);

@@ -18,6 +18,7 @@ static const int CarWidth           = 100;
 static const int CarLength          = 240;
 static const int Zhouju             = 140;
 static const int StraightStep       = 5;
+static const int SpeedWhenAutoMove  = 80;
 
 
 #endif  // COMMONDATA_H_INCLUDED

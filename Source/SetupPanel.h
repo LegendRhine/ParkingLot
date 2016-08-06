@@ -44,17 +44,16 @@ private:
     ScopedPointer<TextButton> erasePathBt;
     ScopedPointer<TextButton> screenShotBt;
 
-    ScopedPointer<ToggleButton> leftFrontPathBt;
-    ScopedPointer<ToggleButton> rightFrontPathBt;
-    ScopedPointer<ToggleButton> leftRearPathBt;
-    ScopedPointer<ToggleButton> rightRearPathBt;
+    ScopedPointer<ToggleButton> leftFrontPathBt, rightFrontPathBt;
+    ScopedPointer<ToggleButton> leftRearPathBt, rightRearPathBt;
     ScopedPointer<ToggleButton> forecastBt, showViewLineBt;
 
     ScopedPointer<ToggleButton> trainingBt, parkingBt, hardBt;
     ScopedPointer<ToggleButton> nonSlopeBt, slopeBt, antiSlopeBt;
+    ScopedPointer<ToggleButton> autoMoveBt, autoSlowBt, autoNormalBt, autoFastBt;
     ScopedPointer<ToggleButton> cejuBt, hideCarBt;
         
-    ScopedPointer<GroupComponent> pathGroup, typeGroup, othersGroup;
+    ScopedPointer<GroupComponent> pathGroup, typeGroup, autoMoveGroup, othersGroup;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SetupPanel)
 };

@@ -8,6 +8,7 @@
   ==============================================================================
 */
 
+#include "CommonData.h"
 #include "SetupPanel.h"
 #include "ParkingLot.h"
 
@@ -57,7 +58,7 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     forecastBt->addListener (this);
     forecastBt->setToggleState (false, dontSendNotification);
 
-    // show pole button
+    // show help-lines button
     addAndMakeVisible (showViewLineBt = new ToggleButton (L"辅助观察线"));
     showViewLineBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
     showViewLineBt->addListener (this);
@@ -105,6 +106,37 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
 
     nonSlopeBt->setToggleState (true, dontSendNotification);
 
+    // auto move group..
+    addAndMakeVisible (autoMoveGroup = new GroupComponent (String(), L"自行"));
+    autoMoveGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
+    autoMoveGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
+
+    addAndMakeVisible (autoMoveBt = new ToggleButton (L"开启"));
+    autoMoveBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
+    autoMoveBt->addListener (this);
+
+    addAndMakeVisible (autoSlowBt = new ToggleButton (L"慢速"));
+    autoSlowBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
+    autoSlowBt->addListener (this);
+
+    addAndMakeVisible (autoNormalBt = new ToggleButton (L"中速"));
+    autoNormalBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
+    autoNormalBt->addListener (this);
+
+    addAndMakeVisible (autoFastBt = new ToggleButton (L"快速"));
+    autoFastBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
+    autoFastBt->addListener (this);
+
+    autoSlowBt->setRadioGroupId (1235);
+    autoNormalBt->setRadioGroupId (1235);
+    autoFastBt->setRadioGroupId (1235);
+
+    autoSlowBt->setToggleState (true, dontSendNotification);
+
+    autoSlowBt->setEnabled (false);
+    autoNormalBt->setEnabled (false);
+    autoFastBt->setEnabled (false);
+
     // group component..
     addAndMakeVisible (pathGroup = new GroupComponent (String(), L"轨迹"));
     pathGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
@@ -149,7 +181,6 @@ void SetupPanel::resized()
     const int leftGap = 20;
 
     pathGroup->setBounds (leftGap - 10, 70, getWidth() - 15, 115);
-
     leftFrontPathBt->setBounds (leftGap, pathGroup->getY() + 20, 100, 25);
     rightFrontPathBt->setBounds (leftFrontPathBt->getRight() + 5, leftFrontPathBt->getY(), 100, 25);
     leftRearPathBt->setBounds (leftGap, leftFrontPathBt->getBottom() + 5, 100, 25);
@@ -157,9 +188,8 @@ void SetupPanel::resized()
     erasePathBt->setBounds (getWidth() - 105, rightRearPathBt->getBottom() + 5, 90, 25);
     forecastBt->setBounds (leftGap, rightRearPathBt->getBottom() + 5, 100, 25);
 
-    // slope..
-    typeGroup->setBounds (leftGap - 10, erasePathBt->getBottom() + 20, getWidth() - 15, 90);
-
+    // field group..
+    typeGroup->setBounds (leftGap - 10, erasePathBt->getBottom() + 20, getWidth() - 15, 85);
     trainingBt->setBounds (leftGap, typeGroup->getY() + 20, 62, 25);
     parkingBt->setBounds (trainingBt->getRight() + 5, trainingBt->getY(), 62, 25);
     hardBt->setBounds (parkingBt->getRight() + 5, trainingBt->getY(), 62, 25);
@@ -168,9 +198,15 @@ void SetupPanel::resized()
     slopeBt->setBounds (nonSlopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
     antiSlopeBt->setBounds (slopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
 
-    // others..
-    othersGroup->setBounds (leftGap - 10, antiSlopeBt->getBottom() + 25, getWidth() - 15, 90);
+    // auto move..
+    autoMoveGroup->setBounds (leftGap - 10, antiSlopeBt->getBottom() + 20, getWidth() - 15, 55);
+    autoMoveBt->setBounds (leftGap, autoMoveGroup->getY() + 20, 45, 25);
+    autoSlowBt->setBounds (autoMoveBt->getRight() + 5, autoMoveGroup->getY() + 20, 45, 25);
+    autoNormalBt->setBounds (autoSlowBt->getRight() + 5, autoMoveGroup->getY() + 20, 45, 25);
+    autoFastBt->setBounds (autoNormalBt->getRight() + 5, autoMoveGroup->getY() + 20, 45, 25);
 
+    // others..
+    othersGroup->setBounds (leftGap - 10, autoFastBt->getBottom() + 20, getWidth() - 15, 85);
     showViewLineBt->setBounds (leftGap, othersGroup->getY() + 20, 100, 25);
     hideCarBt->setBounds (showViewLineBt->getRight() + 5, showViewLineBt->getY(), 100, 25);
     cejuBt->setBounds (leftGap, hideCarBt->getBottom() + 5, 60, 25);
@@ -213,6 +249,7 @@ void SetupPanel::buttonClicked (Button* bt)
     {
         parkinglot->setFieldState (0);
         hideCarBt->setToggleState (false, sendNotification);
+        parkinglot->stopTimer();
 
         cejuBt->setToggleState (false, sendNotificationSync);
         nonSlopeBt->setEnabled (false);
@@ -224,6 +261,7 @@ void SetupPanel::buttonClicked (Button* bt)
     {
         parkinglot->setFieldState (-1);
         hideCarBt->setToggleState (false, sendNotification);
+        parkinglot->stopTimer();
 
         cejuBt->setToggleState (false, sendNotificationSync);
         nonSlopeBt->setEnabled (true);
@@ -235,6 +273,7 @@ void SetupPanel::buttonClicked (Button* bt)
     {
         parkinglot->setFieldState (1);
         hideCarBt->setToggleState (false, sendNotification);
+        parkinglot->stopTimer();
 
         cejuBt->setToggleState (false, sendNotificationSync);
         nonSlopeBt->setEnabled (false);
@@ -246,12 +285,14 @@ void SetupPanel::buttonClicked (Button* bt)
     {
         parkinglot->setSlopedRestingCars (false, false);
         cejuBt->setToggleState (false, sendNotificationSync);
+        parkinglot->stopTimer();
     }
 
     else if (bt == slopeBt && parkinglot->getSlopeState() != 1)
     {
         parkinglot->setSlopedRestingCars (true, false);
         cejuBt->setToggleState (false, sendNotificationSync);
+        parkinglot->stopTimer();
     }
 
 
@@ -259,7 +300,25 @@ void SetupPanel::buttonClicked (Button* bt)
     {
         parkinglot->setSlopedRestingCars (true, true);
         cejuBt->setToggleState (false, sendNotificationSync);
+        parkinglot->stopTimer();
     }
+
+    else if (bt == autoMoveBt)
+    {
+        parkinglot->setAutoMoveMode (autoMoveBt->getToggleState());
+
+        autoSlowBt->setEnabled (autoMoveBt->getToggleState());
+        autoNormalBt->setEnabled (autoMoveBt->getToggleState());
+        autoFastBt->setEnabled (autoMoveBt->getToggleState());
+    }
+    else if (bt == autoSlowBt)
+        parkinglot->setAutoMoveSpped (SpeedWhenAutoMove * 3);
+    
+    else if (bt == autoNormalBt)
+        parkinglot->setAutoMoveSpped (SpeedWhenAutoMove * 2);
+    
+    else if (bt == autoFastBt)
+        parkinglot->setAutoMoveSpped (SpeedWhenAutoMove);
 
     else if (bt == screenShotBt)
         saveScreenShot();

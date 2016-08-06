@@ -23,7 +23,8 @@ class MeasuringComp;
 */
 class ParkingLot   : public Component,
     public DragAndDropContainer,
-    public DragAndDropTarget
+    public DragAndDropTarget,
+    public Timer
 {
 public:
     //==============================================================================
@@ -47,6 +48,8 @@ public:
 
     void transparentTrainingCar (const bool transparentIt);
     void setSlopedRestingCars (const bool slope, const bool backslash);
+    void setAutoMoveMode (const bool autoMove);
+    void setAutoMoveSpped (const int timerIntervel);
 
     /** return 0-non slope, 1-slope, -1-anti slope */
     const int getSlopeState() const                 { return arrangeState;  }  
@@ -67,6 +70,7 @@ public:
     virtual void itemDropped (const SourceDetails& dragSourceDetails) override;
 
     virtual bool keyPressed (const KeyPress& key) override;
+    virtual void timerCallback() override;
 
 private:
     //==============================================================================
@@ -76,7 +80,7 @@ private:
     void getCurrentCheckPoints();    
     const bool isCrashed();
     const bool isSuccessful();
-
+    
      //=========================================================================
     Point<float> polePoint;
     OwnedArray<Component> restingCars;
@@ -108,15 +112,17 @@ private:
     Array<Point<int>> checkPoints;
     Path leftFrontPath, rightFrontPath, leftRearPath, rightRearPath;
     Path forecastPath1, forecastPath2;
+
     float pathHudu;
-    int arrangeState;
+    int arrangeState, autoSpeed;
 
     bool leftFrontPathShow, rightFrontPathShow, leftRearPathShow, rightRearPathShow;
     bool shouldShowForecastPath, shouldShowViewLine, isMeasuringDistance;
     bool xiexiang, fanxiexiang;
     bool clearAllRestingCars;
+    bool isAutoMode, backWhenAutoMove;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParkingLot)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParkingLot)        
 };
 
 
