@@ -364,17 +364,11 @@ void ParkingLot::mouseUp (const MouseEvent& e)
 //=================================================================================================
 void ParkingLot::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& wheel)
 {
+    backWhenAutoMove = (wheel.deltaY > 0);
+
     if (isAutoMode)
     {
-        if (isTimerRunning())
-        {
-            stopTimer();
-        }
-        else
-        {
-            backWhenAutoMove = (wheel.deltaY > 0);
-            startTimer (autoSpeed);
-        }
+        isTimerRunning() ? stopTimer() : startTimer (autoSpeed);
     }
     else
     {
