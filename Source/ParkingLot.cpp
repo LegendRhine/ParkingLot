@@ -432,16 +432,34 @@ bool ParkingLot::keyPressed (const KeyPress& key)
     // move forward
     else if (key == KeyPress::upKey)
     {
-        if (!moveTheCar (false))
-            moveTheCar (true);
+        backWhenAutoMove = false;
+
+        if (isAutoMode)
+        {
+            isTimerRunning() ? stopTimer() : startTimer (autoSpeed);
+        }
+        else
+        {
+            if (!moveTheCar (false))
+                moveTheCar (true);
+        }        
 
         return true;
     }
     // move back
     else if (key == KeyPress::downKey)
     {
-        if (!moveTheCar (true))
-            moveTheCar (false);
+        backWhenAutoMove = true;
+        
+        if (isAutoMode)
+        {
+            isTimerRunning() ? stopTimer() : startTimer (autoSpeed);
+        }
+        else
+        {
+            if (!moveTheCar (true))
+                moveTheCar (false);
+        }
 
         return true;
     }
