@@ -42,6 +42,7 @@ public:
     void showRightRearPath (const bool showIt);
     void showForecastPath (const bool showIt);
     void showViewLine (const bool showIt);
+    void measureDistance (const bool enable);
 
     void transparentTrainingCar (const bool transparentIt);
     void setSlopedRestingCars (const bool slope, const bool backslash);
@@ -111,7 +112,7 @@ private:
     int arrangeState;
 
     bool leftFrontPathShow, rightFrontPathShow, leftRearPathShow, rightRearPathShow;
-    bool shouldShowForecastPath, shouldShowViewLine;
+    bool shouldShowForecastPath, shouldShowViewLine, isMeasuringDistance;
     bool xiexiang, fanxiexiang;
     bool clearAllRestingCars;
 

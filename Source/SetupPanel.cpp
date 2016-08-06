@@ -115,6 +115,11 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     othersGroup->setColour (GroupComponent::outlineColourId, Colours::lightgrey.withAlpha (0.5f));
     othersGroup->setColour (GroupComponent::textColourId, Colours::lightgrey);
 
+    // ceju
+    addAndMakeVisible (cejuBt = new ToggleButton (L"测距"));
+    cejuBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
+    cejuBt->addListener (this);
+
     // cancel all widgets's focus for shortcut of ParkingLot (turning and moving car)
     for (int i = getNumChildComponents(); --i >= 0; )
         getChildComponent (i)->setWantsKeyboardFocus (false);
@@ -161,10 +166,11 @@ void SetupPanel::resized()
     antiSlopeBt->setBounds (slopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
 
     // others..
-    othersGroup->setBounds (leftGap - 10, antiSlopeBt->getBottom() + 25, getWidth() - 15, 60);
+    othersGroup->setBounds (leftGap - 10, antiSlopeBt->getBottom() + 25, getWidth() - 15, 90);
 
     showViewLineBt->setBounds (leftGap, othersGroup->getY() + 20, 100, 25);
     hideCarBt->setBounds (showViewLineBt->getRight() + 5, showViewLineBt->getY(), 100, 25);
+    cejuBt->setBounds (leftGap, hideCarBt->getBottom() + 5, 60, 25);
 }
 
 //=================================================================================================
@@ -190,6 +196,9 @@ void SetupPanel::buttonClicked (Button* bt)
 
     else if (bt == showViewLineBt)
         parkinglot->showViewLine (showViewLineBt->getToggleState());
+
+    else if (bt == cejuBt)
+        parkinglot->measureDistance (cejuBt->getToggleState());
 
     else if (bt == hideCarBt)
         parkinglot->transparentTrainingCar (hideCarBt->getToggleState());

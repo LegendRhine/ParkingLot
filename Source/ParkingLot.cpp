@@ -21,6 +21,7 @@ ParkingLot::ParkingLot()
     rightRearPathShow (true),
     shouldShowForecastPath (false),
     shouldShowViewLine (false),
+    isMeasuringDistance (false),
     xiexiang (false),
     fanxiexiang (false),
     clearAllRestingCars (false)
@@ -201,6 +202,7 @@ void ParkingLot::paint (Graphics& g)
         l8.applyTransform (trainingCar->getTransform());
 
         g.setColour (Colours::whitesmoke);
+
         g.drawDashedLine (l1.toFloat(), dashArray, 2, 0.6f);
         g.drawDashedLine (l2.toFloat(), dashArray, 2, 0.6f);
         g.drawDashedLine (l3.toFloat(), dashArray, 2, 0.6f);
@@ -515,6 +517,17 @@ void ParkingLot::showViewLine (const bool showIt)
 {
     shouldShowViewLine = showIt;
     repaint();
+}
+
+void ParkingLot::measureDistance(const bool enable)
+{
+    isMeasuringDistance = enable;
+
+    if (isMeasuringDistance)
+        setMouseCursor (MouseCursor::CrosshairCursor);
+    else
+        setMouseCursor (MouseCursor::NormalCursor);
+
 }
 
 //=================================================================================================

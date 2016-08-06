@@ -44,13 +44,11 @@ private:
     ScopedPointer<ToggleButton> rightFrontPathBt;
     ScopedPointer<ToggleButton> leftRearPathBt;
     ScopedPointer<ToggleButton> rightRearPathBt;
-    ScopedPointer<ToggleButton> forecastBt;
+    ScopedPointer<ToggleButton> forecastBt, showViewLineBt;
 
     ScopedPointer<ToggleButton> trainingBt, parkingBt, hardBt;
     ScopedPointer<ToggleButton> nonSlopeBt, slopeBt, antiSlopeBt;
-
-    ScopedPointer<ToggleButton> showViewLineBt;
-    ScopedPointer<ToggleButton> hideCarBt;
+    ScopedPointer<ToggleButton> cejuBt, hideCarBt;
         
     ScopedPointer<GroupComponent> pathGroup, typeGroup, othersGroup;
 
