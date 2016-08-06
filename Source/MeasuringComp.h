@@ -19,9 +19,10 @@
 class MeasuringComp    : public Component
 {
 public:
-    /** distanceValue's unit: px */
-    MeasuringComp (const int distanceValue, const Point<int> startInParent, const Point<int> endInParent);
+    MeasuringComp (const Point<int> startInParent);
     ~MeasuringComp() { }
+
+    void setEndPoint (const Point<int> endInParent);
 
     void paint (Graphics&) override;
     void resized() override;

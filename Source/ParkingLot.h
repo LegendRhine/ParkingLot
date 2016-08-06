@@ -13,6 +13,7 @@
 
 class TrainingCar;
 class RestingCar;
+class MeasuringComp;
 
 //==============================================================================
 /** The parking lot which holds few resting cars, the training-car and controls it. 
@@ -56,6 +57,7 @@ public:
 
     void resetPath ();
         
+    virtual void mouseDown (const MouseEvent& event) override;
     virtual void mouseUp (const MouseEvent& event) override;
     virtual void mouseDrag (const MouseEvent& event) override;
     virtual void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override;
@@ -78,7 +80,7 @@ private:
      //=========================================================================
     Point<float> polePoint;
     OwnedArray<Component> restingCars;
-    OwnedArray<Component> measurings;
+    OwnedArray<MeasuringComp> measurings;
     ScopedPointer<TrainingCar> trainingCar;
 
     /** This class repersent stop-area */

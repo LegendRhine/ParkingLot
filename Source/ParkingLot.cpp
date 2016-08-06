@@ -298,36 +298,63 @@ void ParkingLot::placeAfterSetDirection (const int newAngle)
     DBG (polePoint.getDistanceFrom (frontPoint));*/
 
 }
+//=========================================================================
+void ParkingLot::mouseDown (const MouseEvent& e)
+{
+    if (isMeasuringDistance)
+    {
+        const Point<int> startP = e.getMouseDownPosition();
+
+        MeasuringComp* m = new MeasuringComp (startP);
+        addAndMakeVisible (m);
+        measurings.add (m);
+
+        m->setTopLeftPosition (startP.getX(), startP.getY());
+    }
+}
+
+//=================================================================================================
+void ParkingLot::mouseDrag (const MouseEvent& e)
+{
+    if (isMeasuringDistance)
+    {
+        MeasuringComp* m = measurings.getLast();
+
+        const Point<int> startP = e.getMouseDownPosition();
+        const Point<int> endP = e.getPosition();
+        
+        const int x = (startP.getX() < endP.getX()) ? startP.getX() : endP.getX();
+        const int y = (startP.getY() < endP.getY()) ? startP.getY() : endP.getY();
+        const int w = jmax (std::abs (startP.getX() - endP.getX()), 56);
+        const int h = jmax (std::abs (startP.getY() - endP.getY()), 22);
+
+        m->setEndPoint (endP);
+        m->setBounds (x - 1, y - 1, w + 2, h + 2);
+    }
+}
 
 //=================================================================================================
 void ParkingLot::mouseUp (const MouseEvent& e)
 {
     if (isMeasuringDistance)
     {
+        MeasuringComp* m = measurings.getLast();
+
         const Point<int> startP = e.getMouseDownPosition();
         const Point<int> endP = e.getPosition();
 
-        MeasuringComp* m = new MeasuringComp (e.getDistanceFromDragStart(), startP, endP);
-        addAndMakeVisible (m);
-        measurings.add (m);
-
         const int x = (startP.getX() < endP.getX()) ? startP.getX() : endP.getX();
         const int y = (startP.getY() < endP.getY()) ? startP.getY() : endP.getY();
-        const int w = jmax (std::abs (startP.getX() - endP.getX()), 56);
-        const int h = jmax (std::abs (startP.getY() - endP.getY()), 22);
+        const int w = jmax (std::abs (startP.getX() - endP.getX()), 54);
+        const int h = jmax (std::abs (startP.getY() - endP.getY()), 20);
 
-        m->setBounds (x, y, w, h);
+        m->setEndPoint (endP);
+        m->setBounds (x - 1, y - 1, w + 2, h + 2);
     }
     else
     {
         trainingCar->mouseUp (e);
     }
-}
-
-//=================================================================================================
-void ParkingLot::mouseDrag (const MouseEvent& )
-{
-    
 }
 
 //=================================================================================================
@@ -624,7 +651,7 @@ const bool ParkingLot::isCrashed()
     {
         Point<int> p (checkPoints[i].transformedBy (atf));
 
-        if (!contains (p))
+        if (!reallyContains (p, true))
             return true;
 
         Component* comp = getComponentAt (p);

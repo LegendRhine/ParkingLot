@@ -24,8 +24,6 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     
-    virtual bool hitTest (int, int) override { return false; }
-
 private:
     const Colour cl;
 

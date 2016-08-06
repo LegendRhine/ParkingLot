@@ -11,14 +11,12 @@
 #include "MeasuringComp.h"
 
 //==============================================================================
-MeasuringComp::MeasuringComp (const int distanceValue,
-                              const Point<int> startInParent_, 
-                              const Point<int> endInParent_) :
+MeasuringComp::MeasuringComp (const Point<int> startInParent_) :
     startInParent (startInParent_),
-    endInParent (endInParent_)
+    endInParent (startInParent_)
 {
 
-    addAndMakeVisible (lb = new Label (String(), String (distanceValue * 2) + "cm"));
+    addAndMakeVisible (lb = new Label());
 
     lb->setFont (Font (16.f));
     lb->setJustificationType (Justification::centred);
@@ -30,6 +28,15 @@ MeasuringComp::MeasuringComp (const int distanceValue,
 void MeasuringComp::resized()
 {
     lb->setCentreRelative (0.5f, 0.5f);
+}
+
+//=================================================================================================
+void MeasuringComp::setEndPoint (const Point<int> endInParent_)
+{
+    endInParent = endInParent_;
+    const int distanceValue = startInParent.getDistanceFrom (endInParent);
+
+    lb->setText (String (distanceValue * 2) + "cm", dontSendNotification);
 }
 
 //=========================================================================
@@ -44,9 +51,9 @@ void MeasuringComp::paint (Graphics& g)
     const Line<int> markLine (startPoint, endPoint);
 
     g.setColour (Colours::lightblue);
-    g.drawLine (markLine.toFloat(), 0.8f);
+    g.drawLine (markLine.toFloat(), 0.5f);
 
-    const float banjing = 3.f;
+    const float banjing = 2.f;
     g.fillEllipse (startPoint.getX() - banjing, startPoint.getY() - banjing, banjing * 2.f, banjing * 2.f);
     g.fillEllipse (endPoint.getX() - banjing, endPoint.getY() - banjing, banjing * 2.f, banjing * 2.f);
 }

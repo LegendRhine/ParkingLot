@@ -208,6 +208,7 @@ void SetupPanel::buttonClicked (Button* bt)
         parkinglot->setFieldState (0);
         hideCarBt->setToggleState (false, sendNotification);
 
+        cejuBt->setToggleState (false, sendNotificationSync);
         nonSlopeBt->setEnabled (false);
         slopeBt->setEnabled (false);
         antiSlopeBt->setEnabled (false);
@@ -218,6 +219,7 @@ void SetupPanel::buttonClicked (Button* bt)
         parkinglot->setFieldState (-1);
         hideCarBt->setToggleState (false, sendNotification);
 
+        cejuBt->setToggleState (false, sendNotificationSync);
         nonSlopeBt->setEnabled (true);
         slopeBt->setEnabled (true);
         antiSlopeBt->setEnabled (true);
@@ -228,6 +230,7 @@ void SetupPanel::buttonClicked (Button* bt)
         parkinglot->setFieldState (1);
         hideCarBt->setToggleState (false, sendNotification);
 
+        cejuBt->setToggleState (false, sendNotificationSync);
         nonSlopeBt->setEnabled (false);
         slopeBt->setEnabled (false);
         antiSlopeBt->setEnabled (false);
