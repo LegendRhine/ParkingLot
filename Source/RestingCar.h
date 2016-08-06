@@ -24,7 +24,7 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     
-    virtual void mouseUp (const MouseEvent& event) override;
+    virtual bool hitTest (int, int) override { return false; }
 
 private:
     const Colour cl;

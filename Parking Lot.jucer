@@ -15,6 +15,9 @@
       <FILE id="C19zrB" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
       <FILE id="sDRIdk" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="G6rFtm" name="MeasuringComp.cpp" compile="1" resource="0"
+            file="Source/MeasuringComp.cpp"/>
+      <FILE id="AtKxeA" name="MeasuringComp.h" compile="0" resource="0" file="Source/MeasuringComp.h"/>
       <FILE id="wNt6U5" name="ParkingLot.cpp" compile="1" resource="0" file="Source/ParkingLot.cpp"/>
       <FILE id="lnpPJj" name="ParkingLot.h" compile="0" resource="0" file="Source/ParkingLot.h"/>
       <FILE id="GhK5rM" name="RestingCar.cpp" compile="1" resource="0" file="Source/RestingCar.cpp"/>

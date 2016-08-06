@@ -7,9 +7,10 @@
 */
 
 #include "CommonData.h"
-#include "ParkingLot.h"
 #include "TrainingCar.h"
 #include "RestingCar.h"
+#include "MeasuringComp.h"
+#include "ParkingLot.h"
 
 //==============================================================================
 ParkingLot::ParkingLot()
@@ -301,7 +302,26 @@ void ParkingLot::placeAfterSetDirection (const int newAngle)
 //=================================================================================================
 void ParkingLot::mouseUp (const MouseEvent& e)
 {
-    trainingCar->mouseUp (e);
+    if (isMeasuringDistance)
+    {
+        const Point<int> startP = e.getMouseDownPosition();
+        const Point<int> endP = e.getPosition();
+
+        MeasuringComp* m = new MeasuringComp (e.getDistanceFromDragStart(), startP, endP);
+        addAndMakeVisible (m);
+        measurings.add (m);
+
+        const int x = (startP.getX() < endP.getX()) ? startP.getX() : endP.getX();
+        const int y = (startP.getY() < endP.getY()) ? startP.getY() : endP.getY();
+        const int w = jmax (std::abs (startP.getX() - endP.getX()), 56);
+        const int h = jmax (std::abs (startP.getY() - endP.getY()), 22);
+
+        m->setBounds (x, y, w, h);
+    }
+    else
+    {
+        trainingCar->mouseUp (e);
+    }
 }
 
 //=================================================================================================
@@ -522,11 +542,16 @@ void ParkingLot::showViewLine (const bool showIt)
 void ParkingLot::measureDistance(const bool enable)
 {
     isMeasuringDistance = enable;
+    measurings.clear();
 
     if (isMeasuringDistance)
+    {
         setMouseCursor (MouseCursor::CrosshairCursor);
+    }
     else
+    {
         setMouseCursor (MouseCursor::NormalCursor);
+    }
 
 }
 

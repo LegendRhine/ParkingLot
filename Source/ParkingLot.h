@@ -78,6 +78,7 @@ private:
      //=========================================================================
     Point<float> polePoint;
     OwnedArray<Component> restingCars;
+    OwnedArray<Component> measurings;
     ScopedPointer<TrainingCar> trainingCar;
 
     /** This class repersent stop-area */
@@ -94,10 +95,7 @@ private:
             g.fillCheckerBoard (getLocalBounds(), 28, 27, Colour (0x00), Colours::lightgrey.withAlpha (0.15f));
         }
 
-        void mouseUp (const MouseEvent& e) override
-        {
-            getParentComponent()->mouseUp (e);
-        }
+        virtual bool hitTest (int, int) override        { return false; }
 
     private:
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StopArea)
