@@ -243,13 +243,23 @@ void SetupPanel::buttonClicked (Button* bt)
     }
 
     else if (bt == nonSlopeBt && parkinglot->getSlopeState() != 0)
+    {
         parkinglot->setSlopedRestingCars (false, false);
+        cejuBt->setToggleState (false, sendNotificationSync);
+    }
 
     else if (bt == slopeBt && parkinglot->getSlopeState() != 1)
+    {
         parkinglot->setSlopedRestingCars (true, false);
+        cejuBt->setToggleState (false, sendNotificationSync);
+    }
+
 
     else if (bt == antiSlopeBt && parkinglot->getSlopeState() != -1)
+    {
         parkinglot->setSlopedRestingCars (true, true);
+        cejuBt->setToggleState (false, sendNotificationSync);
+    }
 
     else if (bt == screenShotBt)
         saveScreenShot();
@@ -259,7 +269,7 @@ void SetupPanel::buttonClicked (Button* bt)
 //=================================================================================================
 void SetupPanel::saveScreenShot()
 {
-    screenShot = parkinglot->createComponentSnapshot (parkinglot->getLocalBounds());
+    screenShot = parkinglot->getParentComponent()->createComponentSnapshot (parkinglot->getLocalBounds());
 
     FileChooser fc (L"保存屏幕截图", File::nonexistent, "*.png");
 

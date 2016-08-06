@@ -170,7 +170,7 @@ void ParkingLot::paint (Graphics& g)
         Point<int> p11 (r, b);
 
         Line<int> l1 (p2, p3);
-        Line<int> l2 (p1, Point<int> (r, y + 120));
+        Line<int> l2 (p1, Point<int> (r, y + 110));
         Line<int> l3 (p8, p9);
         Line<int> l4 (p10, p11);
         Line<int> l5 (p1, p4);
@@ -181,10 +181,10 @@ void ParkingLot::paint (Graphics& g)
         l1 = l1.withShortenedStart (-200).withShortenedEnd (-300);
         l1.applyTransform (trainingCar->getTransform());
 
-        l2 = l2.withShortenedStart (-200).withShortenedEnd (-300);
+        l2 = l2.withShortenedStart (-300).withShortenedEnd (-400);
         l2.applyTransform (trainingCar->getTransform());
 
-        l3 = l3.withShortenedStart (-100).withShortenedEnd (-200);
+        l3 = l3.withShortenedStart (-200).withShortenedEnd (-300);
         l3.applyTransform (trainingCar->getTransform());
 
         l4 = l4.withShortenedStart (-200).withShortenedEnd (-300);
@@ -199,7 +199,7 @@ void ParkingLot::paint (Graphics& g)
         l7 = l7.withShortenedEnd (-200);
         l7.applyTransform (trainingCar->getTransform());
 
-        l8 = l8.withShortenedEnd (-300);
+        l8 = l8.withShortenedEnd (-200);
         l8.applyTransform (trainingCar->getTransform());
 
         g.setColour (Colours::whitesmoke);
@@ -760,7 +760,7 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
     {
         Component* car = nullptr;
 
-        if (i == 3)
+        if (i == 1)
         {
             car = stopAreaOne = new StopArea();
             car->setSize (CarLength + 8, CarWidth + 8);
@@ -793,7 +793,7 @@ void ParkingLot::arrangeRestingCars (const bool slope, const bool backslash)
     {
         Component* car = nullptr;
 
-        if (i == 1)
+        if (i == 3)
         {
             car = stopAreaTwo = new StopArea();
             car->setSize (CarLength + 8, CarWidth + 8);
