@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="sFpOqq" name="Swing-Parking" projectType="guiapp" version="2016.08.15"
+<JUCERPROJECT id="sFpOqq" name="Swing-Parking" projectType="guiapp" version="2016.08.08"
               bundleIdentifier="com.underwaySoft.ParkingLot" includeBinaryInAppConfig="1"
               jucerVersion="4.2.3">
   <MAINGROUP id="HITcTa" name="Swing-Parking">
