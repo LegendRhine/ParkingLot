@@ -49,9 +49,9 @@
     <XCODE_MAC targetFolder="Builds/MacOSX" smallIcon="cTG37C" bigIcon="cTG37C">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="Swing-Parking"
-                       osxSDK="default" osxCompatibility="10.8 SDK"/>
+                       osxSDK="default" osxCompatibility="10.8 SDK" binaryPath=""/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="Swing-Parking"
-                       osxCompatibility="10.8 SDK"/>
+                       osxCompatibility="10.8 SDK" binaryPath=""/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_basics" path="../JUCE/modules"/>
