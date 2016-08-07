@@ -34,15 +34,16 @@ public:
 private:
     //=========================================================================
     void saveScreenShot();
+    void showAboutDialog ();
+    void showHelpDialog();
 
     ParkingLot* const parkinglot;
     Image screenShot;
 
-    ScopedPointer<Label> nameLb;
-    ScopedPointer<Label> versionLb;
+    ScopedPointer<Label> nameLb, versionLb;
 
-    ScopedPointer<TextButton> erasePathBt;
-    ScopedPointer<TextButton> screenShotBt;
+    ScopedPointer<TextButton> erasePathBt, screenShotBt;
+    ScopedPointer<TextButton> helpBt, aboutBt;
 
     ScopedPointer<ToggleButton> leftFrontPathBt, rightFrontPathBt;
     ScopedPointer<ToggleButton> leftRearPathBt, rightRearPathBt;
@@ -54,6 +55,7 @@ private:
     ScopedPointer<ToggleButton> cejuBt, hideCarBt;
         
     ScopedPointer<GroupComponent> pathGroup, typeGroup, autoMoveGroup, othersGroup;
+    ScopedPointer<HyperlinkButton> web1;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SetupPanel)
 };

@@ -33,6 +33,12 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
 
     addAndMakeVisible (screenShotBt = new TextButton (L"截屏"));
     screenShotBt->addListener (this);
+
+    addAndMakeVisible (helpBt = new TextButton (L"帮助"));
+    helpBt->addListener (this);
+
+    addAndMakeVisible (aboutBt = new TextButton (L"关于"));
+    aboutBt->addListener (this);
     
     // show path buttons
     addAndMakeVisible (leftFrontPathBt = new ToggleButton (L"左前角轨迹"));
@@ -212,7 +218,9 @@ void SetupPanel::resized()
     cejuBt->setBounds (leftGap, hideCarBt->getBottom() + 5, 60, 25);
 
     // bottom buttons
-    screenShotBt->setBounds (leftGap, getHeight () - 30, 45, 25);
+    screenShotBt->setBounds (leftGap - 5, getHeight () - 30, 45, 25);
+    helpBt->setBounds (screenShotBt->getRight() + 5, getHeight() - 30, 45, 25);
+    aboutBt->setBounds (helpBt->getRight() + 5, getHeight() - 30, 45, 25);
 }
 
 //=================================================================================================
@@ -322,6 +330,13 @@ void SetupPanel::buttonClicked (Button* bt)
 
     else if (bt == screenShotBt)
         saveScreenShot();
+
+    else if (bt == aboutBt)
+        showAboutDialog();
+
+
+    else if (bt == helpBt)
+        showHelpDialog();
         
 }
 
@@ -358,5 +373,45 @@ void SetupPanel::saveScreenShot()
             AlertWindow::showMessageBox (AlertWindow::NoIcon, L"提示", L"图像数据写入失败！");
         }
     }        
+}
+
+//=================================================================================================
+void SetupPanel::showAboutDialog ()
+{
+    AlertWindow::showMessageBox (AlertWindow::InfoIcon,
+        ProjectInfo::projectName,
+        L"设计编程: SwingCoder\n"
+        L"立项日期: 2016.07.26\n"
+        L"最新编译: " + String (ProjectInfo::versionString) + "\n\n"
+        "underwaySoft@126.com\n"
+        L"微信订阅: FOR870920\n"
+        "QQ: 843775 (SwingCoder)\n\n"
+        "http://www.underwaySoft.com\n"
+        "http://www.870920.com");
+}
+
+//=================================================================================================
+void SetupPanel::showHelpDialog ()
+{
+    AlertWindow::showMessageBox (AlertWindow::InfoIcon,
+        String (ProjectInfo::projectName) + L" 操作说明",
+        L" 1. 非自行模式下，转动鼠标滚轮可控制教练车的前进、后退。\n"
+        L" 2. 鼠标左键单击左转弯，双击向左打死。右键单击右转弯，双击向右打死。\n"
+        L" 3. 鼠标中键（滚轮）单击为方向直接回正。\n"
+        L" 4. 键盘上下左右光标键也可以控制车辆行驶和打方向。按住不动为连续动作。\n"
+        "\n"
+        L" 5. 自行模式的停止状态下，滚动一下鼠标滚轮或按一次键盘上下光标键即可自动行驶。\n"
+        L" 6. 自行模式的行驶状态下，拍一下空格键为刹车停止。再次拍一下继续自动行驶。\n"
+        L" 7. 自行模式的行驶状态下，滚动一下鼠标滚轮或者再次按一次上下光标键也可刹车停止。\n"
+        L" 8. 自行模式的行驶状态下，入位成功或车辆发生碰撞后立即停车。再次自行请参见5和6。\n"
+        "\n"
+        L" 9. 设置面板勾选某个选项后将进入不同的显示模式、操作模式或训练场地。\n"
+        L"10. 设置面板左下方的【截屏】可将当前场地的屏幕显示保存为PNG格式的图像文件。\n"
+        L"11. 点击右下角的【>|】按钮可隐现设置面板。\n\n"
+        L"12. 激活“测距”模式后，鼠标在场地中单击确定测量开始点，按住不放移动鼠标，\n"
+        L"      到达测量结束点后，松开鼠标按键，本次测距完成。\n"
+        "\n"
+        L"使用中如发现Bug或反馈建议，请发邮件至：underwaySoft@126.com  谢谢！"
+    );
 }
 

@@ -59,7 +59,7 @@ void MainComponent::resized()
 
     parkinglot->setBounds (0, 0, getWidth() - panelWidth, getHeight());
     setupPanel->setBounds (getWidth() - panelWidth, 0, panelWidth, getHeight()); 
-    showPanelBt->setBounds (getWidth() - 35, getHeight() - 30, 25, 25);
+    showPanelBt->setBounds (getWidth() - 40, getHeight() - 30, 30, 25);
 
     setupPanel->setWantsKeyboardFocus (false);
     parkinglot->setWantsKeyboardFocus (true);
