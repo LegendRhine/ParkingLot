@@ -30,7 +30,7 @@ public:
     void resized() override;
 
     virtual void buttonClicked (Button* bt) override;
-
+    
 private:
     //=========================================================================
     void saveScreenShot();
@@ -49,7 +49,7 @@ private:
     ScopedPointer<ToggleButton> leftRearPathBt, rightRearPathBt;
     ScopedPointer<ToggleButton> forecastBt, showViewLineBt;
 
-    ScopedPointer<ToggleButton> trainingBt, parkingBt, hardBt;
+    ScopedPointer<ToggleButton> trainingBt, parkingBt;
     ScopedPointer<ToggleButton> nonSlopeBt, slopeBt, antiSlopeBt;
     ScopedPointer<ToggleButton> autoMoveBt, autoSlowBt, autoNormalBt, autoFastBt;
     ScopedPointer<ToggleButton> cejuBt, hideCarBt;

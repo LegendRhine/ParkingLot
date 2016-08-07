@@ -83,13 +83,8 @@ SetupPanel::SetupPanel (ParkingLot* const parkinglot_)
     parkingBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
     parkingBt->addListener (this);
 
-    addAndMakeVisible (hardBt = new ToggleButton (L"障碍赛"));
-    hardBt->setColour (ToggleButton::textColourId, Colours::lightgrey);
-    hardBt->addListener (this);
-
     trainingBt->setRadioGroupId (1233);
     parkingBt->setRadioGroupId (1233);
-    hardBt->setRadioGroupId (1233);
 
     parkingBt->setToggleState (true, dontSendNotification);
 
@@ -172,35 +167,29 @@ SetupPanel::~SetupPanel()
 //=========================================================================
 void SetupPanel::paint (Graphics& g)
 {
-    g.setColour (Colours::lightgrey);
+    g.fillAll (Colours::darkgrey);
 
+    g.setColour (Colours::yellow.withAlpha (0.6f));
+    g.drawRect (0, 0, 3, getHeight());
+
+    g.setColour (Colours::lightgrey);
     g.drawHorizontalLine (getHeight() - 38, 8.0f, getWidth() - 8.0f);
 }
 //=========================================================================
 void SetupPanel::resized()
 {
     // labels
-    nameLb->setBounds (0, 10, getWidth(), 30);
-    versionLb->setBounds (0, 35, getWidth(), 25);
-
-    // pathes..
+    nameLb->setBounds (3, 10, getWidth() - 6, 30);
+    versionLb->setBounds (3, 35, getWidth() - 6, 25);
+    
     const int leftGap = 20;
 
-    pathGroup->setBounds (leftGap - 10, 70, getWidth() - 15, 115);
-    leftFrontPathBt->setBounds (leftGap, pathGroup->getY() + 20, 100, 25);
-    rightFrontPathBt->setBounds (leftFrontPathBt->getRight() + 5, leftFrontPathBt->getY(), 100, 25);
-    leftRearPathBt->setBounds (leftGap, leftFrontPathBt->getBottom() + 5, 100, 25);
-    rightRearPathBt->setBounds (leftRearPathBt->getRight() + 5, leftRearPathBt->getY(), 100, 25);
-    erasePathBt->setBounds (getWidth() - 105, rightRearPathBt->getBottom() + 5, 90, 25);
-    forecastBt->setBounds (leftGap, rightRearPathBt->getBottom() + 5, 100, 25);
-
     // field group..
-    typeGroup->setBounds (leftGap - 10, erasePathBt->getBottom() + 20, getWidth() - 15, 85);
+    typeGroup->setBounds (leftGap - 10, 70, getWidth() - 15, 85);
     trainingBt->setBounds (leftGap, typeGroup->getY() + 20, 62, 25);
     parkingBt->setBounds (trainingBt->getRight() + 5, trainingBt->getY(), 62, 25);
-    hardBt->setBounds (parkingBt->getRight() + 5, trainingBt->getY(), 62, 25);
 
-    nonSlopeBt->setBounds (leftGap, hardBt->getBottom() + 5, 62, 25);
+    nonSlopeBt->setBounds (leftGap, parkingBt->getBottom() + 5, 62, 25);
     slopeBt->setBounds (nonSlopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
     antiSlopeBt->setBounds (slopeBt->getRight() + 5, nonSlopeBt->getY(), 61, 25);
 
@@ -211,8 +200,17 @@ void SetupPanel::resized()
     autoNormalBt->setBounds (autoSlowBt->getRight() + 5, autoMoveGroup->getY() + 20, 45, 25);
     autoFastBt->setBounds (autoNormalBt->getRight() + 5, autoMoveGroup->getY() + 20, 45, 25);
 
+    // pathes..
+    pathGroup->setBounds (leftGap - 10, autoFastBt->getBottom() + 20, getWidth() - 15, 115);
+    leftFrontPathBt->setBounds (leftGap, pathGroup->getY() + 20, 100, 25);
+    rightFrontPathBt->setBounds (leftFrontPathBt->getRight() + 5, leftFrontPathBt->getY(), 100, 25);
+    leftRearPathBt->setBounds (leftGap, leftFrontPathBt->getBottom() + 5, 100, 25);
+    rightRearPathBt->setBounds (leftRearPathBt->getRight() + 5, leftRearPathBt->getY(), 100, 25);
+    erasePathBt->setBounds (getWidth() - 105, rightRearPathBt->getBottom() + 5, 90, 25);
+    forecastBt->setBounds (leftGap, rightRearPathBt->getBottom() + 5, 100, 25);
+
     // others..
-    othersGroup->setBounds (leftGap - 10, autoFastBt->getBottom() + 20, getWidth() - 15, 85);
+    othersGroup->setBounds (leftGap - 10, forecastBt->getBottom() + 20, getWidth() - 15, 85);
     showViewLineBt->setBounds (leftGap, othersGroup->getY() + 20, 100, 25);
     hideCarBt->setBounds (showViewLineBt->getRight() + 5, showViewLineBt->getY(), 100, 25);
     cejuBt->setBounds (leftGap, hideCarBt->getBottom() + 5, 60, 25);
@@ -275,18 +273,6 @@ void SetupPanel::buttonClicked (Button* bt)
         nonSlopeBt->setEnabled (true);
         slopeBt->setEnabled (true);
         antiSlopeBt->setEnabled (true);
-    }
-
-    else if (bt == hardBt && parkinglot->getFieldState() != 1)
-    {
-        parkinglot->setFieldState (1);
-        hideCarBt->setToggleState (false, sendNotification);
-        parkinglot->stopTimer();
-
-        cejuBt->setToggleState (false, sendNotificationSync);
-        nonSlopeBt->setEnabled (false);
-        slopeBt->setEnabled (false);
-        antiSlopeBt->setEnabled (false);
     }
 
     else if (bt == nonSlopeBt && parkinglot->getSlopeState() != 0)
@@ -380,7 +366,7 @@ void SetupPanel::showAboutDialog ()
 {
     AlertWindow::showMessageBox (AlertWindow::InfoIcon,
         ProjectInfo::projectName,
-        L"设计编程: SwingCoder\n"
+        L"设计编程: SwingCoder\n\n"
         L"立项日期: 2016.07.26\n"
         L"最新编译: " + String (ProjectInfo::versionString) + "\n\n"
         "underwaySoft@126.com\n"

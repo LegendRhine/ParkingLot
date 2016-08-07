@@ -44,6 +44,10 @@ void TrainingCar::paint (Graphics& g)
     g.setColour (Colours::lightgrey.withAlpha (0.45f));
     g.setFont (20.0f);
     g.drawSingleLineText ("S", getWidth() / 2 - 6, 30);
+
+    // rear light
+    g.setColour (Colours::darkred.withAlpha (0.85f));
+    g.fillRoundedRectangle (10.f, getHeight() - 6.f, getWidth() - 20.f, 5.f, 5.f);
         
     // driver
     g.setColour (Colours::black.withAlpha (0.65f));
