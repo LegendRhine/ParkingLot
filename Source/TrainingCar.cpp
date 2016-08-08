@@ -86,24 +86,6 @@ void TrainingCar::mouseDrag (const MouseEvent& e)
 }
 
 //=================================================================================================
-void TrainingCar::mouseDoubleClick (const MouseEvent & e)
-{
-    const int oldAngle = turningAngle;
-
-    if (e.mods.isLeftButtonDown())
-    {
-        turningAngle = -33;
-    }
-    else if (e.mods.isRightButtonDown())
-    {
-        turningAngle = 33;
-    }
-
-    if (oldAngle != turningAngle)
-        afterSetAngle (true);
-}
-
-//=================================================================================================
 void TrainingCar::mouseUp (const MouseEvent& e)
 {
     if (e.mouseWasClicked())
@@ -111,10 +93,10 @@ void TrainingCar::mouseUp (const MouseEvent& e)
         const int oldAngle = turningAngle;
 
         if (e.mods.isLeftButtonDown())
-            turningAngle = jmax (turningAngle - 3, -33);
+            turningAngle = -33;
 
         else if (e.mods.isRightButtonDown())
-            turningAngle = jmin (turningAngle + 3, 33);
+            turningAngle = 33;
 
         else if (e.mods.isMiddleButtonDown())
             turningAngle = 0;
@@ -135,7 +117,7 @@ void TrainingCar::afterSetAngle (const bool shouldRepaintParent)
         fromInnerWheel = 0.f;
 
     // set current hudu
-    for (int i = 3; i <=33; i += 3)
+    for (int i = 1; i <=33; ++i)
     {
         if (i == std::abs (turningAngle))
         {

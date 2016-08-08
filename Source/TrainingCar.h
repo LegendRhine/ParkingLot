@@ -31,7 +31,7 @@ public:
     const float getDistanceFromInnerWheel()             { return fromInnerWheel; }
     const float getCurrentEachHudu() const { return eachHudu; }
 
-    /** turn left or right.  */
+    /** turn the most left or right */
     virtual void mouseUp (const MouseEvent& event) override;
 
     /** tell parent component to move the car forward or back */
@@ -39,9 +39,6 @@ public:
 
     /** drag this object for manual place it */
     virtual void mouseDrag (const MouseEvent& event) override;
-
-    /** turn the most left or right */
-    virtual void mouseDoubleClick (const MouseEvent& e) override;
     
     /** direction = 0, repaint front wheels etc.. */
     void reset();

@@ -22,9 +22,9 @@ class MeasuringComp;
     Mouse wheel for back/forward the training-car.
 */
 class ParkingLot   : public Component,
-    public DragAndDropContainer,
-    public DragAndDropTarget,
-    public Timer
+                        public DragAndDropContainer,
+                        public DragAndDropTarget,
+                        public Timer
 {
 public:
     //==============================================================================

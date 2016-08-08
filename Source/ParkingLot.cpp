@@ -410,7 +410,7 @@ bool ParkingLot::keyPressed (const KeyPress& key)
     // turn left
     if (key == KeyPress::leftKey && currentAngle != -33)
     {
-        const int newAngle = jmax (-33, currentAngle - 3);
+        const int newAngle = jmax (-33, currentAngle - 1);
         trainingCar->setTurningAngle (newAngle, true);
 
         return true;
@@ -418,7 +418,7 @@ bool ParkingLot::keyPressed (const KeyPress& key)
     // turn right
     else if (key == KeyPress::rightKey && currentAngle != 33)
     {
-        const int newAngle = jmin (33, currentAngle + 3);
+        const int newAngle = jmin (33, currentAngle + 1);
         trainingCar->setTurningAngle (newAngle, true);
 
         return true;
