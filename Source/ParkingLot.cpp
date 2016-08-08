@@ -375,12 +375,6 @@ void ParkingLot::mouseWheelMove (const MouseEvent&, const MouseWheelDetails& whe
 }
 
 //=================================================================================================
-void ParkingLot::mouseDoubleClick(const MouseEvent & e)
-{
-    trainingCar->mouseDoubleClick (e);
-}
-
-//=================================================================================================
 bool ParkingLot::isInterestedInDragSource (const SourceDetails& dragSourceDetails)
 {
     return (dragSourceDetails.sourceComponent == trainingCar);
