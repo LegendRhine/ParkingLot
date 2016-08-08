@@ -20,6 +20,7 @@ MainComponent::MainComponent() :
 
     addAndMakeVisible (parkinglot = new ParkingLot());
     addAndMakeVisible (setupPanel = new SetupPanel (parkinglot));
+
     addAndMakeVisible (showPanelBt = new TextButton (">|"));
     showPanelBt->addListener (this);
 
@@ -47,7 +48,7 @@ void MainComponent::paint (Graphics& g)
         g.fillRect (parkinglot->getWidth() / 2 + CarWidth / 2 + 13, 0, 5, getHeight());
         g.fillRect (parkinglot->getWidth() - CarLength - 28, 0, 5, getHeight());
     }
-    else
+   /* else
     {
         Rectangle<int> fieldArea (0, 0, getWidth() - setupPanel->getWidth(), getHeight());
         g.excludeClipRegion (Rectangle<int> (fieldArea.getCentreX() - 65, 189, 255, 7));
@@ -56,7 +57,7 @@ void MainComponent::paint (Graphics& g)
         g.drawRect (fieldArea.reduced (190), 5);
         g.drawRect (fieldArea.getCentreX() - 70, 190, 265, getHeight() - 380, 5);
         g.drawVerticalLine (fieldArea.getCentreX() + 70, 190.f, getHeight() - 190.f);
-    }    
+    }*/    
 }
 
 //==============================================================================

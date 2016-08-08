@@ -14,7 +14,11 @@
 #include "JuceHeader.h"
 
 //==============================================================================
-/*
+/** This class represent the measure-mark 
+
+    (a label and a line which has a start-point and a end-point). 
+    The object could be created by its parent's mouseDown(), then add it to an ownedArray, 
+    and its size and content could be set by parent-component's mouseDrag() and mouseUp().
 */
 class MeasuringComp    : public Component
 {
@@ -22,10 +26,12 @@ public:
     MeasuringComp (const Point<int> startInParent);
     ~MeasuringComp() { }
 
+    /** Update the label's text in real-time */
     void setEndPoint (const Point<int> endInParent);
 
     void paint (Graphics&) override;
     void resized() override;
+
     virtual bool hitTest (int, int) override            { return false; }
 
 private:

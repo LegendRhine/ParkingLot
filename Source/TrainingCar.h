@@ -16,7 +16,7 @@
 class ParkingLot;
 
 //==============================================================================
-/** Training-car which be held and controled by the parking-lot.
+/** Training-car which be held and controled (move) by the parking-lot.
 */
 class TrainingCar    : public Component
 {
@@ -29,7 +29,7 @@ public:
     void setTurningAngle (const int newAngle, const bool shouldTellParentRepaint);
 
     const float getDistanceFromInnerWheel()             { return fromInnerWheel; }
-    const float getCurrentEachHudu() const { return eachHudu; }
+    const float getCurrentEachHudu() const              { return eachHudu; }
 
     /** turn the most left or right */
     virtual void mouseUp (const MouseEvent& event) override;

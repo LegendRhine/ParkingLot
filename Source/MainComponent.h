@@ -17,10 +17,9 @@ class ParkingLot;
 class SetupPanel;
 
 //==============================================================================
-/*
-*/
-class MainComponent    : public Component,
-    public Button::Listener
+/** work area. left is parking-lot/traning field, right is setup panel. */
+class MainComponent   : public Component,
+                        public Button::Listener
 {
 public:
     MainComponent();

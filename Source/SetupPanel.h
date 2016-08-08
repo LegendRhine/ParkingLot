@@ -16,8 +16,6 @@
 class ParkingLot;
 
 //==============================================================================
-/*
-*/
 class SetupPanel    : public Component,
     public Button::Listener
 {
