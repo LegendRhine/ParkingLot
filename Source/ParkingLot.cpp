@@ -156,8 +156,6 @@ void ParkingLot::paint (Graphics& g)
     {
         const int x = trainingCar->getX();
         const int y = trainingCar->getY();
-        const int w = trainingCar->getWidth();
-        const int h = trainingCar->getHeight();
         const int r = trainingCar->getRight();
         const int b = trainingCar->getBottom();
 
@@ -233,7 +231,6 @@ void ParkingLot::paint (Graphics& g)
 void ParkingLot::resized ()
 {
     pathHudu = 0.0f;
-    const int fromInnerWheel = roundToInt (trainingCar->getDistanceFromInnerWheel());
 
     trainingCar->setTransform (AffineTransform ());
 	trainingCar->setCentrePosition (getWidth() / 2, CarLength + 179);
