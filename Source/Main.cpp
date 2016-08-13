@@ -63,9 +63,14 @@ public:
     { 
         laf = new ParkingLotLaF();
         LookAndFeel::setDefaultLookAndFeel (laf);
-        laf->setDefaultSansSerifTypefaceName ("Microsoft Yahei");
         
-        mainWindow = new MainWindow (getApplicationName()); 
+#if JUCE_WINDOWS
+        laf->setDefaultSansSerifTypefaceName ("Microsoft Yahei");
+#elif JUCE_MAC
+        laf->setDefaultSansSerifTypefaceName ("Hiragino Sans GB");
+#endif
+        
+        mainWindow = new MainWindow (getApplicationName());
     }
     
     void shutdown() override    { mainWindow = nullptr; }

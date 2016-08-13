@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="sFpOqq" name="Swing-Parking" projectType="guiapp" version="2016.08.08"
+<JUCERPROJECT id="sFpOqq" name="Swing-Parking" projectType="guiapp" version="1.0.160812"
               bundleIdentifier="com.underwaySoft.ParkingLot" includeBinaryInAppConfig="1"
               jucerVersion="4.2.3">
   <MAINGROUP id="HITcTa" name="Swing-Parking">
@@ -54,13 +54,13 @@
                        osxCompatibility="10.8 SDK" binaryPath=""/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_gui_basics" path="../JUCE/modules"/>
-        <MODULEPATH id="juce_graphics" path="../JUCE/modules"/>
-        <MODULEPATH id="juce_events" path="../JUCE/modules"/>
-        <MODULEPATH id="juce_data_structures" path="../JUCE/modules"/>
-        <MODULEPATH id="juce_core" path="../JUCE/modules"/>
-        <MODULEPATH id="juce_opengl" path="../JUCE/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
   </EXPORTFORMATS>
