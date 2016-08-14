@@ -67,7 +67,7 @@ public:
 #if JUCE_WINDOWS
         laf->setDefaultSansSerifTypefaceName ("Microsoft Yahei UI");
 #elif JUCE_MAC
-        laf->setDefaultSansSerifTypefaceName ("Hiragino Sans GB");
+        laf->setDefaultSansSerifTypefaceName ("Microsoft Yahei");
 #endif
         
         mainWindow = new MainWindow (getApplicationName());
