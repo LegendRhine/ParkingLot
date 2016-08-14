@@ -65,7 +65,7 @@ public:
         LookAndFeel::setDefaultLookAndFeel (laf);
         
 #if JUCE_WINDOWS
-        laf->setDefaultSansSerifTypefaceName ("Microsoft Yahei");
+        laf->setDefaultSansSerifTypefaceName ("Microsoft Yahei UI");
 #elif JUCE_MAC
         laf->setDefaultSansSerifTypefaceName ("Hiragino Sans GB");
 #endif
