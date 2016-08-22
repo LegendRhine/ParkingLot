@@ -70,8 +70,7 @@ public:
         laf->setDefaultSansSerifTypefaceName ("Microsoft Yahei");  // little small
         //laf->setDefaultSansSerifTypefaceName ("Hiragino Sans GB"); // little big
         //laf->setDefaultSansSerifTypefaceName ("Pingfang SC");  // too small
-#endif
-        
+#endif        
         mainWindow = new MainWindow (getApplicationName());
     }
     
