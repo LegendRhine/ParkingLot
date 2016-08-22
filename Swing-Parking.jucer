@@ -73,10 +73,6 @@
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
   </MODULES>
-<<<<<<< HEAD
   <JUCEOPTIONS JUCE_WEB_BROWSER="disabled" JUCE_USE_COREIMAGE_LOADER="disabled"
                JUCE_USE_DIRECTWRITE="disabled"/>
-=======
-  <JUCEOPTIONS JUCE_WEB_BROWSER="disabled" JUCE_USE_DIRECTWRITE="disabled"/>
->>>>>>> origin/master
 </JUCERPROJECT>
