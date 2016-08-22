@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="sFpOqq" name="Swing-Parking" projectType="guiapp" version="1.0.160812"
+<JUCERPROJECT id="sFpOqq" name="Swing-Parking" projectType="guiapp" version="1.0.160822"
               bundleIdentifier="com.underwaySoft.ParkingLot" includeBinaryInAppConfig="1"
               jucerVersion="4.2.3">
   <MAINGROUP id="HITcTa" name="Swing-Parking">
@@ -73,5 +73,6 @@
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
   </MODULES>
-  <JUCEOPTIONS JUCE_WEB_BROWSER="disabled"/>
+  <JUCEOPTIONS JUCE_WEB_BROWSER="disabled" JUCE_USE_COREIMAGE_LOADER="disabled"
+               JUCE_USE_DIRECTWRITE="disabled"/>
 </JUCERPROJECT>

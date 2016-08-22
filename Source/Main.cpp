@@ -67,14 +67,16 @@ public:
 #if JUCE_WINDOWS
         laf->setDefaultSansSerifTypefaceName ("Microsoft Yahei UI");
 #elif JUCE_MAC
-        laf->setDefaultSansSerifTypefaceName ("Microsoft Yahei");
+        laf->setDefaultSansSerifTypefaceName ("Microsoft Yahei");  // little small
+        //laf->setDefaultSansSerifTypefaceName ("Hiragino Sans GB"); // little big
+        //laf->setDefaultSansSerifTypefaceName ("Pingfang SC");  // too small
 #endif
         
         mainWindow = new MainWindow (getApplicationName());
     }
     
-    void shutdown() override    { mainWindow = nullptr; }
-    void systemRequestedQuit() override    { quit(); }
+    void shutdown() override                { mainWindow = nullptr; }
+    void systemRequestedQuit() override     { quit(); }
     void anotherInstanceStarted (const String& ) override    { }
 
     //==============================================================================
