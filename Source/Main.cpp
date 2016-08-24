@@ -10,10 +10,11 @@
 #include "MainComponent.h"
 
 //=========================================================================
+/*
 class ParkingLotLaF : public LookAndFeel_V3
 {
 public:
-    /*virtual Font getTextButtonFont (TextButton&, int) override
+    virtual Font getTextButtonFont (TextButton&, int) override
     {
         return Font (16.f);
     }
@@ -43,9 +44,8 @@ public:
             textX, 0,
             button.getWidth() - textX - 2, button.getHeight(),
             Justification::centredLeft, 10);
-    }*/
-
-};
+    }
+}; */
 
 //==============================================================================
 class ParkingLotApplication  : public JUCEApplication
@@ -61,11 +61,12 @@ public:
     //==============================================================================
     void initialise (const String&) override    
     { 
-        laf = new ParkingLotLaF();
-        LookAndFeel::setDefaultLookAndFeel (laf);
-        
+        /*laf = new ParkingLotLaF();
+        LookAndFeel::setDefaultLookAndFeel (laf);*/
+        LookAndFeel* laf = &LookAndFeel::getDefaultLookAndFeel ();
+
 #if JUCE_WINDOWS
-        laf->setDefaultSansSerifTypefaceName ("Microsoft Yahei UI");
+        laf->setDefaultSansSerifTypefaceName ("Microsoft Yahei Light");
 #elif JUCE_MAC
         laf->setDefaultSansSerifTypefaceName ("Microsoft Yahei");  // little small
         //laf->setDefaultSansSerifTypefaceName ("Hiragino Sans GB"); // little big
@@ -111,7 +112,7 @@ public:
 
 private:
     ScopedPointer<MainWindow> mainWindow;
-    ScopedPointer<ParkingLotLaF> laf;
+    //ScopedPointer<ParkingLotLaF> laf;
 };
 
 //==============================================================================
