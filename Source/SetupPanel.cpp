@@ -367,13 +367,11 @@ void SetupPanel::showAboutDialog ()
     AlertWindow::showMessageBox (AlertWindow::InfoIcon,
         ProjectInfo::projectName,
         L"设计编程: SwingCoder\n\n"
-        L"立项日期: 2016.07.26\n"
         L"最新编译: " + String (ProjectInfo::versionString) + "\n\n"
         "underwaySoft@126.com\n"
         L"微信订阅: FOR870920\n"
         "QQ: 843775 (SwingCoder)\n\n"
-        "http://www.underwaySoft.com\n"
-        "http://www.870920.com");
+        "http://underwaySoft.com\n");
 }
 
 //=================================================================================================
